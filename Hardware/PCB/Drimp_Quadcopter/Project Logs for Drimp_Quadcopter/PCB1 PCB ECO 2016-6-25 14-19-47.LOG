@@ -1,0 +1,17 @@
+Change Component DesignItemId : Designator=Q1 Old DesignItemId=IRF5852 New DesignItemId=IRLML2402
+Change Component DesignItemId : Designator=Q2 Old DesignItemId=IRF5852 New DesignItemId=IRLML2402
+Change Component DesignItemId : Designator=Q3 Old DesignItemId=IRF5852 New DesignItemId=IRLML2402
+Change Component DesignItemId : Designator=Q4 Old DesignItemId=IRF5852 New DesignItemId=IRLML2402
+Change Component Footprint: Designator=Q1 Old Footprint=SOT23_M New Footprint=SOT-23_N
+Change Component Footprint: Designator=Q2 Old Footprint=SOT23_M New Footprint=SOT-23_N
+Change Component Footprint: Designator=Q3 Old Footprint=SOT23_M New Footprint=SOT-23_N
+Change Component Footprint: Designator=Q4 Old Footprint=SOT23_M New Footprint=SOT-23_N
+Added Pin To Net: NetName=GND Pin=Q1-2
+Added Pin To Net: NetName=NetP1_2 Pin=Q1-3
+Added Pin To Net: NetName=GND Pin=Q2-2
+Added Pin To Net: NetName=NetP2_2 Pin=Q2-3
+Added Pin To Net: NetName=GND Pin=Q3-2
+Added Pin To Net: NetName=NetP3_2 Pin=Q3-3
+Added Pin To Net: NetName=GND Pin=Q4-2
+Added Pin To Net: NetName=NetP4_2 Pin=Q4-3
+Added Room: Name=Drimp_Quadcopter
