@@ -1,0 +1,25 @@
+﻿Field=#~Integer~#~50|Field=Comment~String~Comment~125|Field=Description~String~Description~125|Field=Designator~String~Designator~176|Field=Quantity~Integer~Quantity~108|ReportField=Currency~<none>|ReportField=ProductionQuantity~1|ReportField=ProjectFileName~Drimp_Quadcopter.PrjPcb|ReportField=ProjectFullPath~E:\project\微型四轴无人机\Hardware\PCB\Drimp_Quadcopter\Drimp_Quadcopter.PrjPcb|ReportField=Title~Bill of Materials For PCB Document [PCB10X10.PcbDoc]|ReportField=TotalQuantity~55|ReportField=ReportTime~21:39:37|ReportField=ReportDate~2016/6/25|ReportField=ReportDateTime~2016/6/25 21:39:37|ReportField=OutputName~Bill of Materials|ReportField=OutputType~BOM_PartType|ReportField=GeneratorName~BOM|ReportField=GeneratorDescription~Bill of Materials|ReportField=VariantName~None|ReportField=DataSourceFileName~PCB10X10.PcbDoc|ReportField=DataSourceFullPath~E:\project\微型四轴无人机\Hardware\PCB\PCB10X10.PcbDoc
+1|Buzzer||B1|1
+2|Cap|Capacitor|C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14|14
+3|D2|Typical BLUE SiC LED|D1, D2, D4|3
+4|MBR0520|Default Diode|D3|1
+5|Inductor|Inductor|L1, L2, L3|3
+6|motor1|电机连接口|P1|1
+7|motor2|电机连接口|P2|1
+8|motor3|电机连接口|P3|1
+9|motor4|电机连接口|P4|1
+10|3.3V_GND||P5|1
+11|5V_GND||P6|1
+12|Power_GND||P7|1
+13|SW_download||P8|1
+14|SI2302|HEXFET Power MOSFET|Q1, Q2, Q3, Q4|4
+15|NPN|NPN General Purpose Amplifier|Q5|1
+16|Res2|Resistor|R1|1
+17|Res1|Resistor|R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13|12
+18|switch||S1|1
+19|STM32F101C8T6|STM32 ARM-based 32-bit MCU with 64 Kbytes Flash, 48-pin LQFP, Industrial Temperature|U1|1
+20|LM27313|3.7V升压到5v|U2|1
+21|MIC5205|5V降压到3.3V|U3|1
+22|433|通讯模块|U4|1
+23|MPU6050_10|MPU6050_10轴|U5|1
+24|8M|Crystal Oscillator|Y1|1
