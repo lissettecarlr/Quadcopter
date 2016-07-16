@@ -26,4 +26,7 @@
 .\objects\inputcapture_exit.o: ..\..\..\..\lib\math\FIFOBuffer.h
 .\objects\inputcapture_exit.o: ..\..\..\..\lib\onchip\GPIO\GPIO.h
 .\objects\inputcapture_exit.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\inputcapture_exit.o: ..\..\..\..\lib\onchip\I2C\I2C.h
+.\objects\inputcapture_exit.o: ..\..\..\..\lib\onchip\delay\Delay.h
 .\objects\inputcapture_exit.o: ..\..\..\..\lib\onchip\taskManager\TaskManager.h
+.\objects\inputcapture_exit.o: ..\..\..\..\lib\onchip\I2C\Sensor.h

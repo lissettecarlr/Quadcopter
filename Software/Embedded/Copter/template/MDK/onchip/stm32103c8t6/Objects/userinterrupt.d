@@ -24,3 +24,7 @@
 .\objects\userinterrupt.o: ..\..\..\..\lib\math\FIFOBuffer.h
 .\objects\userinterrupt.o: ..\..\..\..\lib\onchip\GPIO\GPIO.h
 .\objects\userinterrupt.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\userinterrupt.o: ..\..\..\..\lib\onchip\I2C\I2C.h
+.\objects\userinterrupt.o: ..\..\..\..\lib\onchip\delay\Delay.h
+.\objects\userinterrupt.o: ..\..\..\..\lib\onchip\taskManager\TaskManager.h
+.\objects\userinterrupt.o: ..\..\..\..\lib\onchip\I2C\Sensor.h

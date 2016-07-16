@@ -25,3 +25,7 @@
 .\objects\usart.o: ..\..\..\..\lib\onchip\interrupt\Interrupt.h
 .\objects\usart.o: .\app\UserInterrupt.h
 .\objects\usart.o: .\app\Configuration.h
+.\objects\usart.o: ..\..\..\..\lib\onchip\I2C\I2C.h
+.\objects\usart.o: ..\..\..\..\lib\onchip\delay\Delay.h
+.\objects\usart.o: ..\..\..\..\lib\onchip\taskManager\TaskManager.h
+.\objects\usart.o: ..\..\..\..\lib\onchip\I2C\Sensor.h

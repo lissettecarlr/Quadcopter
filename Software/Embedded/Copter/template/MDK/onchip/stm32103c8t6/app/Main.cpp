@@ -10,21 +10,24 @@
 #include "ADC.h"
 #include "PWM.h"
 #include "flash.h"
-#include "InputCapture_TIM.h"
-#include "InputCapture_EXIT.h"
+#include "mpu6050.h"
+#include "HMC5883L.h"
+#include "Moto.h"
+#include "attitude.h"
+#include "Control.h"
+#include "Communication.h"
+
+
+
 
 
 //Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
 USART com2(2,115200,false);
-//USART com1(1,115200,false);
-USART com3(3,9600,false);
-//I2C abc(2); 
-//PWM pwm2(TIM2,1,1,1,1,20000);  //开启时钟2的4个通道，频率2Whz
-//PWM pwm3(TIM3,1,1,0,0,20000);  //开启时钟3的2个通道，频率2Whz
-//PWM pwm4(TIM4,1,1,1,0,20000);  //开启时钟4的3个通道，频率2Whz
-//InputCapture_TIM t4(TIM4, 400, true, true, true, true);
-//InputCapture_EXIT ch1(GPIOB,6);
-ADC pressure(1,5,6,8,9); //PA1读取AD值
+Communication COM433(com2); 
+I2C imu(2); 
+mpu6050 IMU(imu);
+PWM pwm4(TIM4,1,1,1,1,24000);
+ADC pressure(1); //PA1读取AD值
 //flash InfoStore(0x08000000+100*MEMORY_PAGE_SIZE,true);     //flash
 
 GPIO ledRedGPIO(GPIOA,11,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
@@ -32,27 +35,58 @@ GPIO ledGREGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 
 int main()
 {
-	double record_UI_Updata=0; //UI更新时间片
+	bool clock = true;  //锁定
 	
-	ledRedGPIO.SetLevel(1);
-	ledGREGPIO.SetLevel(1);
+	double Updata_posture_control=0; //计算欧拉角和自稳时间片 10ms
+	double Receive_data=0;  //接收数据  20ms
+	double Send_data=0; //发送数据  100ms
+	double Updata_hint=0; //更新提示信息状态 500ms
 	
+	ledRedGPIO.SetLevel(0);
+	ledGREGPIO.SetLevel(0);
+	
+	Vector3<int> acc;
+	Vector3<int> gyro;
+	
+	pwm4.SetDuty(0,30,70,100);
+	
+	float v=0;
 	
 	while(1)
 	{			
-		if(tskmgr.TimeSlice(record_UI_Updata,0.1))  //0.1秒更新一次UI
+			ledRedGPIO.SetLevel(0);
+			ledGREGPIO.SetLevel(0);
+			tskmgr.DelayMs(500);
+			ledRedGPIO.SetLevel(1);
+			ledGREGPIO.SetLevel(1);
+			tskmgr.DelayMs(500);
+		
+		if(tskmgr.TimeSlice(Updata_posture_control,0.01) )
 		{
-
+				IMU.Update(false,&acc,&gyro);
 		}
+		if(tskmgr.TimeSlice(Receive_data,0.02) )
+		{
+		
+		}
+		if(tskmgr.TimeSlice(Send_data,0.1) )
+		{
+				com2<<"test!!\n";
+				com2<<acc.x<<acc.y<<acc.z;
+		}
+		if(tskmgr.TimeSlice(Updata_hint,0.5) )
+		{
 			
+			if(clock == true)
+			{}
+			else
+			{}
+			
+			v=pressure.Voltage_I(1,1,3,4.2);
+			com2<<v;
+			
+		}
+		
 	}
 }
 
-
-
-
-
-//X1（5）: 中间值：2.56        最小：（右移）0.008   最大（左移） 3.299
-//Y1（6）:         0.87              （下移）0.005		   （上移） 2.98
-//X2（8）:         0.83              （左移）0.002       （右移） 2.89
-//Y2（9）:         2.27              （上移）0.010       （下移） 3.299  
