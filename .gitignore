@@ -1,0 +1,36 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+#out folder
+out
+listing
+Objects
+listings
+Listings
+History
+
+
+#MDK project file
+JLinkLog.txt
+JLinkSettings.ini
+*.guild_log.htm
+*.uvguix.*
+*_uvoptx.bak
+*_uvprojx.bak
+*.dep
+*.uvoptx
+*.*.bak
+
+
+ProjectTemplate
