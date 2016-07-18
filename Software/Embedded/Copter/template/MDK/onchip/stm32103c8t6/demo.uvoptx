@@ -181,9 +181,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>67</LineNumber>
+          <LineNumber>86</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134230014</Address>
+          <Address>134232434</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -192,7 +192,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>E:\project\寰瀷鍥涜酱鏃犱汉鏈?Software\Embedded\Copter\template\MDK\onchip\stm32103c8t6\app\Main.cpp</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\demo\app/Main.cpp\67</Expression>
+          <Expression>\\demo\app/Main.cpp\86</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow2>

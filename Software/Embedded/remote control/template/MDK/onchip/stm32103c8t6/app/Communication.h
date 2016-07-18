@@ -35,6 +35,8 @@ class Communication{
 	
 	//上锁与解锁
 		bool FlightLockControl(bool flag);
+	//发送遥控器信息给飞机
+		bool SendData2Copter(float Yaw,float Thr,float Roll,float Pitch);
 	
 	
 };

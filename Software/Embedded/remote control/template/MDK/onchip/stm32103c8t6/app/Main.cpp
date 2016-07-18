@@ -13,8 +13,8 @@
 #include "InputCapture_TIM.h"
 #include "InputCapture_EXIT.h"
 #include "HMI.h"
-#include "Joystick.h"
 #include "Communication.h"
+#include "rocker.h"
 
 //Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
 USART com2(2,115200,false);
@@ -33,7 +33,7 @@ GPIO ledRedGPIO(GPIOA,11,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 GPIO ledGREGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 
 HMI MessageShow(com3);
-Joystick RCjoystick(pressure,5,6,8,9);
+rocker RC(pressure,5,6,8,9);//yaw Thr Roll pitch
 Communication Rc2Copter(com2);
 
 int main()
@@ -43,9 +43,10 @@ int main()
 	double record_UI_time_hight=0;//时间更新
 	double record_UI_YRPT_CLOCK=0;//时间更新
 	double record_JoystickUpdata=0;
+	double test=0;
 	
-	u8 LeftJoystickState = 5;
-	u8 NightJoystickState = 5;
+
+
 	
 	ledRedGPIO.SetLevel(1);
 	ledGREGPIO.SetLevel(1);
@@ -86,39 +87,40 @@ int main()
 			}
 			
 			//更新摇杆状态显示
-			MessageShow.outputDirection(UI_DirectionL,LeftJoystickState);
-			MessageShow.outputDirection(UI_DirectionR,NightJoystickState);
-			
+			MessageShow.outputDirection(UI_DirectionL,RC.getLeftState());
+			MessageShow.outputDirection(UI_DirectionR,RC.getNightState());
 			
 		}
 		
 		if(tskmgr.TimeSlice(record_JoystickUpdata,0.1))  //0.1秒更新一次摇杆状态
 		{
-				RCjoystick.Updata();
-				LeftJoystickState = RCjoystick.getLeftState();
-				NightJoystickState = RCjoystick.getNightState();
-			//遥控器状态判断  外八解锁，内八上锁
-			  if(LeftJoystickState == 7 && NightJoystickState == 9) //解
-				{
-						Rc2Copter.FlightLockControl(false);
-				}
-				else if(LeftJoystickState == 9 && NightJoystickState == 7)
-				{
-						Rc2Copter.FlightLockControl(true);
-				}
-				else if(LeftJoystickState == 1 && NightJoystickState == 3 && Rc2Copter.ClockState == 1) //外八且上锁
-				{
-						
-				}
-				else//如果处于解锁状态则发送数据
-				{
-						if(Rc2Copter.ClockState == 0)
+  				if(RC.Updata())
+					{
+					//遥控器状态判断  外八解锁，内八上锁
+						if(RC.getLeftState() == 7 && RC.getNightState() == 9) //解
 						{
-							//发送数据
+								Rc2Copter.FlightLockControl(false);
 						}
-				}
-				
+						else if(RC.getLeftState() == 9 && RC.getNightState() == 7)
+						{
+								Rc2Copter.FlightLockControl(true);
+						}
+						else if(RC.getLeftState() == 1 && RC.getNightState() == 3 && Rc2Copter.ClockState == 1) //外八且上锁
+						{
+								
+						}
+						else//如果处于解锁状态则发送数据
+						{
+								if(Rc2Copter.ClockState == 0)
+								{
+									//发送数据
+								}
+						}
+															
+					}			
 		}
+		if(tskmgr.TimeSlice(test,0.1))  
+			com2<<pressure[5]<<"\t"<<pressure[6]<<"\t"<<pressure[8]<<"\t"<<pressure[9]<<"\n";
 		
 		
 	}
@@ -128,7 +130,7 @@ int main()
 
 
 
-//X1（5）: 中间值：2.56        最小：（右移）0.008   最大（左移） 3.299
-//Y1（6）:         0.87              （下移）0.005		   （上移） 2.98
+//X1（5）: 中间值：        				最小：（右移）0.008   最大（左移） 3.299
+//Y1（6）:         0.87              （下移）0.16		   （上移） 2.98
 //X2（8）:         0.83              （左移）0.002       （右移） 2.89
 //Y2（9）:         2.27              （上移）0.010       （下移） 3.299  

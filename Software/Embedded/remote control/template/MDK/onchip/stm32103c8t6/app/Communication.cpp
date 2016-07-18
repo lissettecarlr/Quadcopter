@@ -63,13 +63,17 @@ bool Communication::DataListening()
 										ClockState=true;
 								 
 								 RcvTime =(int)data[11]<<8+data[12];
+								 
+								 return true;
 																 
 							}
 							else
 								return false;
 						}
 						else//其他命令字
-						{}
+						{
+								return true;
+						}
 						
 					}
 					else

@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\lib\math;..\..\..\..\lib\onchip\ADC;..\..\..\..\lib\onchip\capture;..\..\..\..\lib\onchip\delay;..\..\..\..\lib\onchip\EXTI;..\..\..\..\lib\onchip\flash;..\..\..\..\lib\onchip\GPIO;..\..\..\..\lib\onchip\I2C;..\..\..\..\lib\onchip\interrupt;..\..\..\..\lib\onchip\PWM;..\..\..\..\lib\onchip\taskManager;..\..\..\..\lib\onchip\timer;..\..\..\..\lib\onchip\USART;.\app;..\..\..\..\lib\offchip\LED;..\..\..\..\lib\offchip\HMI;..\..\..\..\lib\offchip\Joystick</IncludePath>
+              <IncludePath>..\..\..\..\lib\math;..\..\..\..\lib\onchip\ADC;..\..\..\..\lib\onchip\capture;..\..\..\..\lib\onchip\delay;..\..\..\..\lib\onchip\EXTI;..\..\..\..\lib\onchip\flash;..\..\..\..\lib\onchip\GPIO;..\..\..\..\lib\onchip\I2C;..\..\..\..\lib\onchip\interrupt;..\..\..\..\lib\onchip\PWM;..\..\..\..\lib\onchip\taskManager;..\..\..\..\lib\onchip\timer;..\..\..\..\lib\onchip\USART;.\app;..\..\..\..\lib\offchip\LED;..\..\..\..\lib\offchip\HMI;..\..\..\..\lib\offchip\Joystick;..\..\..\..\lib\offchip\rocker_potentiometer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -487,6 +487,11 @@
               <FileName>Joystick.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\lib\offchip\Joystick\Joystick.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>rocker.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\lib\offchip\rocker_potentiometer\rocker.cpp</FilePath>
             </File>
           </Files>
         </Group>

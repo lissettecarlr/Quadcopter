@@ -5,7 +5,7 @@
   * @date    10/26/2015          
   * @brief   TIMx	CH1		CH2		CH3	 	CH4
 	*		        1		PA8		PA9		PA10 	PA11
-	*	          	2		PA0		PA1		PA2		PA3
+	*	          2		PA0		PA1		PA2		PA3
 	*		        3		PA6		PA7		PB0		PB1
 	*		        4		PB6		PB7		PB8		PB9
 	* @attention 	USART1.Rx = TIM1.CH2, USART1.Tx = TIM1.CH3
