@@ -36,7 +36,10 @@
 .\objects\main.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\main.o: ..\..\..\..\lib\offchip\HMC5883L\HMC5883L.h
 .\objects\main.o: ..\..\..\..\lib\offchip\Moto\Moto.h
-.\objects\main.o: app\attitude.h
 .\objects\main.o: app\Control.h
 .\objects\main.o: app\Communication.h
 .\objects\main.o: ..\..\..\..\lib\math\CRC.h
+.\objects\main.o: app\IMU.h
+.\objects\main.o: app\attitude.h
+.\objects\main.o: ..\..\..\..\lib\math\Matrix3.h
+.\objects\main.o: ..\..\..\..\lib\math\Quaternion.h

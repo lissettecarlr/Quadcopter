@@ -144,7 +144,7 @@ class HMC5883L:public Sensor
 		/////////////////////
 		///Initialization
 		/////////////////////
-		bool Init(bool wait=false);
+		virtual bool Init(bool wait=false);
 	
 		///////////////////////
 		///Status of HMC5883L
@@ -193,14 +193,14 @@ class HMC5883L:public Sensor
 		///@return if wait set to true,MOD_READY:update succed MOD_ERROR:update fail  MOD_BUSY:Update interval is too short
 		///        if wait set to false,MOD_ERROR:发送更新数据失败 MOD_READY:命令将会发送（具体的发送时间取决于队列中的排队的命令的数量）MOD_BUSY:Update interval is too short
 		/////////////////////
-		u8 Update(bool wait=false,Vector3<int> *mag=0);
+		 u8 Update(bool wait=false,Vector3<int> *mag=0);
 		
 		
 		///////////////////////
 		///Get magnetometer's raw data from memory 
 		///@retval magnetometer's raw data
 		///////////////////////
-		Vector3<int> GetDataRaw();
+		 Vector3<int> GetDataRaw();
 		
 		//////////////////////////////
 		///Get heading of magnetometer
@@ -212,7 +212,7 @@ class HMC5883L:public Sensor
 			////////////////////////////////
 		///获取两次更新值之间的时间间隔
 		////////////////////////////////
-		double GetUpdateInterval();
+		 double GetUpdateInterval();
 		
 };
 #endif

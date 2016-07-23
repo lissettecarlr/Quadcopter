@@ -13,10 +13,9 @@
 #include "mpu6050.h"
 #include "HMC5883L.h"
 #include "Moto.h"
-#include "attitude.h"
 #include "Control.h"
 #include "Communication.h"
-
+#include "IMU.h"
 
 
 
@@ -24,14 +23,19 @@
 //Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
 USART com2(2,115200,false);
 Communication COM433(com2); 
-I2C imu(2); 
-mpu6050 IMU(imu);
+I2C i2c(2);
+
+mpu6050 MPU6050(i2c);
+HMC5883L mag(i2c);
+
 PWM pwm4(TIM4,1,1,1,1,24000);
 ADC pressure(1); //PA1读取AD值
 //flash InfoStore(0x08000000+100*MEMORY_PAGE_SIZE,true);     //flash
 
 GPIO ledRedGPIO(GPIOA,11,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 GPIO ledGREGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
+
+IMU imu(MPU6050,mag);
 
 int main()
 {
@@ -45,12 +49,11 @@ int main()
 	ledRedGPIO.SetLevel(0);
 	ledGREGPIO.SetLevel(0);
 	
-	Vector3<int> acc;
-	Vector3<int> gyro;
+//	Vector3<int> acc;
+//	Vector3<int> gyro;
+	Vector3f mAngle;
 	
 	pwm4.SetDuty(0,30,70,100);
-	
-	float v=0;
 	
 	while(1)
 	{			
@@ -63,7 +66,7 @@ int main()
 		
 		if(tskmgr.TimeSlice(Updata_posture_control,0.01) )
 		{
-				IMU.Update(false,&acc,&gyro);
+				
 		}
 		if(tskmgr.TimeSlice(Receive_data,0.02) )
 		{
@@ -71,8 +74,7 @@ int main()
 		}
 		if(tskmgr.TimeSlice(Send_data,0.1) )
 		{
-				com2<<"test!!\n";
-				com2<<acc.x<<acc.y<<acc.z;
+		
 		}
 		if(tskmgr.TimeSlice(Updata_hint,0.5) )
 		{
@@ -81,9 +83,7 @@ int main()
 			{}
 			else
 			{}
-			
-			v=pressure.Voltage_I(1,1,3,4.2);
-			com2<<v;
+		
 			
 		}
 		

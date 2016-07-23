@@ -3,6 +3,19 @@
 
 #include "stm32f10x.h"
 
+
+//#define DEBUG
+
+#ifdef DEBUG
+#define LOG(str) com<<str
+#define DEBUG_LOG com
+#include "USART.h"
+extern USART com;
+#else
+#define LOG(str) ;
+#endif
+
+
 //~~~~~~~~~~~~~~~USART Congfigure~~~~~~~~~~~//
 #define USE_USART              //---USART---//
 #define USE_USART1             //---USART1--//

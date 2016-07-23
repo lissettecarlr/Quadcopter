@@ -32,6 +32,7 @@
 #include "stm32f10x.h"
 #include "I2C.h"
 #include "Vector3.h"
+
 #ifdef MPU6050_USE_TASKMANAGER
 	#include "TaskManager.h"
 #else
@@ -72,6 +73,11 @@ private:
 	u16 mMaxUpdateFrequency;
 #endif
 	Mpu6050Data mData;
+
+	bool mIsGyrCalibrating;      //角速度校准
+	Vector3<int> mGyroOffset;    //角速度误差校准值
+	Vector3<int> mGyroRaw;       //角速度原始值
+	bool mIsGyrCalibrated;       //加速度是否已经校准完毕
 public:
 
 
@@ -103,7 +109,7 @@ public:
 	///@param wait if wait until the command in queue execute complete
 	///@retval -1:检测到硬件 -2:检测到部分硬件 -3:正在检测 -0:未检测到硬件
 	//////////////////////////
-		u8 Init(bool wait=false);//初始化IMU
+	u8 Init(bool wait=false);//初始化IMU
 
 
 #ifdef MPU6050_USE_TASKMANAGER
@@ -130,14 +136,14 @@ public:
 	///获取加速度原始值
 	///@retval 返回三轴的加速度值
 	///////////////////////////////
-		Vector3<int> GetAccRaw();//获取加速度原始值
+	Vector3<int> GetAccRaw();//获取加速度原始值
 
 
 	////////////////////////////////
 	///获取角速度原始值
 	///@retval 返回三轴的角速度值 
 	///////////////////////////////
-		Vector3<int> GetGyrRaw();//获取角速度原始值
+	Vector3<int> GetGyrRaw();//获取角速度原始值
 
 		
 	////////////////////////////////
@@ -146,14 +152,32 @@ public:
 	///////////////////////////////
 		int GetTempRaw();//获取加速度计温度原始值
 	
-
 	////////////////////////////////
-	///获取结算过后的三轴的角度值
-	///@retval 返回结算过后的三轴的角度值
-	///////////////////////////////	
-		Vector3<float> Get_Angle();//通过加速度、角速度、磁力计解算成角度
+	///获取角速度值
+	///@retval 返回三轴的角速度值 
+	///////////////////////////////
+	Vector3f GetGyr();//获取角速度原始值
 		
-		
+	////////////////////////////////
+	///获取加速度值
+	///@retval 返回三轴的加速度值
+	///////////////////////////////
+	Vector3f GetAcc();//获取加速度原始值
+
+	///////////////////////////
+	///角速度校准值
+	//////////////////////////
+	Vector3<int> GetGyrOffset();
+	
+	/////////////////////////////
+	///角速度校准是否完毕
+	//////////////////////////////
+	bool IsGyroCalibrated()
+	{
+		return mIsGyrCalibrated;
+	}
+	
+	
 	//////////////////////////////
 	///从硬件更新加速度、角速度值到内存
 	///@param wait if wait until the command in queue execute complete
@@ -162,9 +186,27 @@ public:
 	///@return if wait set to true,MOD_READY:update succed MOD_ERROR:update fail  MOD_BUSY:Update interval is too short
 	///        if wait set to false,MOD_ERROR:发送更新数据失败 MOD_READY:命令将会发送（具体的发送时间取决于队列中的排队的命令的数量）MOD_BUSY:Update interval is too short
 	//////////////////////////////
-		u8 Update(bool wait=false,Vector3<int> *acc=0, Vector3<int> *gyro=0);
+	u8 Update(bool wait=false,Vector3<int> *acc=0, Vector3<int> *gyro=0);
 
 
+	////////////////////////
+	///开始角速度校准
+	///@attention 校准时不要移动传感器
+	/////////////////////////
+	void StartGyroCalibrate();
+	
+	////////////////////////
+	///停止角速度校准
+	///@attention 校准时不要移动传感器
+	/////////////////////////
+	void StopGyroCalibrate();
+	
+	
+	////////////////////
+	///是否正在校准角速度
+	///////////////////////
+	bool IsGyroCalibrating();
+	
 	///////////////////////////////////
 	///检测mpu6050状态,状态来自于调用update函数之后
 	///@retval 0:失去连接   1:正常状态     2:未初始化
