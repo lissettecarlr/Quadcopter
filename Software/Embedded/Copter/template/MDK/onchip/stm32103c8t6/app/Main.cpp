@@ -23,7 +23,7 @@
 //Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
 USART com(1,115200,false);
 USART com2(2,115200,false);
-Communication COM433(com2); 
+Communication COM433(com); 
 I2C i2c(2);
 
 mpu6050 MPU6050(i2c);
@@ -85,8 +85,9 @@ int main()
 			//
 			if(imu.IsCalibrated())
 			{
-				com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
+				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
 				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
+				COM433.SendCopterState(imu.mAngle.y*RtA,imu.mAngle.x*RtA,imu.mAngle.z*RtA,0,0,0);
 			}
 		}
 		if(tskmgr.TimeSlice(Updata_hint,0.5) )

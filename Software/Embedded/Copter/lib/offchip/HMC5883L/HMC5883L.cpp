@@ -245,4 +245,59 @@ bool HMC5883L::SetCalibrateRatioBias(float RatioX,float RatioY,float RatioZ,floa
 	return true;
 }
 
-
+bool HMC5883L::Calibrate(double SpendTime)
+{
+		int DataSize[6]={0}; //用于存放XYZ轴的最大最小值
+		int NowData[3];
+		int OldData[3];
+		double TempTime=0;
+		
+		while(1)
+		{
+			NowData[0]=GetDataRaw().x;
+			NowData[1]=GetDataRaw().y;
+			NowData[2]=GetDataRaw().z;
+			if(DataSize[0] == 0) //赋初值
+			{
+					DataSize[0] = NowData[0];
+					DataSize[1] = NowData[0];
+				
+					DataSize[2] = NowData[1];
+					DataSize[3] = NowData[1];
+				
+					DataSize[4] = NowData[2];
+					DataSize[5] = NowData[2];
+			}
+							
+			if(NowData[0]!=OldData[0] || NowData[1]!=OldData[1] || NowData[2]!=OldData[2])
+			{
+					TempTime = tskmgr.Time();
+				//更新X轴尺寸
+				if(NowData[0] > DataSize[1])
+					DataSize[1] = NowData[0];
+				if(NowData[0] < DataSize[0])
+					DataSize[0] = NowData[0];
+				
+				//更新Y轴尺寸
+				if(NowData[1] > DataSize[3])
+					DataSize[3] = NowData[1];
+				if(NowData[1] < DataSize[2])
+					DataSize[2] = NowData[1];
+				
+				//更新Z轴尺寸
+				if(NowData[2] > DataSize[5])
+					DataSize[5] = NowData[2];
+				if(NowData[2] < DataSize[4])
+					DataSize[4] = NowData[2];
+			//	com<<DataSize[0]<<"\t"<<DataSize[1]<<"\t"<<DataSize[2]<<"\t"<<DataSize[3]<<"\t"<<DataSize[4]<<"\t"<<DataSize[5]<<"\n";
+			}
+			if(tskmgr.Time() - TempTime >=5)
+			{
+//					com<<"cailibret end ------\n";
+					break;
+			}			
+			OldData[0]=NowData[0];
+			OldData[1]=NowData[1];
+			OldData[2]=NowData[2];
+		}
+}

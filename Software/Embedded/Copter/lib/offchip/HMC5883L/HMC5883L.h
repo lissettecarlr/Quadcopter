@@ -131,6 +131,8 @@ class HMC5883L:public Sensor
 		I2C *mI2C;
 		unsigned char mHealth;
 		HMC5883DataTypeDef mData;
+	
+		bool mIsCalibrate;
 		float mRatioX;
 		float mRatioY;
 		float mRatioZ;
@@ -225,6 +227,7 @@ class HMC5883L:public Sensor
 		 //设置校准的值 X的比例系数 Y的比例系数 X需加的常数 Y需加的常数
 		 bool SetCalibrateRatioBias(float RatioX,float RatioY,float BiasX,float BiasY);
 		 bool SetCalibrateRatioBias(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ);
+		 bool Calibrate(double SpendTime);
 		
 };
 #endif
