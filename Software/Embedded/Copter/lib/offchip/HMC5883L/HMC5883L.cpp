@@ -43,7 +43,7 @@ bool HMC5883L::Init(bool wait)
 	}
 	
 	//设置校准的比例系数和常数
-	SetCalibrateRatioBias(1.02,1,213.76,-201.5);
+	SetCalibrateRatioBias(1.02,1,1.09,213.76,-201.5,125.16);
 	return true;
 }
 

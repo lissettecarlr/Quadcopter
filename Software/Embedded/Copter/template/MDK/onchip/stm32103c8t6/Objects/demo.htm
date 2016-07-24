@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\demo.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\demo.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Sun Jul 24 15:46:40 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Sun Jul 24 15:54:03 2016
 <BR><P>
 <H3>Maximum Stack Usage =        544 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1733,19 +1733,19 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IMU::init()
 </UL>
 
-<P><STRONG><a name="[110]"></a>HMC5883L::SetCalibrateRatioBias(float, float, float, float)</STRONG> (Thumb, 28 bytes, Stack size 12 bytes, hmc5883l.o(i._ZN8HMC5883L21SetCalibrateRatioBiasEffff))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = HMC5883L::SetCalibrateRatioBias(float, float, float, float)
+<P><STRONG><a name="[110]"></a>HMC5883L::SetCalibrateRatioBias(float, float, float, float, float, float)</STRONG> (Thumb, 24 bytes, Stack size 20 bytes, hmc5883l.o(i._ZN8HMC5883L21SetCalibrateRatioBiasEffffff))
+<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = HMC5883L::SetCalibrateRatioBias(float, float, float, float, float, float)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[45]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HMC5883L::Init(bool)
 </UL>
 
-<P><STRONG><a name="[45]"></a>HMC5883L::Init(bool)</STRONG> (Thumb, 176 bytes, Stack size 40 bytes, hmc5883l.o(i._ZN8HMC5883L4InitEb))
+<P><STRONG><a name="[45]"></a>HMC5883L::Init(bool)</STRONG> (Thumb, 184 bytes, Stack size 40 bytes, hmc5883l.o(i._ZN8HMC5883L4InitEb))
 <BR><BR>[Stack]<UL><LI>Max Depth = 256<LI>Call Chain = HMC5883L::Init(bool) &rArr; I2C::WaitTransmitComplete(bool, bool, bool) &rArr; I2C::Init() &rArr; I2C::I2C_CHACK_BUSY_FIX(unsigned, unsigned short, unsigned short) &rArr; I2C::I2CGPIODeInit(unsigned short, unsigned short) &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C::WaitTransmitComplete(bool, bool, bool)
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C::StartCMDQueue()
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C::AddCommand(unsigned char, unsigned char, unsigned char*, unsigned char, unsigned char*, unsigned char, bool, Sensor*)
-<LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HMC5883L::SetCalibrateRatioBias(float, float, float, float)
+<LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HMC5883L::SetCalibrateRatioBias(float, float, float, float, float, float)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HMC5883L::HMC5883L(I2C&)
 </UL>
