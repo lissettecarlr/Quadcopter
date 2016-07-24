@@ -24,3 +24,5 @@
 .\objects\communication.o: ..\..\..\..\lib\onchip\GPIO\GPIO.h
 .\objects\communication.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\communication.o: ..\..\..\..\lib\math\CRC.h
+.\objects\communication.o: ..\..\..\..\lib\math\Vector3.h
+.\objects\communication.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\math.h

@@ -181,20 +181,43 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>86</LineNumber>
+          <LineNumber>196</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134232434</Address>
+          <Address>134235598</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\project\寰瀷鍥涜酱鏃犱汉鏈?Software\Embedded\Copter\template\MDK\onchip\stm32103c8t6\app\Main.cpp</Filename>
+          <Filename>E:\project\寰瀷鍥涜酱鏃犱汉鏈?Software\Embedded\Copter\lib\offchip\MPU6050\mpu6050.cpp</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\demo\app/Main.cpp\86</Expression>
+          <Expression>\\demo\../../../../lib/offchip/MPU6050/mpu6050.cpp\196</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>186</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134235404</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>E:\project\寰瀷鍥涜酱鏃犱汉鏈?Software\Embedded\Copter\lib\offchip\MPU6050\mpu6050.cpp</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\demo\../../../../lib/offchip/MPU6050/mpu6050.cpp\186</Expression>
         </Bp>
       </Breakpoint>
+      <WatchWindow1>
+        <Ww>
+          <count>0</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gyroCalibrateCnt</ItemText>
+        </Ww>
+      </WatchWindow1>
       <WatchWindow2>
         <Ww>
           <count>0</count>

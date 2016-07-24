@@ -10,9 +10,9 @@
 
 class IMU{
 	private:
-		mpu6050 &mIns;
-		HMC5883L &mMag;
-		AttitudeCalculation mAHRS_Algorithm;
+		mpu6050 &mIns; //加速度计和陀螺仪
+		HMC5883L &mMag;//磁力计
+		AttitudeCalculation mAHRS_Algorithm; //姿态解算
 		bool mIsCalibrating;
 	
 	public:
@@ -20,6 +20,7 @@ class IMU{
 		IMU(mpu6050 &Ins,HMC5883L &Mag);
 		bool init();
 		bool UpdateIMU(); 
+		bool IsCalibrated();
 	
 };
 

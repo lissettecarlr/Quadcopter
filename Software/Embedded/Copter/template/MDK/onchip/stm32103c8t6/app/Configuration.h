@@ -4,7 +4,7 @@
 #include "stm32f10x.h"
 
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define LOG(str) com<<str

@@ -26,3 +26,7 @@
 .\objects\mpu6050.o: ..\..\..\..\lib\onchip\I2C\Sensor.h
 .\objects\mpu6050.o: ..\..\..\..\lib\math\Vector3.h
 .\objects\mpu6050.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\mpu6050.o: .\app\Configuration.h
+.\objects\mpu6050.o: ..\..\..\..\lib\onchip\USART\USART.h
+.\objects\mpu6050.o: ..\..\..\..\lib\onchip\GPIO\GPIO.h
+.\objects\mpu6050.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\stdbool.h

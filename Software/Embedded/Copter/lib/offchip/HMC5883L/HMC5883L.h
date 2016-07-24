@@ -131,9 +131,17 @@ class HMC5883L:public Sensor
 		I2C *mI2C;
 		unsigned char mHealth;
 		HMC5883DataTypeDef mData;
+		float mRatioX;
+		float mRatioY;
+		float mRatioZ;
+		float mBiasX;
+		float mBiasY;
+		float mBiasZ;
+	
 	#ifdef HMC5883L_USE_TASKMANAGER
 		u16 mMaxUpdateFrequency;
 	#endif
+	
 	public:
 		
 		#ifdef HMC5883L_USE_TASKMANAGER
@@ -213,6 +221,10 @@ class HMC5883L:public Sensor
 		///获取两次更新值之间的时间间隔
 		////////////////////////////////
 		 double GetUpdateInterval();
+		 
+		 //设置校准的值 X的比例系数 Y的比例系数 X需加的常数 Y需加的常数
+		 bool SetCalibrateRatioBias(float RatioX,float RatioY,float BiasX,float BiasY);
+		 bool SetCalibrateRatioBias(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ);
 		
 };
 #endif

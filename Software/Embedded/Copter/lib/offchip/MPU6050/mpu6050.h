@@ -32,6 +32,7 @@
 #include "stm32f10x.h"
 #include "I2C.h"
 #include "Vector3.h"
+#include "Configuration.h"
 
 #ifdef MPU6050_USE_TASKMANAGER
 	#include "TaskManager.h"

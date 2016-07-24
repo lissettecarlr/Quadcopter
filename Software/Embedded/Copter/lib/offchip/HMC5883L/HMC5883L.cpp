@@ -41,6 +41,9 @@ bool HMC5883L::Init(bool wait)
 		else
 			this->mHealth=1;
 	}
+	
+	//设置校准的比例系数和常数
+	SetCalibrateRatioBias(1.02,1,213.76,-201.5);
 	return true;
 }
 
@@ -184,8 +187,8 @@ u8 HMC5883L::Update(bool wait,Vector3<int> *mag)
 Vector3<int>  HMC5883L::GetDataRaw()
 {
 	Vector3<int> temp;
-	temp.x=((signed short int)(mData.mag_XH<<8)) | mData.mag_XL;
-	temp.y=((signed short int)(mData.mag_YH<<8)) | mData.mag_YL;
+	temp.x= mRatioX *(((signed short int)(mData.mag_XH<<8)) | mData.mag_XL) +mBiasX;
+	temp.y= mRatioY *(((signed short int)(mData.mag_YH<<8)) | mData.mag_YL) +mBiasY;
 	temp.z=((signed short int)(mData.mag_ZH<<8)) | mData.mag_ZL;
 	return temp;
 }
@@ -219,4 +222,27 @@ double HMC5883L::GetUpdateInterval()
 {
 	return Interval();
 }
+
+bool HMC5883L::SetCalibrateRatioBias(float RatioX,float RatioY,float BiasX,float BiasY)
+{
+		mRatioX=RatioX;
+		mRatioY=RatioY;
+		mRatioZ=1;
+		mBiasX=BiasX;
+		mBiasY=BiasY;
+		mBiasZ=0;
+	return true;
+}
+
+bool HMC5883L::SetCalibrateRatioBias(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ)
+{
+		mRatioX=RatioX;
+		mRatioY=RatioY;
+		mRatioZ=RatioZ;
+		mBiasX=BiasX;
+		mBiasY=BiasY;
+		mBiasZ=BiasZ;
+	return true;
+}
+
 
