@@ -26,3 +26,7 @@
 .\objects\hmc5883l.o: ..\..\..\..\lib\onchip\I2C\Sensor.h
 .\objects\hmc5883l.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\hmc5883l.o: ..\..\..\..\lib\math\Vector3.h
+.\objects\hmc5883l.o: .\app\Configuration.h
+.\objects\hmc5883l.o: ..\..\..\..\lib\onchip\USART\USART.h
+.\objects\hmc5883l.o: ..\..\..\..\lib\onchip\GPIO\GPIO.h
+.\objects\hmc5883l.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\stdbool.h

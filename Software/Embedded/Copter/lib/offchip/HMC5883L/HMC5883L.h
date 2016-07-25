@@ -12,6 +12,7 @@
 #include "math.h"
 #include "Vector3.h"
 #include "TaskManager.h"
+#include "Configuration.h"
 
 //---------------HMC5883L Register Address ---------------------------
 #define HMC5883_ADDRESS            0x3C  //       HMC     7-bit address:  0x1E    ADRESS+WRITE->0X3C  ADRESS+READ->0X3D
@@ -212,6 +213,8 @@ class HMC5883L:public Sensor
 		///////////////////////
 		 Vector3<int> GetDataRaw();
 		
+		 Vector3<int> GetNoCalibrateDataRaw();
+		
 		//////////////////////////////
 		///Get heading of magnetometer
 		///@retval heading angle 
@@ -224,10 +227,17 @@ class HMC5883L:public Sensor
 		////////////////////////////////
 		 double GetUpdateInterval();
 		 
-		 //设置校准的值 X的比例系数 Y的比例系数 X需加的常数 Y需加的常数
+		 //两轴校准设置校准的值 X的比例系数 Y的比例系数 X需加的常数 Y需加的常数
 		 bool SetCalibrateRatioBias(float RatioX,float RatioY,float BiasX,float BiasY);
+		 
+		 //三轴校准
 		 bool SetCalibrateRatioBias(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ);
+		 
+		 //三轴校准函数，调用之后，拿着你的小飞机绕八字，传入的参数是当你每个轴都到达峰值而不在更新，这个时间之后就退出校准
 		 bool Calibrate(double SpendTime);
+		 
+		 //返回磁力计是否经过校准
+		 bool IsCalibrated();
 		
 };
 #endif

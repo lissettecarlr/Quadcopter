@@ -26,7 +26,8 @@ class Communication{
 	 float RcvTargetRoll;
 	 float RcvTargetPitch;
 	 float RcvTargetThr;
- 	 u8 RcvTargetHight;
+ 	 u32 RcvTargetHight;
+	
 	 bool ClockState; //1为锁定，0为解锁
 		
 	 bool Acc_Calibrate;
@@ -34,12 +35,9 @@ class Communication{
 	 bool Mag_Calibrate;
 	 bool PidUpdata;
 	
-	
-	
-	
-	
 	 Communication(USART &com);
 	 bool DataListening();//数据接收监听
+	
 	//上锁与解锁
 	 bool FlightLockControl(bool flag);
 	
@@ -54,7 +52,7 @@ class Communication{
 		//发送PID数据
 	bool SendPID(float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d);
 		//接收应答 需要应答的功能字和校验和
-	bool reply(u8 difference,u8 sum);	
+	bool reply(u8 difference,u8 sum);
 	
 };
 

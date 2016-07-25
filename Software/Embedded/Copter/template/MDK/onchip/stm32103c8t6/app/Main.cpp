@@ -78,6 +78,18 @@ int main()
 		if(tskmgr.TimeSlice(Receive_data,0.02) ) 
 		{
 			//接收
+			COM433.DataListening();
+			if(COM433.Mag_Calibrate == true) //磁力计校准
+			{
+				com<<"mag Calibrating - - - - -";
+				if(mag.Calibrate(10)) //10s的磁力计校准
+				{
+				 com<<"mag Calibrate succeed - - - - -";
+				}
+				else
+				 com<<"mag Calibrate error - - - - -"	;
+				COM433.Mag_Calibrate = false;
+			}
 		}
 		if(tskmgr.TimeSlice(Send_data,0.1) )
 		{
@@ -87,7 +99,7 @@ int main()
 			{
 				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
 				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
-				COM433.SendCopterState(imu.mAngle.y*RtA,imu.mAngle.x*RtA,imu.mAngle.z*RtA,0,0,0);
+				COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,0,0,0);
 			}
 		}
 		if(tskmgr.TimeSlice(Updata_hint,0.5) )

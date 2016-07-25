@@ -44,6 +44,7 @@ bool HMC5883L::Init(bool wait)
 	
 	//设置校准的比例系数和常数
 	SetCalibrateRatioBias(1.02,1,1.09,213.76,-201.5,125.16);
+	mIsCalibrate = false; 
 	return true;
 }
 
@@ -189,6 +190,15 @@ Vector3<int>  HMC5883L::GetDataRaw()
 	Vector3<int> temp;
 	temp.x= mRatioX *(((signed short int)(mData.mag_XH<<8)) | mData.mag_XL) +mBiasX;
 	temp.y= mRatioY *(((signed short int)(mData.mag_YH<<8)) | mData.mag_YL) +mBiasY;
+	temp.z= mRatioZ *(((signed short int)(mData.mag_ZH<<8)) | mData.mag_ZL) +mBiasZ;
+	return temp;
+}
+
+Vector3<int> HMC5883L::GetNoCalibrateDataRaw()
+{
+	Vector3<int> temp;
+	temp.x= (((signed short int)(mData.mag_XH<<8)) | mData.mag_XL) ;
+	temp.y= (((signed short int)(mData.mag_YH<<8)) | mData.mag_YL) ;
 	temp.z=((signed short int)(mData.mag_ZH<<8)) | mData.mag_ZL;
 	return temp;
 }
@@ -247,18 +257,25 @@ bool HMC5883L::SetCalibrateRatioBias(float RatioX,float RatioY,float RatioZ,floa
 
 bool HMC5883L::Calibrate(double SpendTime)
 {
-		int DataSize[6]={0}; //用于存放XYZ轴的最大最小值
+		int DataSize[6]={0}; //用于存放XYZ轴的最大最小值 顺序 Xmin Xmax Ymin Ymax Zmin Zmax
 		int NowData[3];
 		int OldData[3];
 		double TempTime=0;
-		
+		double UpdataTime=0;
+	
 		while(1)
 		{
-			NowData[0]=GetDataRaw().x;
-			NowData[1]=GetDataRaw().y;
-			NowData[2]=GetDataRaw().z;
-			if(DataSize[0] == 0) //赋初值
+			if(tskmgr.TimeSlice(UpdataTime,0.01))
 			{
+				if(Update()!=MOD_ERROR)
+				{
+					NowData[0]=GetNoCalibrateDataRaw().x;
+					NowData[1]=GetNoCalibrateDataRaw().y;
+					NowData[2]=GetNoCalibrateDataRaw().z;
+					
+				if(DataSize[0] == 0) //赋初值
+				{
+					TempTime = tskmgr.Time();
 					DataSize[0] = NowData[0];
 					DataSize[1] = NowData[0];
 				
@@ -267,37 +284,134 @@ bool HMC5883L::Calibrate(double SpendTime)
 				
 					DataSize[4] = NowData[2];
 					DataSize[5] = NowData[2];
-			}
-							
+				}
+				
 			if(NowData[0]!=OldData[0] || NowData[1]!=OldData[1] || NowData[2]!=OldData[2])
-			{
-					TempTime = tskmgr.Time();
+				{
+					
 				//更新X轴尺寸
 				if(NowData[0] > DataSize[1])
+				{
 					DataSize[1] = NowData[0];
+					TempTime = tskmgr.Time();
+				}
 				if(NowData[0] < DataSize[0])
+				{
 					DataSize[0] = NowData[0];
+					TempTime = tskmgr.Time();
+				}
 				
 				//更新Y轴尺寸
 				if(NowData[1] > DataSize[3])
+				{
 					DataSize[3] = NowData[1];
+					TempTime = tskmgr.Time();
+				}
 				if(NowData[1] < DataSize[2])
+				{
 					DataSize[2] = NowData[1];
+					TempTime = tskmgr.Time();
+				}
 				
 				//更新Z轴尺寸
 				if(NowData[2] > DataSize[5])
+				{
 					DataSize[5] = NowData[2];
+					TempTime = tskmgr.Time();
+				}
 				if(NowData[2] < DataSize[4])
+				{
 					DataSize[4] = NowData[2];
-			//	com<<DataSize[0]<<"\t"<<DataSize[1]<<"\t"<<DataSize[2]<<"\t"<<DataSize[3]<<"\t"<<DataSize[4]<<"\t"<<DataSize[5]<<"\n";
-			}
-			if(tskmgr.Time() - TempTime >=5)
-			{
-//					com<<"cailibret end ------\n";
-					break;
+					TempTime = tskmgr.Time();
+				}
+				
+				LOG(DataSize[0]);
+				LOG("\t");
+				LOG(DataSize[1]);
+				LOG("\t");
+				LOG(DataSize[2]);
+				LOG("\t");
+				LOG(DataSize[3]);
+				LOG("\t");
+				LOG(DataSize[4]);
+				LOG("\t");		
+				LOG(DataSize[5]);				
+				LOG("\n");
+				
+				}
+				
+				if(tskmgr.Time() - TempTime >=SpendTime)
+				{
+						//开始计算比例和偏移
+						int X_MaxCutMin = DataSize[1] - DataSize[0];
+						int Y_MaxCutMin = DataSize[3] - DataSize[2];
+						int Z_MaxCutMin = DataSize[5] = DataSize[4];
+					  
+						if(X_MaxCutMin > Y_MaxCutMin && X_MaxCutMin > Z_MaxCutMin)
+						{
+							mRatioX = 1;
+							mRatioY = (float)X_MaxCutMin/Y_MaxCutMin;
+							mRatioZ = (float)X_MaxCutMin/Z_MaxCutMin;				
+						}
+						else if(Y_MaxCutMin > X_MaxCutMin && Y_MaxCutMin > Z_MaxCutMin)
+						{
+							mRatioX = (float)Y_MaxCutMin/Z_MaxCutMin;
+							mRatioY = 1;
+							mRatioZ = (float)Y_MaxCutMin/Z_MaxCutMin;
+						}
+						else
+						{
+							mRatioX = (float)Z_MaxCutMin/X_MaxCutMin;
+							mRatioY = (float)Z_MaxCutMin/Y_MaxCutMin;
+							mRatioZ = 1;							
+						}
+						
+							mBiasX = mRatioX*(X_MaxCutMin*0.5f - DataSize[1]);
+							mBiasY = mRatioY*(Y_MaxCutMin*0.5f - DataSize[3]);
+							mBiasZ = mRatioZ*(Z_MaxCutMin*0.5f - DataSize[5]);
+						
+						SetCalibrateRatioBias(mRatioX,mRatioY,mRatioZ,mBiasX,mBiasY,mBiasZ);
+						mIsCalibrate = true;
+						LOG("cailibret end ---- \n");
+						
+//						while(1)
+//						{
+//							LOG(mRatioX);
+//							LOG("\t");
+//							LOG(mRatioY);
+//							LOG("\t");
+//							LOG(mRatioZ);
+//							LOG("\t");
+//							LOG(mBiasX);
+//							LOG("\t");
+//							LOG(mBiasY);
+//							LOG("\t");		
+//							LOG(mBiasZ);				
+//							LOG("\n");
+//						 tskmgr.DelayS(1);
+//						}
+						
+					
+						return true;
+				}	
+				
+				//保存上一次的值
+				OldData[0]=NowData[0];
+				OldData[1]=NowData[1];
+				OldData[2]=NowData[2];
+			
+				}else
+				{
+					LOG("Updata error--\n");
+				  continue;
+				}
+				
 			}			
-			OldData[0]=NowData[0];
-			OldData[1]=NowData[1];
-			OldData[2]=NowData[2];
 		}
 }
+
+bool HMC5883L::IsCalibrated()
+{
+	return mIsCalibrate;
+}
+
