@@ -1,26 +1,10 @@
 #ifndef  __FLASH_H
 #define  __FLASH_H
-/**@file Memory.h
-  *@brief stm32 flash的读写操作
-  *    使用：
-  *        * 引入文件到工程中，Memory.cpp Memory.h
-  *        * 建立一个Memory对象（注意构造函数，默认是从63K Byte处开始存数，使用半字储存）
-  *        * 使用Read和Write函数进行读写，具体参数和返回值见函数说明  
-  * 
-  *@author neucrack CQUT IOT lib
-  *
-  */
 
 #include "stm32f10x.h"
 #include "stm32f10x_flash.h"
 
-
-/* Define the STM32F10Xxx Flash page size depending on the used STM32 device */
-#if defined (STM32F10X_LD) || defined (STM32F10X_MD)
-  #define MEMORY_PAGE_SIZE  (uint16_t)0x400  /* Page size = 1KByte */
-#elif defined (STM32F10X_HD) || defined (STM32F10X_CL)
-  #define MEMORY_PAGE_SIZE  (uint16_t)0x800  /* Page size = 2KByte */
-#endif
+#define MEMORY_PAGE_SIZE  (uint16_t)0x400  /* Page size = 1KByte */
 
 
 /* Page status definitions */
@@ -29,6 +13,10 @@
 #define MEMORY_STATUS_VALID_PAGE              ((uint16_t)0x0000)     /* PAGE containing valid data */
 
 
+#define BYTE0(dwTemp)       ( *( (char *)(&dwTemp)		) )
+#define BYTE1(dwTemp)       ( *( (char *)(&dwTemp) + 1) )
+#define BYTE2(dwTemp)       ( *( (char *)(&dwTemp) + 2) )
+#define BYTE3(dwTemp)       ( *( (char *)(&dwTemp) + 3) )
 
 
 
@@ -59,7 +47,7 @@ bool Read(uint16_t relativeAddress, uint8_t* Data,u16 length);
 bool Read(u16 pageNumber,u16 position,u16* data,u16 length);
 
 
-bool Read(uint16_t relativeAddress, uint32_t* Data,u16 length);
+//bool Read(uint16_t relativeAddress, uint32_t* Data,u16 length);
 		
 ///////////////////////
 ///向储存器中特定位置写值
@@ -70,9 +58,11 @@ bool Read(uint16_t relativeAddress, uint32_t* Data,u16 length);
 ///////////////////////
 bool Write(uint16_t pageNumber, uint8_t* Data,u16 length);
 		
-//position为一页中的位置，只能是偶数或者0		
+//position为一页中的位置，只能是偶数或者0	,当传入0的时候将擦除这一页	
 bool Write(uint16_t pageNumber,u16 position,uint16_t* data,u16 length);
-		
+
+bool Write(uint16_t pageNumber,u16 position,float data);
+float Read(uint16_t pageNumber,u16 position);		
 
 bool Write(uint16_t pageNumber, uint32_t* Data,u16 length);
 		
@@ -81,6 +71,7 @@ bool Write(uint16_t pageNumber, uint32_t* Data,u16 length);
 bool Write(uint16_t pageNumber,u16 position,char* str);
 bool Read(uint16_t pageNumber,u16 position,char *str);
 bool Clear(uint16_t pageNumber);
+
 
 };
 

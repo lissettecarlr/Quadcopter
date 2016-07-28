@@ -22,31 +22,31 @@ class Communication{
 	public:
 		
 //接收
-	 float RcvTargetYaw;
-	 float RcvTargetRoll;
-	 float RcvTargetPitch;
-	 float RcvTargetThr;
- 	 u32 RcvTargetHight;
+	 vs16 mRcvTargetYaw;
+	 vs16 mRcvTargetRoll;
+	 vs16 mRcvTargetPitch;
+	 vs16 mRcvTargetThr;
+ 	 u32 mRcvTargetHight;
 	
-	 bool ClockState; //1为锁定，0为解锁
+	 bool mClockState; //1为锁定，0为解锁
 		
-	 bool Acc_Calibrate;
-	 bool Gyro_Calibrate;
-	 bool Mag_Calibrate;
-	 bool PidUpdata;
+	 bool mAcc_Calibrate;
+	 bool mGyro_Calibrate;
+	 bool mMag_Calibrate;
+	 bool mPidUpdata;
 	
 	 Communication(USART &com);
 	 bool DataListening();//数据接收监听
 	
-	//上锁与解锁
-	 bool FlightLockControl(bool flag);
+//	//上锁与解锁
+//	 bool FlightLockControl(bool flag);
 	
 	
 //发送
 		//状态数据
 	bool SendCopterState(float angle_rol, float angle_pit, float angle_yaw, s32 Hight, u8 fly_model, u8 armed);
 		//传感器原始数据
-	bool SendSensorOriginalData(Vector3<int> acc, Vector3<float> gyro,Vector3<int> mag);
+	bool SendSensorOriginalData(Vector3<int> acc, Vector3<int> gyro,Vector3<int> mag);
 		//接收到的控制量
 	bool SendRcvControlQuantity();
 		//发送PID数据

@@ -2,43 +2,49 @@
 #include "Configuration.h"
 #include "TaskManager.h"
 #include "USART.h"
-#include "I2C.h"
 #include "Timer.h"
 #include "ADC.h"
-#include "PWM.h"
 #include "flash.h"
-#include "InputCapture_TIM.h"
-#include "InputCapture_EXIT.h"
+#include "RemoteControl.h"
 #include "LED.h"
+#include "InputCapture_TIM.h"
 
-//Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
+
+InputCapture_TIM hunter(TIM4, 400, true, true, true, true); //TIM4 as InputCapture for remoter controller
 USART com(1,115200,false);
-I2C abc(2); 
-PWM pwm2(TIM2,1,1,1,1,20000);  //开启时钟2的4个通道，频率2Whz
-PWM pwm3(TIM3,1,1,0,0,20000);  //开启时钟3的2个通道，频率2Whz
-PWM pwm4(TIM4,1,1,1,0,20000);  //开启时钟4的3个通道，频率2Whz
-//InputCapture_TIM t4(TIM4, 400, true, true, true, true);
-InputCapture_EXIT ch1(GPIOB,6);
+
 ADC pressure(1); //PA1读取AD值
-flash InfoStore(0x08000000+100*MEMORY_PAGE_SIZE,true);     //flash
+//flash InfoStore(0x08000000+100*MEMORY_PAGE_SIZE,true);     //flash
 
-GPIO ledRedGPIO(GPIOB,0,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
-GPIO ledBlueGPIO(GPIOB,1,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
-LED ledRed(ledRedGPIO);//LED red
-LED ledBlue(ledBlueGPIO);//LED blue
+//GPIO ledRedGPIO(GPIOB,0,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
+//GPIO ledBlueGPIO(GPIOB,1,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
+//LED ledRed(ledRedGPIO);//LED red
+//LED ledBlue(ledBlueGPIO);//LED blue
+RemoteControl RC(&hunter,1,3,2,4);
 
+volatile double curTime=0, oldTime=0, deltaT=0;
 int main()
 {
-	ledBlue.On();
-	ledRed.Off();
-	double record_tmgTest=0; //taskmanager时间 测试
 	while(1)
-	{
-		if(tskmgr.TimeSlice(record_tmgTest,0.2)) //每0.2秒执行一次
+	{	
+		curTime = tskmgr.Time();
+		deltaT = curTime-oldTime;
+		if(deltaT >= 0.1)
 		{
-			ledRed.Toggle();
-//			ledBlue.Toggle();
+			
+			oldTime = curTime;
+			u8 state=RC.Updata(100,2000);
+
+			if(state==REMOTECONTROL_UNLOCK)
+			{
+				com<<"UNLock"<<state<<"THR:"<<RC.GetThrottleVal()<<"\t YAW:"<<RC.GetYawVal()<<"\t ROLL:"<<RC.GetRollVal()<<"\t PITCH:"<<RC.GetPitchVal()<<"\n";
+			}
+			if(state==REMOTECONTROL_LOCK)
+			{
+				//com<<"Lock"<<state<<"\t"<<RC[1]<<"\t"<<RC[2]<<"\t"<<RC[3]<<"\t"<<RC[4]<<"\n";
+				//com<<"PIT:"<<RC.GetOriginalValue(1)<<"\tTHR:"<<RC.GetOriginalValue(2)<<"\tYAW:"<<RC.GetOriginalValue(3)<<"\tROLL:"<<RC.GetOriginalValue(4)<<"\n";
+				com<<"Lock"<<state<<"THR:"<<RC.GetThrottleVal()<<"\t YAW:"<<RC.GetYawVal()<<"\t ROLL:"<<RC.GetRollVal()<<"\t PITCH:"<<RC.GetPitchVal()<<"\n";
+			}
 		}
-		ledBlue.Blink(0,0.5,false);
 	}
 }

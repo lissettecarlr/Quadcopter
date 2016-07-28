@@ -5,6 +5,7 @@ IMU::IMU(mpu6050 &Ins,HMC5883L &Mag):mIns(Ins),mMag(Mag)
 	
 bool IMU::init()
 {
+		
 		float time = TaskManager::Time();
 		mIns.Init();
 	  //测试磁力计是否存在
@@ -14,7 +15,22 @@ bool IMU::init()
 		while(TaskManager::Time()-time<1.5)
 		{}
 		mIns.StartGyroCalibrate();//启动校准
-		mIsCalibrating = true;
+		mGyroIsCalibrating = true;
+		LOG("calibrating ... don't move!!!\n");
+		return true;
+}
+
+bool IMU::init(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ)
+{
+		float time = TaskManager::Time();
+		mIns.Init();
+		if(!mMag.TestConnection(false))
+			LOG("mag connection error\n");
+		mMag.Init(RatioX,RatioY,RatioZ,BiasX,BiasY,BiasZ);
+		while(TaskManager::Time()-time<1.5)
+		{}
+		mIns.StartGyroCalibrate();//启动校准
+		mGyroIsCalibrating = true;
 		LOG("calibrating ... don't move!!!\n");
 		return true;
 }
@@ -35,9 +51,9 @@ bool IMU::UpdateIMU()
 			return false;
 		}
 	}
-	if(mIsCalibrating&&!mIns.IsGyroCalibrating())//角速度校准结束
+	if(mGyroIsCalibrating&&!mIns.IsGyroCalibrating())//角速度校准结束
 	{
-		mIsCalibrating = false;
+		mGyroIsCalibrating = false;
 		LOG("\ncalibrate complete\n");
 	}
 	if(mIns.IsGyroCalibrated())//角速度已经校准了	
@@ -47,7 +63,26 @@ bool IMU::UpdateIMU()
 	return true;
 }
 
-bool IMU::IsCalibrated()
+bool IMU::GyroIsCalibrated()
 {
 	return mIns.IsGyroCalibrated();
+}
+
+bool IMU::GyroCalibrate()
+{
+	mIns.StartGyroCalibrate();//启动校准
+	return true;
+}
+
+bool IMU::MagCalibrate(double SpendTime)
+{
+	mMag.Calibrate(SpendTime);
+	mMagIsCalibrated = true;
+	return true;
+}
+
+
+bool IMU::MagIsCalibrated()
+{
+	return mMagIsCalibrated;
 }

@@ -132,14 +132,8 @@ class HMC5883L:public Sensor
 		I2C *mI2C;
 		unsigned char mHealth;
 		HMC5883DataTypeDef mData;
-	
+
 		bool mIsCalibrate;
-		float mRatioX;
-		float mRatioY;
-		float mRatioZ;
-		float mBiasX;
-		float mBiasY;
-		float mBiasZ;
 	
 	#ifdef HMC5883L_USE_TASKMANAGER
 		u16 mMaxUpdateFrequency;
@@ -147,6 +141,15 @@ class HMC5883L:public Sensor
 	
 	public:
 		
+		//校准值
+		float mRatioX;
+		float mRatioY;
+		float mRatioZ;
+		float mBiasX;
+		float mBiasY;
+		float mBiasZ;
+	
+	
 		#ifdef HMC5883L_USE_TASKMANAGER
 		HMC5883L(I2C &i2c,u16 maxUpdateFrequency=75);
 		#else
@@ -155,8 +158,8 @@ class HMC5883L:public Sensor
 		/////////////////////
 		///Initialization
 		/////////////////////
-		virtual bool Init(bool wait=false);
-	
+		bool Init(bool wait=false);
+		bool Init(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ,bool wait=false);
 		///////////////////////
 		///Status of HMC5883L
 		///@retval 1:normal 0:error

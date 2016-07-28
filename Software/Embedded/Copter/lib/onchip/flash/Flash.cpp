@@ -46,29 +46,29 @@ bool flash::Read(u16 pageNumber,u16 position,u16* data,u16 length)
 ///@param -Data 读出的数据存放的地址
 ///@retval -1 : 读取成功 -0：读取失败
 ///////////////////////
-bool flash::Read(uint16_t pageNumber, uint32_t* data,u16 length)
-{
-	u16 dataLength=length;
-	if(mUseHalfWord)
-	{
-		while(dataLength)
-		{
-			*data=(u32)(*(__IO uint16_t*)(mStartAddress+pageNumber*MEMORY_PAGE_SIZE+(length-dataLength)*2));
-			++data;
-			--dataLength;
-		}
-	}
-	else
-	{
-		while(dataLength)
-		{
-			*data=(*(__IO uint32_t*)(mStartAddress+pageNumber*MEMORY_PAGE_SIZE+(length-dataLength)*4));
-			++data;
-			--dataLength;
-		}
-	}
-	return true;
-}
+//bool flash::Read(uint16_t pageNumber, uint32_t* data,u16 length)
+//{
+//	u16 dataLength=length;
+//	if(mUseHalfWord)
+//	{
+//		while(dataLength)
+//		{
+//			*data=(u32)(*(__IO uint16_t*)(mStartAddress+pageNumber*MEMORY_PAGE_SIZE+(length-dataLength)*2));
+//			++data;
+//			--dataLength;
+//		}
+//	}
+//	else
+//	{
+//		while(dataLength)
+//		{
+//			*data=(*(__IO uint32_t*)(mStartAddress+pageNumber*MEMORY_PAGE_SIZE+(length-dataLength)*4));
+//			++data;
+//			--dataLength;
+//		}
+//	}
+//	return true;
+//}
 
 
 ///////////////////////
@@ -281,6 +281,52 @@ bool  flash::Read(uint16_t pageNumber,u16 position,char *str)
 	return true;
 
 }
+
+//写一个float
+bool flash::Write(uint16_t pageNumber,u16 position,float data)
+{
+	FLASH_Unlock();
+	if(position ==0){   //只有对该页开始位置写入时查出这也,不允许直接从中间开始写
+	FLASH_ClearFlag(FLASH_FLAG_BSY|FLASH_FLAG_EOP|
+					FLASH_FLAG_PGERR|FLASH_FLAG_WRPRTERR);
+	if(!FLASH_ErasePage(mStartAddress+pageNumber*MEMORY_PAGE_SIZE))//擦除页
+				return false;
+	}
+	u16 temp;
+	if(data>0)
+	{
+		temp = (u16)(data*100);
+		temp = temp & 0xfffe; //将最低位置位0 表示是正数
+	}
+	else
+	{
+		temp = (u16)(-data*100);
+		temp = temp | 0x01; //将最低位置位1 表示是负数
+	}
+	if(FLASH_COMPLETE!=FLASH_ProgramHalfWord(mStartAddress+pageNumber*MEMORY_PAGE_SIZE+position,temp))
+				return false;
+	FLASH_Lock();
+	return true;
+}
+
+
+//读一个float
+float flash::Read(uint16_t pageNumber,u16 position)
+{
+	u16 temp;
+	temp=(*(__IO uint32_t*)(mStartAddress+pageNumber*MEMORY_PAGE_SIZE+position));
+	if(temp == 0xffff)
+		return 0;
+	if( (temp & 0x0001) ==0 )
+		return temp/100 + (float)(temp%100)/100;
+	else
+	{
+		return -(temp/100 + (float)(temp%100)/100);
+	}
+}
+
+
+	
 
 //擦除
 bool flash::Clear(uint16_t pageNumber)

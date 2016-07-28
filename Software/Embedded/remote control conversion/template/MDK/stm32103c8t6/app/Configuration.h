@@ -5,7 +5,7 @@
 
 //~~~~~~~~~~~~~~~USART Congfigure~~~~~~~~~~~//
 #define USE_USART              //---USART---//
-//#define USE_USART1             //---USART1--//
+#define USE_USART1             //---USART1--//
 //#define USE_USART2           //---USART2--//
 //#define USE_USART3           //---USART3--//
 
@@ -22,11 +22,11 @@
 //#define USE_TIMER4            //---Timer4--//
 
 //~~~~~~~~~~~~~~Capture Congfigure~~~~~~~~~~//
-//#define USE_CAPTURE_TIM         //--Capture- With Timer-//
+#define USE_CAPTURE_TIM         //--Capture- With Timer-//
 //#define USE_CAPTURE_TIM1       //--ICP-TIM1-//
 //#define USE_CAPTURE_TIM2       //--ICP-TIM2-//
 //#define USE_CAPTURE_TIM3       //--ICP-TIM3-//
-//#define USE_CAPTURE_TIM4       //--ICP-TIM4-//
+#define USE_CAPTURE_TIM4       //--ICP-TIM4-//
 
 //#define USE_CAPTURE_EXIT        //--Capture-With EXIT-//
 //#define USE_CAPTURE_EXIT0       //--ICP-EXIT0//

@@ -8,13 +8,11 @@ HMC5883L::HMC5883L(I2C &i2c,u16 maxUpdateFrequency)
 {
 	mI2C=&i2c;
 	mMaxUpdateFrequency=maxUpdateFrequency;
-	this->Init();
 }
 #else
 HMC5883L::HMC5883L(I2C &i2c)
 {
 	mI2C=&i2c;
-	this->Init();
 }
 #endif
 bool HMC5883L::Init(bool wait)
@@ -41,13 +39,40 @@ bool HMC5883L::Init(bool wait)
 		else
 			this->mHealth=1;
 	}
-	
-	//设置校准的比例系数和常数
-	SetCalibrateRatioBias(1.02,1,1.09,213.76,-201.5,125.16);
 	mIsCalibrate = false; 
 	return true;
 }
 
+bool HMC5883L::Init(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ,bool wait)
+{
+		if(wait)
+	mI2C->WaitTransmitComplete();
+		
+	unsigned char IIC_Write_Temp;
+	IIC_Write_Temp = HMC5883L_AVERAGING_8 | HMC5883L_RATE_75 | HMC5883L_BIAS_NORMAL;   
+	mI2C->AddCommand(HMC5883_ADDRESS,HMC5883_Config_RA,&IIC_Write_Temp,1,0,0); //Config Register A  :number of samples averaged->8  Data Output rate->30Hz
+	IIC_Write_Temp = HMC5883L_GAIN_1090;   //00100000B
+	mI2C->AddCommand(HMC5883_ADDRESS,HMC5883_Config_RB,&IIC_Write_Temp,1,0,0);//Config Register B:  Gain Configuration as : Sensor Field Range->(+-)1.3Ga ; Gain->1090LSB/Gauss; Output Range->0xF800-0x07ff(-2048~2047)
+	IIC_Write_Temp = HMC5883L_MODE_CONTINUOUS;   //00000000B
+	mI2C->AddCommand(HMC5883_ADDRESS,HMC5883_Mode,&IIC_Write_Temp,1,0,0);//Config Mode as: Continous Measurement Mode
+	if(!mI2C->StartCMDQueue())
+		return false;
+	if(wait)
+	{
+		if(!this->mI2C->WaitTransmitComplete(true,true,false))//失败
+		{
+			this->mHealth=0;
+			return false;
+		}
+		else
+			this->mHealth=1;
+	}
+	
+	//设置校准的比例系数和常数
+	SetCalibrateRatioBias(RatioX,RatioY,RatioZ,BiasX,BiasY,BiasZ);
+	mIsCalibrate = false; 
+	return true;
+}
 
 unsigned char HMC5883L::GetHealth()
 {
@@ -355,7 +380,7 @@ bool HMC5883L::Calibrate(double SpendTime)
 						}
 						else if(Y_MaxCutMin > X_MaxCutMin && Y_MaxCutMin > Z_MaxCutMin)
 						{
-							mRatioX = (float)Y_MaxCutMin/Z_MaxCutMin;
+							mRatioX = (float)Y_MaxCutMin/X_MaxCutMin;
 							mRatioY = 1;
 							mRatioZ = (float)Y_MaxCutMin/Z_MaxCutMin;
 						}
