@@ -35,11 +35,15 @@ GPIO ledRedGPIO(GPIOA,11,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 GPIO ledGREGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 
 I2C i2c(2);
-mpu6050 MPU6050(i2c);
-HMC5883L mag(i2c);
+
+
 
 int main()
 {
+	tskmgr.DelayMs(500);
+	mpu6050 MPU6050(i2c);
+	tskmgr.DelayMs(500);
+	HMC5883L mag(i2c);
 	tskmgr.DelayS(1);
 	IMU imu(MPU6050,mag);
 	tskmgr.DelayS(1);
@@ -65,10 +69,10 @@ int main()
 		mag.SetCalibrateRatioBias(InfoStore.Read(0,0),InfoStore.Read(0,2),InfoStore.Read(0,4),InfoStore.Read(0,6),InfoStore.Read(0,8),InfoStore.Read(0,10));
 	
 	
-	COM433.mRcvTargetHight=500;
-	COM433.mRcvTargetPitch=1000;
-	COM433.mRcvTargetRoll=1500;
-	COM433.mRcvTargetYaw=2000;
+//	COM433.mRcvTargetHight=500;
+//	COM433.mRcvTargetPitch=1000;
+//	COM433.mRcvTargetRoll=1500;
+//	COM433.mRcvTargetYaw=2000;
 	
 	while(1)
 	{			
@@ -119,8 +123,8 @@ int main()
 				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
 				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
 				COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,0,0,0);
-				//COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
-				COM433.SendRcvControlQuantity();//发送接收到的舵量
+				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
+				//COM433.SendRcvControlQuantity();//发送接收到的舵量
 								
 				//com<<COM433.mRcvTargetYaw<<"\t"<<COM433.mRcvTargetRoll<<"\t"<<COM433.mRcvTargetPitch<<"\t"<<COM433.mRcvTargetThr<<"\n";
 			}

@@ -181,139 +181,170 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>92</LineNumber>
+          <LineNumber>225</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134241676</Address>
+          <Address>134238324</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\project\寰瀷鍥涜酱鏃犱汉鏈?Software\Embedded\Copter\template\MDK\onchip\stm32103c8t6\app\Main.cpp</Filename>
+          <Filename>E:\project\寰瀷鍥涜酱鏃犱汉鏈?Software\Embedded\Copter\lib\offchip\HMC5883L\HMC5883L.cpp</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\demo\app/Main.cpp\92</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>103</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134241784</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\project\寰瀷鍥涜酱鏃犱汉鏈?Software\Embedded\Copter\template\MDK\onchip\stm32103c8t6\app\Main.cpp</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\demo\app/Main.cpp\103</Expression>
+          <Expression>\\demo\../../../../lib/offchip/HMC5883L/HMC5883L.cpp\225</Expression>
         </Bp>
       </Breakpoint>
+      <WatchWindow1>
+        <Ww>
+          <count>0</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>mData.mag_XH</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>mData.mag_XL</ItemText>
+        </Ww>
+      </WatchWindow1>
       <WatchWindow2>
         <Ww>
           <count>0</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>mData.mag_XH</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>mData.mag_XL</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>position</ItemText>
+          <ItemText>mData.mag_XH</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>mData.mag_XL</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>temp.x</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>mData.mag_YH</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>mData.mag_YL</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>2</WinNumber>
-          <ItemText>position</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>temp</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>position</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>2</WinNumber>
-          <ItemText>gyroCalibrateCnt</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>2</WinNumber>
-          <ItemText>RcvTime</ItemText>
+          <ItemText>temp</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data[12]</ItemText>
+          <ItemText>temp</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data[11]</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>position</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Xtemp</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Ytemp</ItemText>
+          <ItemText>temp</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mLX_Val</ItemText>
+          <ItemText>gyroCalibrateCnt</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mLY_Val</ItemText>
+          <ItemText>RcvTime</ItemText>
         </Ww>
         <Ww>
           <count>19</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mNX_Val</ItemText>
+          <ItemText>data[12]</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>data[11]</ItemText>
+        </Ww>
+        <Ww>
+          <count>21</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>data</ItemText>
+        </Ww>
+        <Ww>
+          <count>22</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Xtemp</ItemText>
+        </Ww>
+        <Ww>
+          <count>23</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Ytemp</ItemText>
+        </Ww>
+        <Ww>
+          <count>24</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>mLX_Val</ItemText>
+        </Ww>
+        <Ww>
+          <count>25</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>mLY_Val</ItemText>
+        </Ww>
+        <Ww>
+          <count>26</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>mNX_Val</ItemText>
+        </Ww>
+        <Ww>
+          <count>27</count>
           <WinNumber>2</WinNumber>
           <ItemText>mNY_Val</ItemText>
         </Ww>

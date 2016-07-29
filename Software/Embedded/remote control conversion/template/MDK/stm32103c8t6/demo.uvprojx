@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\lib\math;..\..\..\lib\onchip\ADC;..\..\..\lib\onchip\capture;..\..\..\lib\onchip\delay;..\..\..\lib\onchip\flash;..\..\..\lib\onchip\GPIO;..\..\..\lib\onchip\I2C;..\..\..\lib\onchip\interrupt;..\..\..\lib\onchip\PWM;..\..\..\lib\onchip\taskManager;..\..\..\lib\onchip\timer;..\..\..\lib\onchip\USART;..\..\..\lib\offchip\LED;.\app</IncludePath>
+              <IncludePath>..\..\..\lib\math;..\..\..\lib\onchip\ADC;..\..\..\lib\onchip\capture;..\..\..\lib\onchip\delay;..\..\..\lib\onchip\flash;..\..\..\lib\onchip\GPIO;..\..\..\lib\onchip\I2C;..\..\..\lib\onchip\interrupt;..\..\..\lib\onchip\PWM;..\..\..\lib\onchip\taskManager;..\..\..\lib\onchip\timer;..\..\..\lib\onchip\USART;..\..\..\lib\offchip\LED;.\app;..\..\..\lib\offchip\RemoteControl</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -478,6 +478,11 @@
               <FileType>8</FileType>
               <FilePath>..\..\..\lib\offchip\LED\LED.cpp</FilePath>
             </File>
+            <File>
+              <FileName>RemoteControl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\lib\offchip\RemoteControl\RemoteControl.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -497,6 +502,11 @@
               <FileName>UserInterrupt.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\app\UserInterrupt.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Communication.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\app\Communication.cpp</FilePath>
             </File>
           </Files>
         </Group>
