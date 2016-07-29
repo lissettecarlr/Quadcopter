@@ -22,10 +22,10 @@ class Communication{
 	public:
 		
 //接收
-	 vs16 mRcvTargetYaw;
-	 vs16 mRcvTargetRoll;
-	 vs16 mRcvTargetPitch;
-	 vs16 mRcvTargetThr;
+	 u16 mRcvTargetYaw;
+	 u16 mRcvTargetRoll;
+	 u16 mRcvTargetPitch;
+	 u16 mRcvTargetThr;
  	 u32 mRcvTargetHight;
 	
 	 bool mClockState; //1为锁定，0为解锁

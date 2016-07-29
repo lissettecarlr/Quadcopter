@@ -37,8 +37,8 @@
 #define FUTABA_ORIGINAL_MIN	1100
 
 //default output limit
-#define RC_DEFAULT_LIMIT_MIN	0
-#define RC_DEFAULT_LIMIT_MAX	1000
+#define RC_DEFAULT_LIMIT_MIN	1000
+#define RC_DEFAULT_LIMIT_MAX	2000
 
 //Choose way is to use a percentage of the output data output function using fixed scope of data output
 //选择输出数据的方式  是使用百分比输出 函数使用规定好的数据范围输出

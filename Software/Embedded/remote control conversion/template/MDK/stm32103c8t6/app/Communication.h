@@ -25,7 +25,7 @@ class Communication{
 	 bool DataListening_SendCopter();//数据接收监听	
 
 	//发送遥控器信息给飞机
-		bool SendData2Copter(uint16_t Yaw,uint16_t Thr,uint16_t Roll,uint16_t Pitch);
+		bool SendData2Copter(uint16_t Yaw,uint16_t Thr,uint16_t Roll,uint16_t Pitch,bool Dir);
 	
 };
 

@@ -99,16 +99,16 @@ bool Communication::DataListening()
 						}
 						else if(ch == 0x03)//控制信息
 						{
-							data[2]= 0x01;
+							data[2]= ch;
 							while(usart.ReceiveBufferSize()<2);//等待数据
 							usart.GetReceivedData(data+3,22);							
 							check=data[24];							
 							if( Calibration(data,data[3]+4,check )) //如果校验正确
-							{
-								mRcvTargetThr= (vs16)(data[4])<<8 + data[5];									
-								mRcvTargetYaw= (vs16)data[6]<<8 + data[7];
-								mRcvTargetRoll= (vs16)data[8]<<8 + data[9];
-								mRcvTargetPitch= (vs16)data[10]<<8 + data[11];
+							{								
+								mRcvTargetThr =(u16)data[4]*256+ data[5];
+								mRcvTargetYaw =(u16)data[6]*256+ data[7];
+								mRcvTargetRoll =(u16)data[8]*256+ data[9];
+								mRcvTargetPitch =(u16)data[10]*256+ data[11];
 								return true;
 							}
 							return false;

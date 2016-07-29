@@ -12,8 +12,8 @@
 
 
 InputCapture_TIM hunter(TIM4, 400, true, true, true, true); //TIM4 as InputCapture for remoter controller
-USART com1(1,115200,false);
-USART com2(2,115200,false);
+USART com1(1,115200,true);
+USART com2(2,115200,true);
 
 Communication Hi(com1,com2); 
 
@@ -33,7 +33,7 @@ int main()
 {
 	
 		double Receive_data=0;  //接收数据  10ms
-	
+		double RcUpdata=0;      //遥控器状态更新时间  20ms
 	while(1)
 	{	
 		if(tskmgr.TimeSlice(Receive_data,0.01) ) //0.01
@@ -41,27 +41,12 @@ int main()
 			Hi.DataListening_SendPC();
 		}
 		
-//		curTime = tskmgr.Time();
-//		deltaT = curTime-oldTime;
-//		if(deltaT >= 0.1)
-//		{
-//			
-//			oldTime = curTime;
-//			u8 state=RC.Updata(100,2000);
-
-//			if(state==REMOTECONTROL_UNLOCK)
-//			{
-//				com<<"UNLock"<<state<<"THR:"<<RC.GetThrottleVal()<<"\t YAW:"<<RC.GetYawVal()<<"\t ROLL:"<<RC.GetRollVal()<<"\t PITCH:"<<RC.GetPitchVal()<<"\n";
-//			}
-//			if(state==REMOTECONTROL_LOCK)
-//			{
-//				//com<<"Lock"<<state<<"\t"<<RC[1]<<"\t"<<RC[2]<<"\t"<<RC[3]<<"\t"<<RC[4]<<"\n";
-//				//com<<"PIT:"<<RC.GetOriginalValue(1)<<"\tTHR:"<<RC.GetOriginalValue(2)<<"\tYAW:"<<RC.GetOriginalValue(3)<<"\tROLL:"<<RC.GetOriginalValue(4)<<"\n";
-//				com<<"Lock"<<state<<"THR:"<<RC.GetThrottleVal()<<"\t YAW:"<<RC.GetYawVal()<<"\t ROLL:"<<RC.GetRollVal()<<"\t PITCH:"<<RC.GetPitchVal()<<"\n";
-//			}
-//		}
-		
-		
+		if(tskmgr.TimeSlice(RcUpdata,0.08) )
+		{
+			RC.Updata(80,2000);
+			Hi.SendData2Copter(RC.GetYawVal(),RC.GetThrottleVal(),RC.GetRollVal(),RC.GetPitchVal(),true);	
+			Hi.SendData2Copter(RC.GetYawVal(),RC.GetThrottleVal(),RC.GetRollVal(),RC.GetPitchVal(),false);	
+		}	
 		
 	}
 }
