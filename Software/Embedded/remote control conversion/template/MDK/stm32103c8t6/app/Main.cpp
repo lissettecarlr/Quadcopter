@@ -27,11 +27,10 @@ ADC pressure(1); //PA1读取AD值
 RemoteControl RC(&hunter,1,3,2,4);
 
 
-
-
 int main()
 {
-	
+		u8 State=REMOTECONTROL_LOCK;
+		u8 OldState=REMOTECONTROL_LOCK;
 		double Receive_data=0;  //接收数据  10ms
 		double RcUpdata=0;      //遥控器状态更新时间  20ms
 	while(1)
@@ -39,13 +38,28 @@ int main()
 		if(tskmgr.TimeSlice(Receive_data,0.01) ) //0.01
 		{
 			Hi.DataListening_SendPC();
+			
 		}
 		
 		if(tskmgr.TimeSlice(RcUpdata,0.08) )
 		{
-			RC.Updata(80,2000);
-			Hi.SendData2Copter(RC.GetYawVal(),RC.GetThrottleVal(),RC.GetRollVal(),RC.GetPitchVal(),true);	
+			State=RC.Updata(80,2000);	
 			Hi.SendData2Copter(RC.GetYawVal(),RC.GetThrottleVal(),RC.GetRollVal(),RC.GetPitchVal(),false);	
+			
+			if(State == REMOTECONTROL_LOCK &&  OldState ==REMOTECONTROL_UNLOCK )
+			{
+					OldState = REMOTECONTROL_LOCK;
+					Hi.SendOrder(0XA0);
+			}
+			else if(State ==REMOTECONTROL_UNLOCK && OldState ==REMOTECONTROL_LOCK)//解锁
+			{	
+					Hi.SendOrder(0XA1);
+					OldState = REMOTECONTROL_UNLOCK;
+					Hi.SendData2Copter(RC.GetYawVal(),RC.GetThrottleVal(),RC.GetRollVal(),RC.GetPitchVal(),true);	
+			}		
+			else
+			{}
+			
 		}	
 		
 	}

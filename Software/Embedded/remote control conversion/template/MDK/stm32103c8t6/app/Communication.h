@@ -26,6 +26,9 @@ class Communication{
 
 	//发送遥控器信息给飞机
 		bool SendData2Copter(uint16_t Yaw,uint16_t Thr,uint16_t Roll,uint16_t Pitch,bool Dir);
+		
+	//0xa0 飞机锁定  0XA1飞机解锁
+		bool SendOrder(u8 Order);
 	
 };
 

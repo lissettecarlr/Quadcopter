@@ -32,7 +32,7 @@ flash InfoStore(0x08000000+60*MEMORY_PAGE_SIZE,true);     //flash
 //0页 存磁力计校准值  1页存PID
 
 GPIO ledRedGPIO(GPIOA,11,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
-GPIO ledGREGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
+GPIO ledYewGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 
 I2C i2c(2);
 
@@ -48,15 +48,17 @@ int main()
 	IMU imu(MPU6050,mag);
 	tskmgr.DelayS(1);
 	
+	
+	
 	double Updata_posture_control=0; //计算欧拉角和自稳时间片 10ms
 	double Receive_data=0;  //接收数据  20ms
 	double Send_data=0; //发送数据  100ms
 	double Updata_hint=0; //更新提示信息状态 500ms
 	
 	ledRedGPIO.SetLevel(0);//用于表示是否处于上锁状态
-	ledGREGPIO.SetLevel(0);//表示系统是否忙于做其他事
+	ledYewGPIO.SetLevel(0);//表示系统是否忙于做其他事
 	
-	pwm4.SetDuty(0,30,70,100);
+	pwm4.SetDuty(10,10,30,10);
 	
 		
 //	if(InfoStore.Read(0,0))
@@ -69,11 +71,6 @@ int main()
 		mag.SetCalibrateRatioBias(InfoStore.Read(0,0),InfoStore.Read(0,2),InfoStore.Read(0,4),InfoStore.Read(0,6),InfoStore.Read(0,8),InfoStore.Read(0,10));
 	
 	
-//	COM433.mRcvTargetHight=500;
-//	COM433.mRcvTargetPitch=1000;
-//	COM433.mRcvTargetRoll=1500;
-//	COM433.mRcvTargetYaw=2000;
-	
 	while(1)
 	{			
 		if(tskmgr.TimeSlice(Updata_posture_control,0.01) ) //0.01
@@ -81,6 +78,17 @@ int main()
 				//更新、获得欧拉角
 				imu.UpdateIMU();
 				//控制
+			  if(!COM433.mClockState)
+				{				
+						float a=0,temp=0;
+						temp=((float)COM433.mRcvTargetThr -1000)/10;
+						if(temp>100)
+							temp=100;
+						if(temp<0)
+							temp=0;
+						a=temp;
+						pwm4.SetDuty(a,a,a,a);
+				}
 			 
 		}
 		if(tskmgr.TimeSlice(Receive_data,0.02) ) 
@@ -133,9 +141,9 @@ int main()
 		if(tskmgr.TimeSlice(Updata_hint,0.5) ) //提示更新
 		{
 			if(COM433.mClockState)
-				ledRedGPIO.SetLevel(0);
+				ledYewGPIO.SetLevel(0);
 			else
-				ledRedGPIO.SetLevel(1);
+				ledYewGPIO.SetLevel(1);
 			
 			if(COM433.mMag_Calibrate)
 				ledRedGPIO.SetLevel(0);

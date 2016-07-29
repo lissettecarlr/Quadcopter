@@ -21,6 +21,19 @@ bool Communication::Calibration(u8 *data,int lenth,u8 check)
 		return false;
 }
 
+bool Communication::DataListening_SendCopter()//数据接收监听
+{
+	u8 data[300];
+	u8 num = usart.ReceiveBufferSize();
+	if(num>0)
+	{
+			usart.GetReceivedData(data,num);
+			com433.SendData(data,num);
+			return true;
+	}
+	return false;
+}
+
 bool Communication::DataListening_SendPC()
 {
 	u8 data[300];
@@ -32,9 +45,6 @@ bool Communication::DataListening_SendPC()
 			return true;
 	}
 	return false;
-	
-	
-	
 	
 //		u8 ch=0;
 //		u8 data[30]={0};
@@ -120,3 +130,20 @@ bool Communication::SendData2Copter(uint16_t Yaw,uint16_t Thr,uint16_t Roll,uint
 	
 	return true;
 }
+
+bool Communication::SendOrder(u8 Order)
+{
+	u8 data_to_send[6];
+	data_to_send[0]=0xAA;
+	data_to_send[1]=0xAF;
+	data_to_send[2]=0x01;
+	data_to_send[3]=0x01;
+	data_to_send[4]=Order;
+	data_to_send[5]=0;
+	
+	for(int i=0;i<5;i++)
+	data_to_send[5]+=data_to_send[i];
+	com433.SendData(data_to_send, 6);
+	return true;
+}
+
