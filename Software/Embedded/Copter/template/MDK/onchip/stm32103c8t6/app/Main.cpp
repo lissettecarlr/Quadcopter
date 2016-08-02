@@ -58,7 +58,7 @@ int main()
 	ledRedGPIO.SetLevel(0);//用于表示是否处于上锁状态
 	ledYewGPIO.SetLevel(0);//表示系统是否忙于做其他事
 	
-	pwm4.SetDuty(10,10,30,10);
+	pwm4.SetDuty(0,0,0,0);
 	
 		
 //	if(InfoStore.Read(0,0))
@@ -70,6 +70,7 @@ int main()
 	if(InfoStore.Read(0,0))
 		mag.SetCalibrateRatioBias(InfoStore.Read(0,0),InfoStore.Read(0,2),InfoStore.Read(0,4),InfoStore.Read(0,6),InfoStore.Read(0,8),InfoStore.Read(0,10));
 	
+	Control control(pwm4);
 	
 	while(1)
 	{			
@@ -131,11 +132,17 @@ int main()
 				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
 				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
 				COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,0,0,0);
-				//COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
+				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
 				//COM433.SendRcvControlQuantity();//发送接收到的舵量
 								
 				//com<<COM433.mRcvTargetYaw<<"\t"<<COM433.mRcvTargetRoll<<"\t"<<COM433.mRcvTargetPitch<<"\t"<<COM433.mRcvTargetThr<<"\n";
 			}
+			if(COM433.mGetPid)//如果请求了获取PID
+			{
+				COM433.mGetPid=false;
+				COM433.SendPID(control.GetPID_PIT(0),control.GetPID_PIT(1),control.GetPID_PIT(2),control.GetPID_ROL(0),control.GetPID_ROL(1),control.GetPID_ROL(2),control.GetPID_YAW(0),control.GetPID_YAW(1),control.GetPID_YAW(2));
+			}
+			
 		}
 		
 		if(tskmgr.TimeSlice(Updata_hint,0.5) ) //提示更新
@@ -153,7 +160,15 @@ int main()
 			if(!imu.GyroIsCalibrated())
 				ledRedGPIO.SetLevel(0);
 			else
-				ledRedGPIO.SetLevel(1);				
+				ledRedGPIO.SetLevel(1);		
+
+			if(COM433.mPidUpdata) //更新PID
+			{
+				COM433.mPidUpdata=false;
+				control.SetPID_PIT(COM433.PID[0],COM433.PID[1],COM433.PID[2]);
+				control.SetPID_ROL(COM433.PID[3],COM433.PID[4],COM433.PID[5]);
+				control.SetPID_YAW(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
+			}
 		}
 		
 	}

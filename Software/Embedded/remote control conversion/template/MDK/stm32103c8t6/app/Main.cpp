@@ -55,10 +55,11 @@ int main()
 			{	
 					Hi.SendOrder(0XA1);
 					OldState = REMOTECONTROL_UNLOCK;
-					Hi.SendData2Copter(RC.GetYawVal(),RC.GetThrottleVal(),RC.GetRollVal(),RC.GetPitchVal(),true);	
 			}		
 			else
-			{}
+			{
+					Hi.SendData2Copter(RC.GetYawVal(),RC.GetThrottleVal(),RC.GetRollVal(),RC.GetPitchVal(),true);	
+			}
 			
 		}	
 		

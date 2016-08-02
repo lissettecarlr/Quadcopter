@@ -33,10 +33,14 @@ class Communication{
 	 bool mAcc_Calibrate;
 	 bool mGyro_Calibrate;
 	 bool mMag_Calibrate;
-	 bool mPidUpdata;
+	
+	 bool mPidUpdata; //为true时表示有新的PID发来需要更新PID
+	 bool mGetPid;    //为true时表示上位机需要获取当前PID的值
 	
 	 Communication(USART &com);
 	 bool DataListening();//数据接收监听
+	
+	 float PID[9]; //暂存接收到的PID值
 	
 //	//上锁与解锁
 //	 bool FlightLockControl(bool flag);
@@ -53,6 +57,8 @@ class Communication{
 	bool SendPID(float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d);
 		//接收应答 需要应答的功能字和校验和
 	bool reply(u8 difference,u8 sum);
+		//发送电机信息
+	void SendMotoMsg(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7,u16 m_8);
 	
 };
 

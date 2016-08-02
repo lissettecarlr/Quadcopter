@@ -15,6 +15,7 @@ Communication::Communication(USART &com):usart(com)
 	 mGyro_Calibrate = false;
 	 mMag_Calibrate = false;
 	 mPidUpdata = false;
+	 mGetPid = false;
 }
 
 
@@ -95,12 +96,32 @@ bool Communication::DataListening()
 						}
 						else if(ch == 0x02)//命令集2
 						{
-							return true;
+							data[2]= ch;
+							while(usart.ReceiveBufferSize()<3);//等待数据
+							usart.GetReceivedData(data+3,3);
+							check=data[5];
+							if( Calibration(data,data[3]+4,check )) //如果校验正确
+							{
+								if(data[4] == 0x01) //PID请求
+								{
+										mGetPid=true;
+										return true;
+								}
+								else
+								{
+									//未知命令
+									return false;
+								}
+								
+							}
+							else
+								return false;
+						
 						}
 						else if(ch == 0x03)//控制信息
 						{
 							data[2]= ch;
-							while(usart.ReceiveBufferSize()<2);//等待数据
+							while(usart.ReceiveBufferSize()<22);//等待数据
 							usart.GetReceivedData(data+3,22);							
 							check=data[24];							
 							if( Calibration(data,data[3]+4,check )) //如果校验正确
@@ -115,7 +136,28 @@ bool Communication::DataListening()
 						}
 						else if(ch ==0x10) //PID更新
 						{
-						return true;
+							data[2]= ch;
+							while(usart.ReceiveBufferSize()<20);//等待数据
+							usart.GetReceivedData(data+3,20);
+							check=data[22];
+							if( Calibration(data,data[3]+4,check )) //如果校验正确
+							{
+									PID[0]=((u16)data[4]*256+data[5])/1000.0;
+									PID[1]=((u16)data[6]*256+data[7])/1000.0;
+									PID[2]=((u16)data[8]*256+data[9])/1000.0;
+									PID[3]=((u16)data[10]*256+data[11])/1000.0;
+									PID[4]=((u16)data[12]*256+data[13])/1000.0;
+									PID[5]=((u16)data[14]*256+data[15])/1000.0;
+									PID[6]=((u16)data[16]*256+data[17])/1000.0;
+									PID[7]=((u16)data[18]*256+data[19])/1000.0;
+									PID[8]=((u16)data[20]*256+data[21])/1000.0;
+									reply(ch,check);
+									mPidUpdata = true;
+									return true;
+							}
+							else
+								return false;
+						
 						}
 						else
 						{
@@ -292,3 +334,91 @@ bool Communication::reply(u8 difference,u8 sum)
 	usart.SendData(data_to_send,7);
 	return true;
 }
+bool Communication::SendPID(float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d)
+{
+	u8 data_to_send[30];
+	u8 _cnt=0;
+	vs16 _temp;
+	
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x10;
+	data_to_send[_cnt++]=0;
+	
+	_temp = p1_p * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = p1_i  * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = p1_d  * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = p2_p  * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = p2_i  * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = p2_d * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = p3_p  * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = p3_i  * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = p3_d * 1000;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	data_to_send[3] = _cnt-4;
+	u8 sum = 0;
+	for(u8 i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	
+	data_to_send[_cnt++]=sum;
+	usart.SendData(data_to_send, _cnt);
+	return true;
+}
+
+void Communication::SendMotoMsg(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7,u16 m_8)
+{
+	u8 data_to_send[30];
+	u8 _cnt=0;
+	vs16 _temp;
+	
+	
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x06;
+	data_to_send[_cnt++]=0;
+	
+	data_to_send[_cnt++]=BYTE1(m_1);
+	data_to_send[_cnt++]=BYTE0(m_1);
+	data_to_send[_cnt++]=BYTE1(m_2);
+	data_to_send[_cnt++]=BYTE0(m_2);
+	data_to_send[_cnt++]=BYTE1(m_3);
+	data_to_send[_cnt++]=BYTE0(m_3);
+	data_to_send[_cnt++]=BYTE1(m_4);
+	data_to_send[_cnt++]=BYTE0(m_4);
+	data_to_send[_cnt++]=BYTE1(m_5);
+	data_to_send[_cnt++]=BYTE0(m_5);
+	data_to_send[_cnt++]=BYTE1(m_6);
+	data_to_send[_cnt++]=BYTE0(m_6);
+	data_to_send[_cnt++]=BYTE1(m_7);
+	data_to_send[_cnt++]=BYTE0(m_7);
+	data_to_send[_cnt++]=BYTE1(m_8);
+	data_to_send[_cnt++]=BYTE0(m_8);
+	
+	data_to_send[3] = _cnt-4;
+	
+	u8 sum = 0;
+	for(u8 i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	
+	data_to_send[_cnt++]=sum;
+	
+	usart.SendData(data_to_send, _cnt);
+}	

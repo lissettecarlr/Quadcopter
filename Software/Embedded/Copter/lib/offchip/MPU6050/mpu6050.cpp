@@ -98,21 +98,32 @@ int mpu6050::GetTempRaw()
 }
 
 ////////////////////////////////
-///获取角速度值
+///获取角速度值（弧度每秒）
 ///@retval 返回三轴的角速度值 
 ///////////////////////////////
-Vector3f mpu6050::GetGyr()//获取角速度原始值
+Vector3f mpu6050::GetGyr()
 {
 	Vector3f temp;
 	temp.x=mGyroRaw.x*0.000133158;
 	temp.y=mGyroRaw.y*0.000133158;
 	temp.z=mGyroRaw.z*0.000133158;
 	return temp;
-	 
-	 
-	 
-	
 }
+
+////////////////////////////////
+///获取角速度值（度每秒）
+///@retval 返回三轴的角速度值 
+///////////////////////////////
+Vector3f mpu6050::GetGyrDegree()//获取角速度原始值
+{
+	Vector3f temp;
+	temp.x=mGyroRaw.x*0.007629394;
+	temp.y=mGyroRaw.y*0.007629394;
+	temp.z=mGyroRaw.z*0.007629394;
+	return temp;
+}
+
+
 
 ////////////////////////////////
 ///获取加速度值
