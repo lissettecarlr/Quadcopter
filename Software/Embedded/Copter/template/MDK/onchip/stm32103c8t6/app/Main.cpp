@@ -16,7 +16,7 @@
 #include "Control.h"
 #include "Communication.h"
 #include "IMU.h"
-
+#include "LED.h"
 
 
 
@@ -33,13 +33,15 @@ flash InfoStore(0x08000000+60*MEMORY_PAGE_SIZE,true);     //flash
 
 GPIO ledRedGPIO(GPIOA,11,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 GPIO ledYewGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
+LED Red(ledRedGPIO);
 
 I2C i2c(2);
-
+Control control(pwm4);
 
 
 int main()
 {
+	Red.On();
 	tskmgr.DelayMs(500);
 	mpu6050 MPU6050(i2c);
 	tskmgr.DelayMs(500);
@@ -55,11 +57,12 @@ int main()
 	double Send_data=0; //发送数据  100ms
 	double Updata_hint=0; //更新提示信息状态 500ms
 	
+	float Vol = 0;//电压
 	ledRedGPIO.SetLevel(0);//用于表示是否处于上锁状态
 	ledYewGPIO.SetLevel(0);//表示系统是否忙于做其他事
 	
 	pwm4.SetDuty(0,0,0,0);
-	
+
 		
 //	if(InfoStore.Read(0,0))
 //如下方式写将会使IIC出错	
@@ -70,7 +73,7 @@ int main()
 	if(InfoStore.Read(0,0))
 		mag.SetCalibrateRatioBias(InfoStore.Read(0,0),InfoStore.Read(0,2),InfoStore.Read(0,4),InfoStore.Read(0,6),InfoStore.Read(0,8),InfoStore.Read(0,10));
 	
-	Control control(pwm4);
+
 	
 	while(1)
 	{			
@@ -79,18 +82,8 @@ int main()
 				//更新、获得欧拉角
 				imu.UpdateIMU();
 				//控制
-			  if(!COM433.mClockState)
-				{				
-						float a=0,temp=0;
-						temp=((float)COM433.mRcvTargetThr -1000)/10;
-						if(temp>100)
-							temp=100;
-						if(temp<0)
-							temp=0;
-						a=temp;
-						pwm4.SetDuty(a,a,a,a);
-				}
-			 
+			if(!COM433.mClockState) //当解锁
+				control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),COM433.mRcvTargetThr,COM433.mRcvTargetPitch,COM433.mRcvTargetRoll,COM433.mRcvTargetYaw);
 		}
 		if(tskmgr.TimeSlice(Receive_data,0.02) ) 
 		{
@@ -131,7 +124,7 @@ int main()
 			{
 				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
 				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
-				COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,0,0,0);
+				COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
 				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
 				//COM433.SendRcvControlQuantity();//发送接收到的舵量
 								
@@ -159,7 +152,7 @@ int main()
 			
 			if(!imu.GyroIsCalibrated())
 				ledRedGPIO.SetLevel(0);
-			else
+			else 
 				ledRedGPIO.SetLevel(1);		
 
 			if(COM433.mPidUpdata) //更新PID
@@ -168,7 +161,9 @@ int main()
 				control.SetPID_PIT(COM433.PID[0],COM433.PID[1],COM433.PID[2]);
 				control.SetPID_ROL(COM433.PID[3],COM433.PID[4],COM433.PID[5]);
 				control.SetPID_YAW(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
+				Red.Blink(4,100,1);
 			}
+			Vol=pressure.Voltage_I(1,1,3,4.2)*100;
 		}
 		
 	}

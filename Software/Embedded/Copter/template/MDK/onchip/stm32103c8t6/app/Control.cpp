@@ -50,6 +50,8 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		float Pitch_P_out=0,Pitch_I_out=0,Pitch_D_out=0;
 		float Pitch_PID=0;
 		float MOTO1=0,MOTO2=0,MOTO3=0,MOTO4=0;
+		float Thr=(RcThr - 1000)/10; //将接收到的油门量转化为百分比
+	
 		//计算时间间隔
 		if(OldTime ==0)
 			TimeInterval = 0.01;
@@ -58,7 +60,7 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		OldTime = tskmgr.Time();
 		
 //PITCH轴
-		Pitch_angle_error = -(RcPit -1500)*0.04- angle.y; //期望角度减去当前角度,这里将遥控器范围规定在+-20°
+		Pitch_angle_error = (RcPit -1500)*0.04- angle.y; //期望角度减去当前角度,这里将遥控器范围规定在+-20°
 		Pitch_P_out = PID_PIT[0] * Pitch_angle_error; // 区间在 P*20
 		Pit_i += Pitch_angle_error *TimeInterval; //积分
 		//积分限幅5%的油门量
@@ -68,7 +70,7 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 			Pit_i=-5;
 		
 		Pitch_I_out = PID_PIT[1] * Pit_i;
-		Pitch_D_out = -PID_PIT[2] * gyr.y;//微分 
+		Pitch_D_out = -PID_PIT[2] * gyr.y;//微分  下偏陀螺仪为正，上偏为负
 		
 		Pitch_PID = Pitch_P_out + Pitch_I_out +Pitch_D_out;
 		
@@ -78,12 +80,18 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		if(Pitch_PID<-50)
 			Pitch_PID=-50;
 		
-		MOTO1 = (RcThr - 1000)/10 - Pitch_PID;
-		MOTO3 = (RcThr - 1000)/10 + Pitch_PID;
+		MOTO1 = Thr - Pitch_PID;
+		MOTO3 = Thr + Pitch_PID;
 		
 //ROLL轴
 		
-		mMoto.SetDuty(MOTO1,MOTO2,MOTO3,MOTO4);
+		
+//输出		
+		if(RcThr<1200)
+			mMoto.SetDuty(Thr,Thr,Thr,Thr);
+		else
+			mMoto.SetDuty(MOTO1,MOTO2,MOTO3,MOTO4);
+		
 		return true;
 }
 
