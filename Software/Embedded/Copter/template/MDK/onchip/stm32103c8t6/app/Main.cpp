@@ -52,7 +52,8 @@ int main()
 	
 	
 	
-	double Updata_posture_control=0; //计算欧拉角和自稳时间片 10ms
+	double Updata_posture=0; //计算欧拉角 10ms
+//	double Updata_Control=0; //控制 500Hz 2ms
 	double Receive_data=0;  //接收数据  20ms
 	double Send_data=0; //发送数据  100ms
 	double Updata_hint=0; //更新提示信息状态 500ms
@@ -77,14 +78,15 @@ int main()
 	
 	while(1)
 	{			
-		if(tskmgr.TimeSlice(Updata_posture_control,0.01) ) //0.01
+		if(tskmgr.TimeSlice(Updata_posture,0.008) ) 
 		{
 				//更新、获得欧拉角
 				imu.UpdateIMU();
-				//控制
 			if(!COM433.mClockState) //当解锁
-				control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),COM433.mRcvTargetThr,COM433.mRcvTargetPitch,COM433.mRcvTargetRoll,COM433.mRcvTargetYaw);
+				control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),COM433.mRcvTargetThr,COM433.mRcvTargetPitch,COM433.mRcvTargetRoll,COM433.mRcvTargetYaw);		
 		}
+
+		
 		if(tskmgr.TimeSlice(Receive_data,0.02) ) 
 		{
 			//接收
@@ -124,7 +126,8 @@ int main()
 			{
 				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
 				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
-				COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
+				//COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
+				COM433.SendCopterState(imu.mAngle.x,control.GetPID_ROL().Differential,control.GetPID_ROL().Proportion,(u32)Vol,0,(u8)COM433.mClockState);
 				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
 				//COM433.SendRcvControlQuantity();//发送接收到的舵量
 								
@@ -133,7 +136,7 @@ int main()
 			if(COM433.mGetPid)//如果请求了获取PID
 			{
 				COM433.mGetPid=false;
-				COM433.SendPID(control.GetPID_PIT(0),control.GetPID_PIT(1),control.GetPID_PIT(2),control.GetPID_ROL(0),control.GetPID_ROL(1),control.GetPID_ROL(2),control.GetPID_YAW(0),control.GetPID_YAW(1),control.GetPID_YAW(2));
+				COM433.SendPID(control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D,control.GetPID_ROL().P,control.GetPID_ROL().I,control.GetPID_ROL().D,control.GetPID_YAW().P,control.GetPID_YAW().I,control.GetPID_YAW().D);
 			}
 			
 		}

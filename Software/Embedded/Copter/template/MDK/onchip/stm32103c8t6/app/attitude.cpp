@@ -189,9 +189,9 @@ float recipNorm;
 Vector3f AttitudeCalculation::GetAngle(Vector3<int> acc, Vector3<float> gyro,float deltaT)
 {
 		NonlinearSO3AHRSupdate(gyro.x,gyro.y,gyro.z,acc.x,acc.y,acc.z,0,0,0,1,0.05,deltaT);
-		mAngle.x = asin(-2 * q1 * q3 + 2 * q0* q2)* RtA; // pitch
-		mAngle.y = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* RtA; // roll
-		mAngle.z = atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3))* RtA;//yaw
+		 mAngle.y= asin(-2 * q1 * q3 + 2 * q0* q2)* RtA; // pitch
+		 mAngle.x= atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* RtA; // roll
+		 mAngle.z = atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3))* RtA;//yaw
 		return mAngle;
 }
 
@@ -200,8 +200,8 @@ Vector3f AttitudeCalculation::GetAngle(Vector3<int> acc, Vector3<float> gyro,Vec
 {
 		NonlinearSO3AHRSupdate(gyro.x,gyro.y,gyro.z,acc.x,acc.y,acc.z,mag.x,mag.y,mag.z,100,0.05,deltaT);
 		
-		mAngle.x = asin(-2 * q1 * q3 + 2 * q0* q2)* RtA; // pitch
-		mAngle.y = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* RtA; // roll
-		mAngle.z = atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3))* RtA;//yaw
+		 mAngle.y= asin(-2 * q1 * q3 + 2 * q0* q2)* RtA; // pitch
+		 mAngle.x= atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* RtA; // roll
+		 mAngle.z = atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3))* RtA;//yaw
 		return mAngle;
 }
