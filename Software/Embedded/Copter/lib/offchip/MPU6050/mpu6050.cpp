@@ -185,30 +185,36 @@ u8 mpu6050::Update(bool wait,Vector3<int> *acc, Vector3<int> *gyro)
 	
 	//角速度校准
 	static Vector3<int> gyroCalibrate_sum;
-	static u16 gyroCalibrateCnt = 0;
+	//static u16 gyroCalibrateCnt = 0;
 	mGyroRaw.x=((int16_t)(mData.gyro_XH<<8))|mData.gyro_XL;
 	mGyroRaw.y=((int16_t)(mData.gyro_YH<<8))|mData.gyro_YL;
 	mGyroRaw.z=((int16_t)(mData.gyro_ZH<<8))|mData.gyro_ZL;
 	if(mIsGyrCalibrating)
 	{
-		gyroCalibrate_sum.x += mGyroRaw.x;
-		gyroCalibrate_sum.y += mGyroRaw.y;
-		gyroCalibrate_sum.z += mGyroRaw.z;
+//		gyroCalibrate_sum.x += mGyroRaw.x;
+//		gyroCalibrate_sum.y += mGyroRaw.y;
+//		gyroCalibrate_sum.z += mGyroRaw.z;
 		
 //		LOG(gyroCalibrateCnt);
 //		LOG("\n");
-		if(++gyroCalibrateCnt>=100) //与主函数调用时间有关
-		{
-			mIsGyrCalibrating = false;
-			mGyroOffset.x = gyroCalibrate_sum.x*1.0 / gyroCalibrateCnt;
-			mGyroOffset.y = gyroCalibrate_sum.y*1.0 / gyroCalibrateCnt;
-			mGyroOffset.z = gyroCalibrate_sum.z*1.0 / gyroCalibrateCnt;
-			gyroCalibrate_sum.x = 0;
-			gyroCalibrate_sum.y = 0;
-			gyroCalibrate_sum.z = 0;
-			gyroCalibrateCnt = 0;
-			mIsGyrCalibrated = true;
-		}	
+		
+//		if(++gyroCalibrateCnt>=100) //与主函数调用时间有关
+//		{
+//			mIsGyrCalibrating = false;
+//			mGyroOffset.x = gyroCalibrate_sum.x*1.0 / gyroCalibrateCnt;
+//			mGyroOffset.y = gyroCalibrate_sum.y*1.0 / gyroCalibrateCnt;
+//			mGyroOffset.z = gyroCalibrate_sum.z*1.0 / gyroCalibrateCnt;
+//			gyroCalibrate_sum.x = 0;
+//			gyroCalibrate_sum.y = 0;
+//			gyroCalibrate_sum.z = 0;
+//			gyroCalibrateCnt = 0;
+//			mIsGyrCalibrated = true;
+//		}	
+		mIsGyrCalibrating = false;
+		mGyroOffset.x=-134;
+		mGyroOffset.y=0xb8;
+		mGyroOffset.z=-122;
+		mIsGyrCalibrated = true;
 	}	
 	mGyroRaw -= mGyroOffset;
 	

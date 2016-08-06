@@ -59,6 +59,8 @@ class Communication{
 	bool reply(u8 difference,u8 sum);
 		//发送电机信息
 	void SendMotoMsg(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7,u16 m_8);
+		//test 使用原始数据的通信方式来发送测试信息
+	void test(float a,float b,float c,float d,float e,float f,float g,float h,float i);	
 	
 };
 

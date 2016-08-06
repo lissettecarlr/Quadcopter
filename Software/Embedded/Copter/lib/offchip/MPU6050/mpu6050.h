@@ -76,11 +76,11 @@ private:
 	Mpu6050Data mData;
 
 	bool mIsGyrCalibrating;      //角速度校准
-	Vector3<int> mGyroOffset;    //角速度误差校准值
 	Vector3<int> mGyroRaw;       //角速度原始值
 	bool mIsGyrCalibrated;       //加速度是否已经校准完毕
 public:
-
+	
+	Vector3<int> mGyroOffset;    //角速度误差校准值
 
 #ifdef MPU6050_USE_TASKMANAGER
 	////////////////////////////
@@ -103,7 +103,7 @@ public:
 	///////////////////////////
 		~mpu6050();
 
-
+	
 
 	//////////////////////////
 	///IMU初始化函数,但不对iic进行初始化，在iic已经初始化了的情况下使用，否则会出错哦

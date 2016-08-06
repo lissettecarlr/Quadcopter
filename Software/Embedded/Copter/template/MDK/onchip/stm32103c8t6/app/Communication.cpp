@@ -422,3 +422,63 @@ void Communication::SendMotoMsg(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,
 	
 	usart.SendData(data_to_send, _cnt);
 }	
+
+void Communication::test(float a,float b,float c,float d,float e,float f,float g,float h,float i)
+{
+		u8 _cnt=0;
+	vs16 _temp;
+	u8 data_to_send[30];
+	
+
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x02;
+	data_to_send[_cnt++]=0;
+	
+	
+	_temp = (int)(a*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = (int)(b*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = (int)(c*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = (int)(d*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = (int)(e*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = (int)(f*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	
+	_temp = (int)(g*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = (int)(h*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = (int)(i*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	data_to_send[3] = _cnt-4;
+	u8 sum = 0;
+	for(u8 i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	data_to_send[_cnt++] = sum;
+	
+	usart.SendData(data_to_send, _cnt);
+
+}

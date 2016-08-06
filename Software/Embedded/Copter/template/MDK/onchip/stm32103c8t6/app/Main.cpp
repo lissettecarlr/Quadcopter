@@ -82,7 +82,7 @@ int main()
 		{
 				//更新、获得欧拉角
 				imu.UpdateIMU();
-			if(!COM433.mClockState) //当解锁
+//			if(!COM433.mClockState) //当解锁
 				control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),COM433.mRcvTargetThr,COM433.mRcvTargetPitch,COM433.mRcvTargetRoll,COM433.mRcvTargetYaw);		
 		}
 
@@ -127,7 +127,11 @@ int main()
 				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
 				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
 				//COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
-				COM433.SendCopterState(imu.mAngle.x,control.GetPID_ROL().Differential,control.GetPID_ROL().Proportion,(u32)Vol,0,(u8)COM433.mClockState);
+				//COM433.SendCopterState(imu.mAngle.x,control.GetPID_ROL().Differential,control.GetPID_ROL().Proportion,(u32)Vol,0,(u8)COM433.mClockState);
+				COM433.SendCopterState(imu.mAngle.x,imu.mAngle.y,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
+				//COM433.test(control.GetPID_ROL().Proportion,control.GetPID_ROL().Integral,control.GetPID_ROL().Differential,
+				//						control.GetPID_ROL().Output,COM433.mRcvTargetThr,COM433.mRcvTargetRoll,
+				//						control.GetPID_ROL().P,control.GetPID_ROL().I,control.GetPID_ROL().D);
 				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
 				//COM433.SendRcvControlQuantity();//发送接收到的舵量
 								
@@ -163,7 +167,8 @@ int main()
 				COM433.mPidUpdata=false;
 				control.SetPID_PIT(COM433.PID[0],COM433.PID[1],COM433.PID[2]);
 				control.SetPID_ROL(COM433.PID[3],COM433.PID[4],COM433.PID[5]);
-				control.SetPID_YAW(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
+				//control.SetPID_YAW(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
+				control.SetPID_ROL_rate(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
 				Red.Blink(4,100,1);
 			}
 			Vol=pressure.Voltage_I(1,1,3,4.2)*100;

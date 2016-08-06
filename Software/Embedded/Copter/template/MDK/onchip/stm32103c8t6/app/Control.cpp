@@ -5,8 +5,11 @@ Control::Control(PWM &Moto):mMoto(Moto)
 	OldTime=0;
 	
 	//积分限幅
-	pitch_angle_PID.iLimit =5;
-	roll_angle_PID.iLimit =5;
+	pitch_angle_PID.iLimit =30;
+	roll_angle_PID.iLimit =30;
+	
+	pitch_rate_PID.iLimit =30;
+	roll_rate_PID.iLimit =30;
 	//总输出限幅
 	pitch_angle_PID.OLimit = 50;
 	roll_angle_PID.OLimit = 50;
@@ -54,6 +57,16 @@ bool Control::SavePID(flash info,u16 Page,u16 position)
 bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 PcYaw)
 {
 	
+			//调试用控制
+		if(RcThr==0)
+			RcThr=1000;
+		if(RcPit==0)
+			RcPit=1500;
+		if(RcRol==0)
+			RcRol=1500;
+		if(PcYaw==0)
+			PcYaw=1500;
+	
 		float MOTO1=0,MOTO2=0,MOTO3=0,MOTO4=0;
 		float Thr=(RcThr - 1000)/10; //将接收到的油门量转化为百分比
 	
@@ -63,6 +76,7 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		else
 			TimeInterval = tskmgr.Time() - OldTime;
 		OldTime = tskmgr.Time();
+
 		
 //PITCH轴		
 		//比例
@@ -93,8 +107,8 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 //思考例子：当前-20度，也就是飞机向左偏了，目标是0度，误差就是20，由于向0度运动时陀螺仪是正数，于是微分项添加一个负号
 //要想回到0，MOTO2要减速,MOTO4要加速		
 		//比例
-		roll_angle_PID.Error = (RcRol -1500)*0.04- angle.x; //期望角度减去当前角度,这里将遥控器范围规定在+-20°
-		roll_angle_PID.Proportion = roll_angle_PID.P *roll_angle_PID.Error; // 区间在 P*20
+		roll_angle_PID.Error = (RcRol -1500)*0.08- angle.x; //期望角度减去当前角度,这里将遥控器范围规定在+-20°
+		roll_angle_PID.Proportion = roll_angle_PID.P *roll_angle_PID.Error; // 区间在 P*40
 		//积分
 		roll_angle_PID.CumulativeError += roll_angle_PID.Error *TimeInterval;
 		roll_angle_PID.Integral = roll_angle_PID.I * roll_angle_PID.CumulativeError;
@@ -109,12 +123,15 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		roll_angle_PID.Output = roll_angle_PID.Proportion + roll_angle_PID.Integral+roll_angle_PID.Differential;
 		
 		//PID总和限幅
-		if(roll_angle_PID.Output >roll_angle_PID.OLimit)
-			roll_angle_PID.Output=roll_angle_PID.OLimit;
-		if(roll_angle_PID.Output<-roll_angle_PID.OLimit)
-			roll_angle_PID.Output=-roll_angle_PID.OLimit;
+//		if(roll_angle_PID.Output >roll_angle_PID.OLimit)
+//			roll_angle_PID.Output=roll_angle_PID.OLimit;
+//		if(roll_angle_PID.Output<-roll_angle_PID.OLimit)
+//			roll_angle_PID.Output=-roll_angle_PID.OLimit;
 		
 		MOTO2 = Thr - roll_angle_PID.Output;
+		if(MOTO2<0)
+			MOTO2=0;
+		
 		MOTO4 = Thr + roll_angle_PID.Output;
 		
 		
@@ -130,57 +147,54 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 
 bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 PcYaw)
 {
-//	float O_Roll_error_angle=0;
-//	float O_Roll_PIDout=0,I_Roll_PIDout=0;
-//	float MOTO2=0,MOTO4=0;
-//	float Thr=(RcThr - 1000)/10; //将接收到的油门量转化为百分比
-//	
-//		//计算时间间隔
-//	if(OldTime ==0)
-//		TimeInterval = 0.008;
-//	else
-//		TimeInterval = tskmgr.Time() - OldTime;
-//	OldTime = tskmgr.Time();
-
-//	
-//	//roll外环（PI）
-//	O_Roll_error_angle = (RcRol -1500)*0.08- angle.y;   //遥控器 范围+-40°
-//	Rol_i += O_Roll_error_angle *TimeInterval;
-//	
-//	//积分限幅5%的油门量
-//	if(Rol_i>5)
-//		Rol_i=5;
-//	if(Rol_i<-5)
-//		Rol_i=-5;
-//	
-//	
-//	//-------------Roll 外环计算输出-------------------//
-//	O_Roll_PIDout = PID_ROL[0] * O_Roll_error_angle + PID_ROL[1]* Rol_i;
-//	
-//	
-//	//roll内环积分
-//	Rol_error+=gyr.x-O_Roll_PIDout;
-//		if(Rol_error>5)
-//		Rol_error=5;
-//	if(Rol_error<-5)
-//		Rol_error=-5;
-//	
-//	I_Roll_PIDout= (O_Roll_PIDout+gyr.x)*PID_YAW[0]+Rol_error*PID_YAW[1]+(gyr.x - lastAngle_gx)*PID_YAW[2];
-//	
-//		//PID总和限幅
-//	if(I_Roll_PIDout >50)
-//		I_Roll_PIDout=50;
-//	if(I_Roll_PIDout<-50)
-//		I_Roll_PIDout=-50;
-//	
-//	lastAngle_gx = gyr.x;
-//	
-//	//电机输出
-//		MOTO2 = Thr - I_Roll_PIDout;
-//		MOTO4 = Thr + I_Roll_PIDout;
-//	
-//	mMoto.SetDuty(0,MOTO2,0,MOTO4);
-//	return true;
-
+	//角度环（外环）
+	float TargetRcThr = (RcThr - 1000)/10;
+	float TargetPitch = (RcPit-1500)*0.08; //期望角度控制在+-40°
+	float TargetRoll = (RcRol -1500)*0.08;
+	
+	//计算时间间隔
+	if(OldTime ==0)
+		TimeInterval = 0.008;
+	else
+		TimeInterval = tskmgr.Time() - OldTime;
+	OldTime = tskmgr.Time();
+	
+	TOOL_PID_Postion_Cal(&pitch_angle_PID,TargetPitch,angle.y,TargetRcThr,TimeInterval);
+	TOOL_PID_Postion_Cal(&roll_angle_PID,TargetRoll,angle.x,TargetRcThr,TimeInterval);
+	
+	//角速度环（内环）
+	TOOL_PID_Postion_Cal(&pitch_rate_PID,pitch_angle_PID.Output,gyr.y,TargetRcThr,TimeInterval);	
+	TOOL_PID_Postion_Cal(&roll_rate_PID,roll_angle_PID.Output,gyr.x,TargetRcThr,TimeInterval);
+	
+//	TOOL_PID_Postion_Cal(&roll_rate_PID,TargetRoll,gyr.x,TargetRcThr,TimeInterval);
+	
+	//电机控制
+	if(TargetRcThr >10)
+		mMoto.SetDuty(0,TargetRcThr-roll_rate_PID.Output,0,TargetRcThr+roll_rate_PID.Output);
+	else
+		mMoto.SetDuty(0,TargetRcThr,0,TargetRcThr);
+	
+	return true;
 }
+
+bool Control::TOOL_PID_Postion_Cal(PID_Typedef * PID,float target,float measure,float Thr,double dertT)
+{
+	float tempI=0; //积分项暂存
+	
+	PID->Error = target - measure; //计算误差
+	PID->Differential = (PID->Error - PID->LastError)/dertT; //计算微分值
+	PID->Output=(PID->P * PID->Error) + (PID->I * PID->Integral) + (PID->D * PID->Differential);  //PID:比例环节+积分环节+微分环节
+	PID->LastError=PID->Error;//保存误差
+	
+	
+	if( fabs(PID->Output) <Thr) //比油门还大时不积分
+	{
+		tempI=(PID->Integral) + (PID->Error) * dertT;     //积分环节
+		if(tempI>-PID->iLimit && tempI<PID->iLimit &&PID->Output > - PID->iLimit && PID->Output < PID->iLimit)//在输出小于30才累计
+			PID->Integral = tempI;
+	}
+	return true;
+	
+}
+
 

@@ -6,7 +6,7 @@
 #include "Vector3.h"
 #include "TaskManager.h"
 #include "PWM.h"
-
+#include "math.h"
 
 
 // PID结构体
@@ -17,6 +17,7 @@ typedef struct
     float D;
     float Desired; //期望
     float Error; //误差
+	  float LastError; //上一次的误差
     float CumulativeError;//积分累计误差
 		float Proportion; //比例项
     float Integral;//积分项
@@ -45,8 +46,9 @@ class Control{
 		PID_Typedef yaw_angle_PID;    //yaw角度环的PID 
 		PID_Typedef yaw_rate_PID;     //yaw角速率环的PID
 
-	
-	
+		//增量式PID工具
+		//参数：需要更新的PID结构体，目标位置，当前位置，时间间隔
+		bool TOOL_PID_Postion_Cal(PID_Typedef * PID,float target,float measure,float Thr,double dertT);
 	public:
 		Control(PWM &Moto);
 		bool ReadPID(flash info,u16 Page,u16 position);
@@ -76,6 +78,30 @@ class Control{
 			yaw_angle_PID.D=D;
 			return true;
 		}
+		//角速度环
+		bool SetPID_ROL_rate(float P,float I,float D)
+		{
+			roll_rate_PID.P=P;
+			roll_rate_PID.I=I;
+			roll_rate_PID.D=D;
+			return true;
+		}
+		
+		bool SetPID_PIT_rate(float P,float I,float D)
+		{
+			pitch_rate_PID.P=P;
+			pitch_rate_PID.I=I;
+			pitch_rate_PID.D=D;
+			return true;
+		}
+		
+		bool SetPID_YAW_rate(float P,float I,float D)
+		{
+			yaw_rate_PID.P=P;
+			yaw_rate_PID.I=I;
+			yaw_rate_PID.D=D;
+			return true;
+		}
 		
 	//GET-----------------------------------------------
 		PID_Typedef GetPID_ROL()
@@ -91,6 +117,21 @@ class Control{
 		PID_Typedef GetPID_PIT()
 		{
 			return pitch_angle_PID;
+		}
+		
+		PID_Typedef GetPID_ROL_rate()
+		{
+				return roll_rate_PID;
+		}
+		
+		PID_Typedef GetPID_YAW_rate()
+		{
+			return yaw_rate_PID;
+		}
+		
+		PID_Typedef GetPID_PIT_rate()
+		{
+			return pitch_rate_PID;
 		}
 		
 		//传入： 当前角度/陀螺仪的角速度/遥控器量
