@@ -14,7 +14,7 @@ bool IMU::init()
 		mMag.Init();
 		while(TaskManager::Time()-time<1.5)
 		{}
-		mIns.StartGyroCalibrate();//启动校准
+		//mIns.StartGyroCalibrate();//启动校准
 		mGyroIsCalibrating = true;
 		LOG("calibrating ... don't move!!!\n");
 		return true;

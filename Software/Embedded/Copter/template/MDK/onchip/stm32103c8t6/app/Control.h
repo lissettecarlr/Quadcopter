@@ -9,6 +9,10 @@
 #include "math.h"
 
 
+#define DUBUG_PITCH
+//#define DUBUG_ROLL
+//#define NORMAL
+
 // PID结构体
 typedef struct
 {
@@ -36,6 +40,7 @@ class Control{
 		PWM &mMoto;
 		double TimeInterval;
 		double OldTime;
+		float FlyThr; //起飞油门量 经验值，用于区分使用PID的时间
 	
 		PID_Typedef pitch_angle_PID;	//pitch角度环的PID
 		PID_Typedef pitch_rate_PID;		//pitch角速率环的PID

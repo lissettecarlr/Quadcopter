@@ -82,7 +82,7 @@ int main()
 		{
 				//更新、获得欧拉角
 				imu.UpdateIMU();
-//			if(!COM433.mClockState) //当解锁
+			if(!COM433.mClockState) //当解锁
 				control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),COM433.mRcvTargetThr,COM433.mRcvTargetPitch,COM433.mRcvTargetRoll,COM433.mRcvTargetYaw);		
 		}
 
@@ -129,10 +129,13 @@ int main()
 				//COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
 				//COM433.SendCopterState(imu.mAngle.x,control.GetPID_ROL().Differential,control.GetPID_ROL().Proportion,(u32)Vol,0,(u8)COM433.mClockState);
 				COM433.SendCopterState(imu.mAngle.x,imu.mAngle.y,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
-				//COM433.test(control.GetPID_ROL().Proportion,control.GetPID_ROL().Integral,control.GetPID_ROL().Differential,
-				//						control.GetPID_ROL().Output,COM433.mRcvTargetThr,COM433.mRcvTargetRoll,
-				//						control.GetPID_ROL().P,control.GetPID_ROL().I,control.GetPID_ROL().D);
-				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
+				COM433.test(control.GetPID_PIT().Proportion,control.GetPID_PIT().Integral,control.GetPID_PIT().Differential,
+										control.GetPID_PIT().Output,COM433.mRcvTargetThr/100,COM433.mRcvTargetRoll/100,
+										control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D);
+				
+				//输出 比例 积分 微分  /  PID结果  油门量 横滚量 / P I D  所以都被放大了100的
+				
+			//	COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
 				//COM433.SendRcvControlQuantity();//发送接收到的舵量
 								
 				//com<<COM433.mRcvTargetYaw<<"\t"<<COM433.mRcvTargetRoll<<"\t"<<COM433.mRcvTargetPitch<<"\t"<<COM433.mRcvTargetThr<<"\n";
