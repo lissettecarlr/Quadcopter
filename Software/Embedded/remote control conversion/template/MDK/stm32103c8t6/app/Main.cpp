@@ -24,7 +24,7 @@ ADC pressure(1); //PA1读取AD值
 GPIO ledBlueGPIO(GPIOB,5,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 //LED ledRed(ledRedGPIO);//LED red
 //LED ledBlue(ledBlueGPIO);//LED blue
-RemoteControl RC(&hunter,1,3,2,4);
+RemoteControl RC(&hunter,2,3,4,1); //P THR YAW ROLL
 
 
 int main()

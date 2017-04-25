@@ -31,44 +31,40 @@ bool Communication::Calibration(u8 *data,int lenth,u8 check)
 bool Communication::DataListening()
 {
 		u8 ch=0;
-		u8 data[14]={0};
-		u8 check=0;
+		u8 data[20]={0};
+		//u8 check=0;
 		u8 num = usart.ReceiveBufferSize();
 		if(num>3)
 		{
 				usart.GetReceivedData(&ch,1);
-				if(ch == 0xbb)
+				if(ch == 0xaa)
 				{
 					usart.GetReceivedData(&ch,1);
-					if(ch == 0xbb)
+					if(ch == 0xaa)
 					{
 						//命令字判断
 						usart.GetReceivedData(&ch,1);
-						if(ch == 0xff)//状态数据
+						if(ch == 0x01)//状态数据
 						{
 							while(usart.ReceiveBufferSize()<14);//等待数据
 							usart.GetReceivedData(data,14);
-							check=data[13];							
-							if( Calibration(data,13,check )) //如果校验正确
-							{
-								 RcvYaw=(float)data[0]+(float)data[1]/100;
-								 RcvRoll=(float)data[2]+(float)data[3]/100;
-								 RcvPitch=(float)data[4]+(float)data[5]/100;
-								 RcvPower=(float)data[6]+(float)data[7]/100;
-								 RcvThr=data[8];
-								 RcvHight=data[9];
-								 if(data[10]==0)
-										ClockState=false;
-								 else
-										ClockState=true;
-								 
-								 RcvTime =(int)data[11]<<8+data[12];
-								 
-								 return true;
+//							check=data[13];							
+//							if( Calibration(data,13,check )) //如果校验正确
+//							{
+							RcvRoll=(float)(((u16)data[1])<<8+data[2])/100;
+							RcvPitch=(float)(((u16)data[3])<<8+data[4])/100;
+							RcvYaw=(float)(((u16)data[5])<<8+data[6])/100;
+							
+							RcvPower=((u32)data[7])<<24 + ((u32)data[8])<<16 + ((u16)data[9])<<8 + data[10];
+							ClockState=data[12];
+							
+							usart.ClearReceiveBuffer();
+							
+							return true;
 																 
-							}
-							else
-								return false;
+//							}
+//							else
+//								return false;
 						}
 						else//其他命令字
 						{
@@ -80,23 +76,14 @@ bool Communication::DataListening()
 						return false;
 				}
 				else
-					return false;				
+					return false;			//帧头错误	
 		}
 		else
 			return false;
 		
 }
 
-u8* Communication::ProtocolClock(bool flag)//上锁协议
-{
-		FrameClock[0]=0xaa;
-		FrameClock[1]=0XAA;
-		FrameClock[2]=0X03;
-		FrameClock[3]=(u8)flag;
-		//和校验
-	  FrameClock[4]=FrameClock[2]+FrameClock[3];
-		return FrameClock;
-}
+
 
 //上锁与解锁
 bool Communication::FlightLockControl(bool flag)
@@ -104,14 +91,52 @@ bool Communication::FlightLockControl(bool flag)
 		if(flag == false)//解锁
 		{
 			ClockState = false;
-			usart.SendData(ProtocolClock(false),5);
+			//usart.SendData(ProtocolClock(false),5);
 		}
 		else
 		{
 			ClockState = true;
-			usart.SendData(ProtocolClock(true),5);
+			//usart.SendData(ProtocolClock(true),5);
 		}
 		return true;
 }
 
+bool Communication::SendData2Copter(float Yaw,float Thr,float Roll,float Pitch)
+{
+	u8 _cnt=0;
+	u8 data_to_send[30];
+	
+	data_to_send[_cnt++]=0xAA;
+	
+	data_to_send[_cnt++]=0xAF;	
+	
+	data_to_send[_cnt++]=0x03;
+	data_to_send[_cnt++]=0;
+	
+	data_to_send[_cnt++]=BYTE1(Thr);
+	data_to_send[_cnt++]=BYTE0(Thr);
+	
+	data_to_send[_cnt++]=BYTE1(Yaw);
+	data_to_send[_cnt++]=BYTE0(Yaw);
+	
+	data_to_send[_cnt++]=BYTE1(Roll);
+	data_to_send[_cnt++]=BYTE0(Roll);
+	
+	data_to_send[_cnt++]=BYTE1(Pitch);
+	data_to_send[_cnt++]=BYTE0(Pitch);
+	
+	u8 i=12;
+	while(i--)
+		data_to_send[_cnt++]=0;
+	
+	data_to_send[3] = _cnt-4;
+	u8 sum = 0;
+	for(u8 i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	data_to_send[_cnt++] = sum;
+	
+	usart.SendData(data_to_send, _cnt);	
+	
+	return true;
+}
 

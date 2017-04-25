@@ -165,7 +165,7 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		if(Thr<FlyThr)
 			mMoto.SetDuty(Thr,Thr,Thr,Thr);
 		else
-			mMoto.SetDuty(MOTO1,MOTO2,MOTO4,MOTO4);
+			mMoto.SetDuty(MOTO1,MOTO2,MOTO3,MOTO4);
 		#endif
 		
 		return true;

@@ -425,7 +425,7 @@ void Communication::SendMotoMsg(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,
 
 void Communication::test(float a,float b,float c,float d,float e,float f,float g,float h,float i)
 {
-		u8 _cnt=0;
+	u8 _cnt=0;
 	vs16 _temp;
 	u8 data_to_send[30];
 	

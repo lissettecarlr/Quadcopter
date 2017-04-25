@@ -74,7 +74,8 @@ int main()
 	if(InfoStore.Read(0,0))
 		mag.SetCalibrateRatioBias(InfoStore.Read(0,0),InfoStore.Read(0,2),InfoStore.Read(0,4),InfoStore.Read(0,6),InfoStore.Read(0,8),InfoStore.Read(0,10));
 	
-
+		control.SetPID_PIT(0.4,0,0.026);
+		control.SetPID_ROL(0.4,0,0.026);
 	
 	while(1)
 	{			
@@ -129,13 +130,14 @@ int main()
 				//COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
 				//COM433.SendCopterState(imu.mAngle.x,control.GetPID_ROL().Differential,control.GetPID_ROL().Proportion,(u32)Vol,0,(u8)COM433.mClockState);
 				COM433.SendCopterState(imu.mAngle.x,imu.mAngle.y,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
-				COM433.test(control.GetPID_PIT().Proportion,control.GetPID_PIT().Integral,control.GetPID_PIT().Differential,
-										control.GetPID_PIT().Output,COM433.mRcvTargetThr/100,COM433.mRcvTargetRoll/100,
-										control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D);
+				
+//				COM433.test(control.GetPID_PIT().Proportion,control.GetPID_PIT().Integral,control.GetPID_PIT().Differential,
+//										control.GetPID_PIT().Output,COM433.mRcvTargetThr/100,COM433.mRcvTargetRoll/100,
+//										control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D);
 				
 				//输出 比例 积分 微分  /  PID结果  油门量 横滚量 / P I D  所以都被放大了100的
 				
-			//	COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
+				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
 				//COM433.SendRcvControlQuantity();//发送接收到的舵量
 								
 				//com<<COM433.mRcvTargetYaw<<"\t"<<COM433.mRcvTargetRoll<<"\t"<<COM433.mRcvTargetPitch<<"\t"<<COM433.mRcvTargetThr<<"\n";

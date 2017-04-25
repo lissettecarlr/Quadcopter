@@ -37,4 +37,4 @@
 .\objects\main.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: app\Communication.h
 .\objects\main.o: ..\..\..\..\lib\math\CRC.h
-.\objects\main.o: ..\..\..\..\lib\offchip\rocker_potentiometer\rocker.h
+.\objects\main.o: ..\..\..\..\lib\offchip\Joystick\Joystick.h

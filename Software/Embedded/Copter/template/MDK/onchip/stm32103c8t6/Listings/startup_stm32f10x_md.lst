@@ -476,15 +476,16 @@ ARM Macro Assembler    Page 8
               00000200 
               00000000 
 Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=.\object
-s\startup_stm32f10x_md.d -o.\objects\startup_stm32f10x_md.o -IC:\Users\lissette
-carlr\Desktop\Copter\template\MDK\onchip\stm32103c8t6\RTE -IC:\Users\lissetteca
-rlr\Desktop\Copter\template\MDK\onchip\stm32103c8t6\RTE\Device\STM32F103C8 -IC:
-\Other\keil5\ARM\CMSIS\4.2.0\CMSIS\Include -IC:\Other\keil5\Keil\STM32F1xx_DFP\
-2.1.0 -IC:\Other\keil5\Keil\STM32F1xx_DFP\2.1.0\Device\Include -IC:\Other\keil5
-\Keil\STM32F1xx_DFP\2.1.0\Device\StdPeriph_Driver\inc -IC:\Other\keil5\Keil\STM
-32F1xx_DFP\2.1.0\RTE_Driver --predefine="__UVISION_VERSION SETA 513" --predefin
-e="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --list=.\listings\startup_st
-m32f10x_md.lst RTE\Device\STM32F103C8\startup_stm32f10x_md.s
+s\startup_stm32f10x_md.d -o.\objects\startup_stm32f10x_md.o -IE:\project\微型四
+轴无人机\Software\Embedded\Copter\template\MDK\onchip\stm32103c8t6\RTE -IE:\pro
+ject\微型四轴无人机\Software\Embedded\Copter\template\MDK\onchip\stm32103c8t6\R
+TE\Device\STM32F103C8 -IC:\Other\keil5\ARM\CMSIS\4.2.0\CMSIS\Include -IC:\Other
+\keil5\Keil\STM32F1xx_DFP\2.1.0 -IC:\Other\keil5\Keil\STM32F1xx_DFP\2.1.0\Devic
+e\Include -IC:\Other\keil5\Keil\STM32F1xx_DFP\2.1.0\Device\StdPeriph_Driver\inc
+ -IC:\Other\keil5\Keil\STM32F1xx_DFP\2.1.0\RTE_Driver --predefine="__UVISION_VE
+RSION SETA 513" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --
+list=.\listings\startup_stm32f10x_md.lst RTE\Device\STM32F103C8\startup_stm32f1
+0x_md.s
 
 
 

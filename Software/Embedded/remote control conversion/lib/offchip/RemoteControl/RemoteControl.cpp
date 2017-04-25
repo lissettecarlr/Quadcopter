@@ -275,20 +275,35 @@ uint16_t RemoteControl::GetOriginalValue(u8 ChNum)
 
 
 //这里要注意的是遥控器的左右的大小变化可能不一样
-//油门 下小上大  偏航 左大右小   俯仰 上大下小 横滚 左大右小
+
+//  油门 下小上大  偏航 左大右小   俯仰 上大下小 横滚 左大右小  #define LEFTBIG
+//	油门 下小上大  偏航 左小右大   俯仰 上大下小 横滚 左小右大	#else
 
 u8 RemoteControl::GetLeftState() //左上向右数的九宫格
 {
 	u8 Xtemp,Ytemp;
-	
+
 	if(mOriginalYAW ==0)
 		return 0;
 	else if(mOriginalYAW<=(OriginalYawMin+OriginalYawMax/10))
-		Xtemp = 6;
+	{
+		#ifdef LEFTBIG
+			Xtemp = 6;
+		#else
+			Xtemp = 4;
+		#endif
+	}
 	else if(mOriginalYAW>=(OriginalYawMax-OriginalYawMax/10))
-		Xtemp = 4;
+	{
+		#ifdef LEFTBIG
+			Xtemp = 4;
+		#else
+			Xtemp = 6;
+		#endif
+	}
 	else
 		Xtemp = 5;
+
 	
 	if(mOriginalTHROTTLE<=(OriginalThrMin+OriginalThrMax/10))
 		Ytemp = 8;
@@ -327,9 +342,21 @@ u8 RemoteControl::GetNightState() //左上向右数的九宫格
 	if(mOriginalROLL ==0)
 		return 0;
 	else if(mOriginalROLL<=(OriginalRolMin+OriginalRolMax/10))
-		Xtemp = 6;
+	{
+		#ifdef LEFTBIG
+			Xtemp = 6;
+		#else
+			Xtemp = 4;
+		#endif
+	}
 	else if(mOriginalROLL>=(OriginalRolMax-OriginalRolMax/10))
-		Xtemp = 4;
+	{
+		#ifdef LEFTBIG
+			Xtemp = 4;
+		#else
+			Xtemp = 6;
+		#endif
+	}
 	else
 		Xtemp = 5;
 	

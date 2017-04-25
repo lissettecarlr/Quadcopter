@@ -177,50 +177,32 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F10x_128 -FS08000000 -FL020000 -FP0($$Device:STM32F103C8$Flash/STM32F10x_128.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>206</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134240298</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\..\..\lib\offchip\MPU6050\mpu6050.cpp</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>207</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\..\..\..\lib\offchip\MPU6050\mpu6050.cpp</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mGyroOffset</ItemText>
+          <ItemText>RcThr</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mGyroOffset.x</ItemText>
+          <ItemText>RcPit</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>RcRol</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PcYaw</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Thr</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -232,32 +214,32 @@
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>MPU6050.mGyroOffset</ItemText>
+          <ItemText>mGyroOffset.x</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>MPU6050.mGyroOffset</ItemText>
+          <ItemText>mGyroOffset</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>roll_angle_PID</ItemText>
+          <ItemText>MPU6050.mGyroOffset</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Thr</ItemText>
+          <ItemText>MPU6050.mGyroOffset</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>2</WinNumber>
-          <ItemText>MOTO2</ItemText>
+          <ItemText>roll_angle_PID</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>2</WinNumber>
-          <ItemText>roll_angle_PID</ItemText>
+          <ItemText>Thr</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
@@ -267,92 +249,92 @@
         <Ww>
           <count>8</count>
           <WinNumber>2</WinNumber>
-          <ItemText>MOTO4</ItemText>
+          <ItemText>roll_angle_PID</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Thr</ItemText>
+          <ItemText>MOTO2</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>2</WinNumber>
-          <ItemText>RcThr</ItemText>
+          <ItemText>MOTO4</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>2</WinNumber>
-          <ItemText>pitch_angle_PID</ItemText>
+          <ItemText>Thr</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>2</WinNumber>
-          <ItemText>roll_angle_PID</ItemText>
+          <ItemText>RcThr</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>2</WinNumber>
-          <ItemText>roll_angle_PID</ItemText>
+          <ItemText>pitch_angle_PID</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>2</WinNumber>
-          <ItemText>pitch_rate_PID</ItemText>
+          <ItemText>roll_angle_PID</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>2</WinNumber>
-          <ItemText>TargetRcThr</ItemText>
+          <ItemText>roll_angle_PID</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>2</WinNumber>
-          <ItemText>TargetRoll</ItemText>
+          <ItemText>pitch_rate_PID</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>2</WinNumber>
-          <ItemText>RcRol</ItemText>
+          <ItemText>TargetRcThr</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
           <WinNumber>2</WinNumber>
-          <ItemText>PID</ItemText>
+          <ItemText>TargetRoll</ItemText>
         </Ww>
         <Ww>
           <count>19</count>
           <WinNumber>2</WinNumber>
-          <ItemText>measure</ItemText>
+          <ItemText>RcRol</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>2</WinNumber>
-          <ItemText>target</ItemText>
+          <ItemText>PID</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>2</WinNumber>
-          <ItemText>gyr</ItemText>
+          <ItemText>measure</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>2</WinNumber>
-          <ItemText>roll_angle_PID</ItemText>
+          <ItemText>target</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>2</WinNumber>
-          <ItemText>roll_rate_PID</ItemText>
+          <ItemText>gyr</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mData.mag_XH</ItemText>
+          <ItemText>roll_angle_PID</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mData.mag_XL</ItemText>
+          <ItemText>roll_rate_PID</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
@@ -377,57 +359,57 @@
         <Ww>
           <count>30</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp.x</ItemText>
+          <ItemText>mData.mag_XH</ItemText>
         </Ww>
         <Ww>
           <count>31</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mData.mag_YH</ItemText>
+          <ItemText>mData.mag_XL</ItemText>
         </Ww>
         <Ww>
           <count>32</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mData.mag_YL</ItemText>
+          <ItemText>temp.x</ItemText>
         </Ww>
         <Ww>
           <count>33</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>mData.mag_YH</ItemText>
         </Ww>
         <Ww>
           <count>34</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>mData.mag_YL</ItemText>
         </Ww>
         <Ww>
           <count>35</count>
           <WinNumber>2</WinNumber>
-          <ItemText>position</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>36</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>temp</ItemText>
         </Ww>
         <Ww>
           <count>37</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>position</ItemText>
         </Ww>
         <Ww>
           <count>38</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>39</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>temp</ItemText>
         </Ww>
         <Ww>
           <count>40</count>
           <WinNumber>2</WinNumber>
-          <ItemText>position</ItemText>
+          <ItemText>temp</ItemText>
         </Ww>
         <Ww>
           <count>41</count>
@@ -437,60 +419,70 @@
         <Ww>
           <count>42</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>position</ItemText>
         </Ww>
         <Ww>
           <count>43</count>
           <WinNumber>2</WinNumber>
-          <ItemText>gyroCalibrateCnt</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>44</count>
           <WinNumber>2</WinNumber>
-          <ItemText>RcvTime</ItemText>
+          <ItemText>temp</ItemText>
         </Ww>
         <Ww>
           <count>45</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data[12]</ItemText>
+          <ItemText>gyroCalibrateCnt</ItemText>
         </Ww>
         <Ww>
           <count>46</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data[11]</ItemText>
+          <ItemText>RcvTime</ItemText>
         </Ww>
         <Ww>
           <count>47</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>data[12]</ItemText>
         </Ww>
         <Ww>
           <count>48</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Xtemp</ItemText>
+          <ItemText>data[11]</ItemText>
         </Ww>
         <Ww>
           <count>49</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Ytemp</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>50</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mLX_Val</ItemText>
+          <ItemText>Xtemp</ItemText>
         </Ww>
         <Ww>
           <count>51</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mLY_Val</ItemText>
+          <ItemText>Ytemp</ItemText>
         </Ww>
         <Ww>
           <count>52</count>
           <WinNumber>2</WinNumber>
-          <ItemText>mNX_Val</ItemText>
+          <ItemText>mLX_Val</ItemText>
         </Ww>
         <Ww>
           <count>53</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>mLY_Val</ItemText>
+        </Ww>
+        <Ww>
+          <count>54</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>mNX_Val</ItemText>
+        </Ww>
+        <Ww>
+          <count>55</count>
           <WinNumber>2</WinNumber>
           <ItemText>mNY_Val</ItemText>
         </Ww>

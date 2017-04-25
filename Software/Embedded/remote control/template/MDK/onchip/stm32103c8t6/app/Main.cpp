@@ -14,11 +14,14 @@
 #include "InputCapture_EXIT.h"
 #include "HMI.h"
 #include "Communication.h"
-#include "rocker.h"
+//#include "rocker.h"
+
+#include "Joystick.h"
+
 
 //Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
+USART com1(1,115200,false);
 USART com2(2,115200,false);
-//USART com1(1,115200,false);
 USART com3(3,9600,false);
 //I2C abc(2); 
 //PWM pwm2(TIM2,1,1,1,1,20000);  //开启时钟2的4个通道，频率2Whz
@@ -33,7 +36,10 @@ GPIO ledRedGPIO(GPIOA,11,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 GPIO ledGREGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 
 HMI MessageShow(com3);
-rocker RC(pressure,5,6,8,9);//yaw Thr Roll pitch
+//rocker RC(pressure,5,6,8,9);//yaw Thr Roll pitch
+
+Joystick RC(pressure,5,6,8,9);
+
 Communication Rc2Copter(com2);
 
 int main()
@@ -114,13 +120,14 @@ int main()
 								if(Rc2Copter.ClockState == 0)
 								{
 									//发送数据
+									Rc2Copter.SendData2Copter(1000,1000,1000,1000);
 								}
 						}
 															
 					}			
 		}
 		if(tskmgr.TimeSlice(test,0.1))  
-			com2<<pressure[5]<<"\t"<<pressure[6]<<"\t"<<pressure[8]<<"\t"<<pressure[9]<<"\n";
+			com1<<pressure[5]<<"\t"<<pressure[6]<<"\t"<<pressure[8]<<"\t"<<pressure[9]<<"\n";
 		
 		
 	}

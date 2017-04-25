@@ -9,9 +9,9 @@
 #include "math.h"
 
 
-#define DUBUG_PITCH
+//#define DUBUG_PITCH
 //#define DUBUG_ROLL
-//#define NORMAL
+#define NORMAL
 
 // PID结构体
 typedef struct

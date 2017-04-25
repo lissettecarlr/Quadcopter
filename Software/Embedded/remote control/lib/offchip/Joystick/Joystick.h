@@ -12,13 +12,14 @@
 
 
 
-//左摇杆X 在小于2的时候判定为向右搬动了，在大于3的时候判定为左搬动
+//左摇杆X 在小于1的时候判定为向右搬动了，在大于3的时候判定为左搬动
 //左摇杆Y 在大于1的时候判定为向上搬动了, 在小于0.5的时候判定为向下搬动了
 
 //右摇杆X 在小于0.7的时候判定为向左搬动了,在大于1的时候判定为向右搬动了
 //右摇杆Y 在小于2的时候判定为向上搬动了,在大于3的时候判定为向下搬动了
-#define LX_NIGHT_THRESHOLDS 2
+#define LX_NIGHT_THRESHOLDS 1
 #define LX_LEFT_THRESHOLDS 3
+
 #define LX_UP_THRESHOLDS 1
 #define LX_DOWN_THRESHOLDS 0.5
 
@@ -38,7 +39,13 @@ class Joystick{
 		float mLY_Val;
 		float mNX_Val;
 		float mNY_Val;
-		
+		u8 mLeftDirectionState;
+		u8 mNightDirectionState;
+	
+		bool UpdataDirctionState();
+		u8 _getLeftState(); //左上向右数的九宫格
+		u8 _getNightState();
+	
 	public:
 		Joystick(ADC &adc,u8 LX,u8 LY,u8 NX,u8 NY);
 		bool Updata();

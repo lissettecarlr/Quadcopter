@@ -14,17 +14,18 @@ Joystick::Joystick(ADC &adc,u8 LX,u8 LY,u8 NX,u8 NY):mAdc(adc)
 bool Joystick::Updata()
 {
 	
-		mLX_Val=mAdc[mCH_LX];
-		mLY_Val=mAdc[mCH_LY];
-		mNX_Val=mAdc[mCH_NX];
-		mNY_Val=mAdc[mCH_NY];
+	mLX_Val=mAdc[mCH_LX];
+	mLY_Val=mAdc[mCH_LY];
+	mNX_Val=mAdc[mCH_NX];
+	mNY_Val=mAdc[mCH_NY];
+	
+	UpdataDirctionState();
 	
 	return true;
-	
 }
 
 
-u8 Joystick::getLeftState() //左上向右数的九宫格
+u8 Joystick::_getLeftState() //左上向右数的九宫格
 {
 	u8 Xtemp,Ytemp;
 	
@@ -37,6 +38,7 @@ u8 Joystick::getLeftState() //左上向右数的九宫格
 		Xtemp=4;
 	else
 		Xtemp=5;
+	
 	
   //上下判断
 	if(mLY_Val ==0)
@@ -75,7 +77,7 @@ u8 Joystick::getLeftState() //左上向右数的九宫格
 //右摇杆X 在小于0.7的时候判定为向左搬动了,在大于1的时候判定为向右搬动了
 //右摇杆Y 在小于2的时候判定为向上搬动了,在大于3的时候判定为向下搬动了
 
-u8 Joystick::getNightState()
+u8 Joystick::_getNightState()
 {
 		u8 Xtemp,Ytemp;
 	
@@ -121,3 +123,21 @@ u8 Joystick::getNightState()
 	
 	return 0;//错误退出
 }
+
+bool Joystick::UpdataDirctionState()
+{
+	mLeftDirectionState=_getLeftState();
+	mNightDirectionState=_getNightState();
+	return true;
+}
+
+u8 Joystick::getLeftState()
+{
+		return mLeftDirectionState;
+}
+
+u8 Joystick::getNightState()
+{
+		return mNightDirectionState;
+}
+
