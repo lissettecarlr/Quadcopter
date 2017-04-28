@@ -1,0 +1,7 @@
+Added Component: Designator=T4(P4_1.25)
+Added Pin To Net: NetName=VCC_3-3 Pin=T4-1
+Added Pin To Net: NetName=RX2 Pin=T4-2
+Added Pin To Net: NetName=TX2 Pin=T4-3
+Added Pin To Net: NetName=GND Pin=T4-4
+Added Member To Class: ClassName=Drimp_Quadcopter Member=Component T4 P4
+Added Room: Name=Drimp_Quadcopter
