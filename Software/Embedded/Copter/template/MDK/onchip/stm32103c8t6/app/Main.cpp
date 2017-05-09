@@ -19,6 +19,11 @@
 #include "LED.h"
 
 
+#define IMU_UPDATE_CONTROL_TIME  0.008
+#define RCV_DATE_TIME            0.02
+#define SEND_DATE_TIME           0.1
+#define HINT_TIME                0.5
+
 
 //Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
 //USART com(1,115200,false);
@@ -31,7 +36,7 @@ ADC pressure(1); //PA1读取AD值
 flash InfoStore(0x08000000+60*MEMORY_PAGE_SIZE,true);     //flash
 //0页 存磁力计校准值  1页存PID
 
-GPIO ledRedGPIO(GPIOA,11,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
+GPIO ledRedGPIO(GPIOB,5,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 GPIO ledYewGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 LED Red(ledRedGPIO);
 
@@ -54,8 +59,8 @@ int main()
 	
 	double Updata_posture=0; //计算欧拉角 10ms
 //	double Updata_Control=0; //控制 500Hz 2ms
-	double Receive_data=0;  //接收数据  20ms
-	double Send_data=0; //发送数据  100ms
+	double Receive_date=0;  //接收数据  20ms
+	double Send_date=0; //发送数据  100ms
 	double Updata_hint=0; //更新提示信息状态 500ms
 	
 	float Vol = 0;//电压
@@ -82,13 +87,13 @@ int main()
 		if(tskmgr.TimeSlice(Updata_posture,0.008) ) 
 		{
 				//更新、获得欧拉角
-				imu.UpdateIMU();
+			imu.UpdateIMU();
 			if(!COM433.mClockState) //当解锁
 				control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),COM433.mRcvTargetThr,COM433.mRcvTargetPitch,COM433.mRcvTargetRoll,COM433.mRcvTargetYaw);		
 		}
 
 		
-		if(tskmgr.TimeSlice(Receive_data,0.02) ) 
+		if(tskmgr.TimeSlice(Receive_date,0.02) ) 
 		{
 			//接收
 			COM433.DataListening();
@@ -119,7 +124,7 @@ int main()
 		}
 		
 		
-		if(tskmgr.TimeSlice(Send_data,0.1) )
+		if(tskmgr.TimeSlice(Send_date,0.1) )
 		{
 			//发送
 			//
@@ -172,11 +177,11 @@ int main()
 				COM433.mPidUpdata=false;
 				control.SetPID_PIT(COM433.PID[0],COM433.PID[1],COM433.PID[2]);
 				control.SetPID_ROL(COM433.PID[3],COM433.PID[4],COM433.PID[5]);
-				//control.SetPID_YAW(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
-				control.SetPID_ROL_rate(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
+				control.SetPID_YAW(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
+				//control.SetPID_ROL_rate(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
 				Red.Blink(4,100,1);
 			}
-			Vol=pressure.Voltage_I(1,1,3,4.2)*100;
+			Vol=pressure.Voltage_I(1,1,3,4.2)*100;//电压检测
 		}
 		
 	}

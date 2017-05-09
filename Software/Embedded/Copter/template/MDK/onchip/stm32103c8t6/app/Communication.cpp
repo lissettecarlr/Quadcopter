@@ -215,6 +215,7 @@ bool Communication::SendCopterState(float angle_rol, float angle_pit, float angl
 		sum += data_to_send[i];
 	data_to_send[_cnt++]=sum;
 	
+	//发送
 	usart.SendData(data_to_send, _cnt);
 	return true;
 }

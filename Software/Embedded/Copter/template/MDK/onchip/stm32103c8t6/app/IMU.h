@@ -20,8 +20,10 @@ class IMU{
 		Vector3f mAngle;
 		IMU(mpu6050 &Ins,HMC5883L &Mag);
 		bool GyroCalibrate();
+	  //参数: 留给校准多长时间
 		bool MagCalibrate(double SpendTime);
 		bool init();
+	  //参数是磁力计校准参数
 		bool init(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ);
 		bool UpdateIMU(); 
 		bool GyroIsCalibrated();

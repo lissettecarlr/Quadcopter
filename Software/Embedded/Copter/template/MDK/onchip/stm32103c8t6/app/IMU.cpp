@@ -4,21 +4,22 @@ IMU::IMU(mpu6050 &Ins,HMC5883L &Mag):mIns(Ins),mMag(Mag)
 {}
 	
 bool IMU::init()
-{
-		
+{	
 		float time = TaskManager::Time();
 		mIns.Init();
 	  //测试磁力计是否存在
 		if(!mMag.TestConnection(false))
 			LOG("mag connection error\n");
 		mMag.Init();
-		while(TaskManager::Time()-time<1.5)
+		while(TaskManager::Time()-time<1.5) //给磁力计初始化空出1.5s时间，主要是留给IIC通信
 		{}
-		//mIns.StartGyroCalibrate();//启动校准
+		LOG("calibrating ... don't move!!!\n");	
+		mIns.StartGyroCalibrate();//启动陀螺仪校准
+		//这里不进行磁力计校准，主要是因为 校准磁力计需要拿在手中画八字
 		mGyroIsCalibrating = true;
-		LOG("calibrating ... don't move!!!\n");
 		return true;
 }
+
 
 bool IMU::init(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ)
 {
@@ -29,9 +30,9 @@ bool IMU::init(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,fl
 		mMag.Init(RatioX,RatioY,RatioZ,BiasX,BiasY,BiasZ);
 		while(TaskManager::Time()-time<1.5)
 		{}
-		mIns.StartGyroCalibrate();//启动校准
+		LOG("calibrating ... don't move!!!\n");	
+		mIns.StartGyroCalibrate();//启动陀螺仪校准
 		mGyroIsCalibrating = true;
-		LOG("calibrating ... don't move!!!\n");
 		return true;
 }
 	

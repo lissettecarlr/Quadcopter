@@ -754,7 +754,7 @@ Configuration4_Item5=n Cross","Thick Cross","Small Cross",Checkbox,Triangle|Show
 Configuration4_Name6=SortOrder
 Configuration4_Item6=Designator=Up|Comment=Up|Footprint=Up
 Configuration4_Name7=VisibleOrder
-Configuration4_Item7=Comment=100|Description=100|Designator=100|Quantity=100|Value=100
+Configuration4_Item7=Comment=121|Description=121|Quantity=121|Value=202|Footprint=41
 OutputType5=ComponentCrossReference
 OutputName5=Component Cross Reference Report
 OutputDocumentPath5=
