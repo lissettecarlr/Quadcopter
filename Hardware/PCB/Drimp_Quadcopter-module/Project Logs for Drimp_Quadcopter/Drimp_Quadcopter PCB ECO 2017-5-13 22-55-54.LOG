@@ -1,0 +1,19 @@
+Removed Pin From Net: NetName=GND Pin=C19-1
+Removed Pin From Net: NetName=VCC_3-3-B Pin=C19-2
+Removed Pin From Net: NetName=GND Pin=C20-1
+Removed Pin From Net: NetName=VCC_3-3-B Pin=C20-2
+Removed Pin From Net: NetName=GND Pin=C21-1
+Removed Pin From Net: NetName=GND Pin=C23-1
+Removed Pin From Net: NetName=GND Pin=C24-1
+Removed Pin From Net: NetName=IIC2_SCL Pin=HMC-1
+Removed Pin From Net: NetName=VCC_3-3-B Pin=HMC-2
+Removed Pin From Net: NetName=GND Pin=HMC-9
+Removed Pin From Net: NetName=GND Pin=HMC-11
+Removed Pin From Net: NetName=VCC_3-3-B Pin=HMC-13
+Removed Pin From Net: NetName=GND Pin=HMC-14
+Removed Pin From Net: NetName=IIC2_SDA Pin=HMC-16
+Removed Pin From Net: NetName=VCC_3-3-B Pin=R17-1
+Removed Pin From Net: NetName=IIC2_SCL Pin=R17-2
+Removed Pin From Net: NetName=VCC_3-3-B Pin=R18-1
+Removed Pin From Net: NetName=IIC2_SDA Pin=R18-2
+Added Room: Name=Drimp_Quadcopter

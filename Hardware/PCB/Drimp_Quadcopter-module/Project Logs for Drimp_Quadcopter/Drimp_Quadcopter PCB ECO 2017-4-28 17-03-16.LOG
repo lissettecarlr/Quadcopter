@@ -1,0 +1,7 @@
+Added Component: Designator=T3(USB_micro)
+Added Pin To Net: NetName=GND Pin=T3-1
+Added Pin To Net: NetName=RX Pin=T3-3
+Added Pin To Net: NetName=TX Pin=T3-4
+Added Pin To Net: NetName=VCC_P Pin=T3-5
+Added Member To Class: ClassName=Drimp_Quadcopter Member=Component T3 mini usb
+Added Room: Name=Drimp_Quadcopter

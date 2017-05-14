@@ -71,7 +71,7 @@ int main()
 	ledRedGPIO.SetLevel(1);//用于表示是否处于上锁状态
 	ledGreGPIO.SetLevel(1);//表示系统是否忙于做其他事
 	
-	pwm4.SetDuty(0,0,0,0);
+	pwm4.SetDuty(10,10,10,10);
 
 	
 	

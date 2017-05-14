@@ -1,0 +1,5 @@
+Change Component Footprint: Designator=P1 Old Footprint=P2 New Footprint=P2-T-1.25
+Change Component Footprint: Designator=P2 Old Footprint=P2 New Footprint=P2-T-1.25
+Change Component Footprint: Designator=P3 Old Footprint=P2 New Footprint=P2-T-1.25
+Change Component Footprint: Designator=P4 Old Footprint=P2 New Footprint=P2-T-1.25
+Added Room: Name=Drimp_Quadcopter

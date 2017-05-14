@@ -1,0 +1,5 @@
+Removed Pin From Net: NetName=GND Pin=T3-1
+Removed Pin From Net: NetName=VCC_P Pin=T3-5
+Added Pin To Net: NetName=VCC_P Pin=T3-1
+Added Pin To Net: NetName=GND Pin=T3-5
+Added Room: Name=Drimp_Quadcopter
