@@ -576,7 +576,7 @@ void I2C::ErrorIRQ()
 			LOG("error\n");
 		#endif
 			/* Generate I2C software reset in order to release SDA and SCL lines */
-			mI2C->CR1 |= I2C_CR1_SWRST; 
+			mI2C->CR1 |=  I2C_CR1_SWRST; 
 			mI2C->CR1 &= ~I2C_CR1_SWRST;
 	}
           

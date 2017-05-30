@@ -3,7 +3,7 @@
 
 
 /**************************configuration****************************/
- //         # define   HMC5883L_USE_TASKMANAGER
+          # define   HMC5883L_USE_TASKMANAGER
 /*******************************************************************/
 
 
@@ -13,6 +13,7 @@
 #include "Vector3.h"
 #include "TaskManager.h"
 #include "Configuration.h"
+#include "Magnetometer.h"
 
 //---------------HMC5883L Register Address ---------------------------
 #define HMC5883_ADDRESS            0x3C  //       HMC     7-bit address:  0x1E    ADRESS+WRITE->0X3C  ADRESS+READ->0X3D
@@ -126,14 +127,16 @@ typedef struct
 	unsigned char identification_C; //Register identification c  fixed balue:0x33 if read correctly
 }HMC5883DataTypeDef;
 
-class HMC5883L:public Sensor
+class HMC5883L:public Sensor,public Magnetometer
 {
 	private:
 		I2C *mI2C;
 		unsigned char mHealth;
 		HMC5883DataTypeDef mData;
 
-		bool mIsCalibrate;
+		bool mIsCalibrated;
+		
+		Vector3f mOffsetRatio,mOffsetBias;
 	
 	#ifdef HMC5883L_USE_TASKMANAGER
 		u16 mMaxUpdateFrequency;
@@ -141,15 +144,6 @@ class HMC5883L:public Sensor
 	
 	public:
 		
-		//校准值
-		float mRatioX;
-		float mRatioY;
-		float mRatioZ;
-		float mBiasX;
-		float mBiasY;
-		float mBiasZ;
-	
-	
 		#ifdef HMC5883L_USE_TASKMANAGER
 		HMC5883L(I2C &i2c,u16 maxUpdateFrequency=75);
 		#else
@@ -158,8 +152,8 @@ class HMC5883L:public Sensor
 		/////////////////////
 		///Initialization
 		/////////////////////
-		bool Init(bool wait=false);
-		bool Init(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ,bool wait=false);
+		virtual bool Init(bool wait=false);
+	
 		///////////////////////
 		///Status of HMC5883L
 		///@retval 1:normal 0:error
@@ -207,14 +201,14 @@ class HMC5883L:public Sensor
 		///@return if wait set to true,MOD_READY:update succed MOD_ERROR:update fail  MOD_BUSY:Update interval is too short
 		///        if wait set to false,MOD_ERROR:发送更新数据失败 MOD_READY:命令将会发送（具体的发送时间取决于队列中的排队的命令的数量）MOD_BUSY:Update interval is too short
 		/////////////////////
-		 u8 Update(bool wait=false,Vector3<int> *mag=0);
+		virtual  u8 Update(bool wait=false,Vector3<int> *mag=0);
 		
 		
 		///////////////////////
 		///Get magnetometer's raw data from memory 
 		///@retval magnetometer's raw data
 		///////////////////////
-		 Vector3<int> GetDataRaw();
+		 virtual Vector3<int> GetDataRaw();
 		
 		 Vector3<int> GetNoCalibrateDataRaw();
 		
@@ -228,19 +222,31 @@ class HMC5883L:public Sensor
 			////////////////////////////////
 		///获取两次更新值之间的时间间隔
 		////////////////////////////////
-		 double GetUpdateInterval();
+		 virtual double GetUpdateInterval();
 		 
-		 //两轴校准设置校准的值 X的比例系数 Y的比例系数 X需加的常数 Y需加的常数
-		 bool SetCalibrateRatioBias(float RatioX,float RatioY,float BiasX,float BiasY);
-		 
-		 //三轴校准
-		 bool SetCalibrateRatioBias(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,float BiasZ);
 		 
 		 //三轴校准函数，调用之后，拿着你的小飞机绕八字，传入的参数是当你每个轴都到达峰值而不在更新，这个时间之后就退出校准
-		 bool Calibrate(double SpendTime);
+		 virtual bool StartCalibrate();
 		 
 		 //返回磁力计是否经过校准
-		 bool IsCalibrated();
+		 virtual bool IsCalibrated();
+		 
+		 
+		//获取磁力计校准的偏置
+		virtual Vector3f GetOffsetBias();
+		
+		//获取磁力计校准的比例
+		virtual Vector3f GetOffsetRatio();
+		
+			//获取磁力计校准的偏置
+		virtual void SetOffsetBias(float x,float y,float z);
+		
+		//获取磁力计校准的比例
+		virtual void SetOffsetRatio(float x,float y,float z);
+		
+		int xMaxMinusMin;
+		int yMaxMinusMin;
+		int zMaxMinusMin;
 		
 };
 #endif

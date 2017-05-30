@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/layout/activity_control.xml",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/layout/activity_control.xml"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/layout/activity_wifi_set.xml",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/layout/activity_wifi_set.xml"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/layout/activity_main.xml",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/layout/activity_main.xml"
+    }
+]

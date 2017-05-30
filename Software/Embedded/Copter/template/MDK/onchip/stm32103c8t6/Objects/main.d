@@ -35,6 +35,7 @@
 .\objects\main.o: ..\..\..\..\lib\math\Vector3.h
 .\objects\main.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\main.o: ..\..\..\..\lib\offchip\HMC5883L\HMC5883L.h
+.\objects\main.o: ..\..\..\..\lib\offchip\HMC5883L\Magnetometer.h
 .\objects\main.o: ..\..\..\..\lib\offchip\Moto\Moto.h
 .\objects\main.o: app\Control.h
 .\objects\main.o: app\Communication.h

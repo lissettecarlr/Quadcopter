@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    abi="armeabi-v7a,armeabi"
+    api-level="23"
+    density="560dpi"
+    format="7"
+    timestamp="261347451866355" >
+
+    <task
+        name="javac"
+        duration="281" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="292" />
+    <task
+        name="verifier"
+        duration="16" />
+
+    <artifact
+        location="/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/outputs/apk/ANO_RC_v1-debug.apk"
+        type="MAIN" />
+
+    <build timestamp="261347451866355" >
+        <artifact
+            location="/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/outputs/apk/ANO_RC_v1-debug.apk"
+            type="MAIN" />
+    </build>
+
+</instant-run>

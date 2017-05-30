@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="21.1.2"
+        sha1="9702427d2392752b2391985dd268d4a4302b341c">
+        <dex dex="/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_5f5e28665c70415e44d2902f4165cca0f0513d36/classes.dex" />
+    </item>
+    <item
+        jar="/Users/Wangjt/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"
+        jumboMode="true"
+        revision="21.1.2"
+        sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
+        <dex dex="/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/transforms/dex/debug/folders/1000/10/support-v4-18.0.0_c69d95431dbd24b2f010cc40628b2439811f0441/classes.dex" />
+    </item>
+    <item
+        jar="/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="21.1.2"
+        sha1="fc7b5f1f9e314655167fac4929d48986b64ea819">
+        <dex dex="/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_f57e0e2c1b749f55da40a044d7787afeb2ec305a/classes.dex" />
+    </item>
+
+</items>

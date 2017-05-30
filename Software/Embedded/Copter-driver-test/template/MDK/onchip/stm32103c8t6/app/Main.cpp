@@ -19,7 +19,7 @@
 #include "Moto.h"
 #include "Control.h"
 #include "Communication.h"
-#include "IMU.h"
+//#include "IMU.h"
 #include "LED.h"
 
 
@@ -30,8 +30,8 @@
 
 
 //Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
-//USART com(1,115200,false);
 USART com(1,115200,false);
+USART com2(1,115200,false);
 //Communication COM433(com); 
 
 PWM pwm4(TIM4,1,1,1,1,24000);
@@ -40,158 +40,128 @@ PWM pwm4(TIM4,1,1,1,1,24000);
 //flash InfoStore(0x08000000+60*MEMORY_PAGE_SIZE,true);     //flash
 //0页 存磁力计校准值  1页存PID
 
-GPIO ledRedGPIO(GPIOB,5,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
-GPIO ledGreGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
-LED Red(ledRedGPIO);
+//GPIO ledRedGPIO(GPIOB,5,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
+//GPIO ledGreGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
+//LED Red(ledRedGPIO);
 
 I2C i2c(2);
-//Control control(pwm4);
-
+mpu6050 mpu6050(i2c);
+HMC5883L mag(i2c);
 
 int main()
 {
-	Red.On();
+	mpu6050.Init();
 	tskmgr.DelayMs(500);
-	mpu6050 MPU6050(i2c);
-	tskmgr.DelayMs(500);
-	HMC5883L mag(i2c);
-	tskmgr.DelayS(1);
-	IMU imu(MPU6050,mag);
 	mag.Init();
 	tskmgr.DelayS(1);
 	
-	
 	double Updata_posture=0; //计算欧拉角 10ms
-//	double Updata_Control=0; //控制 500Hz 2ms
 	double Receive_date=0;  //接收数据  20ms
-	double Send_date=0; //发送数据  100ms
 	double Updata_hint=0; //更新提示信息状态 500ms
 	
-	float Vol = 0;//电压
-	ledRedGPIO.SetLevel(1);//用于表示是否处于上锁状态
-	ledGreGPIO.SetLevel(1);//表示系统是否忙于做其他事
+//	float Vol = 0;//电压
+//	ledRedGPIO.SetLevel(1);//用于表示是否处于上锁状态
+//	ledGreGPIO.SetLevel(1);//表示系统是否忙于做其他事
 	
-	pwm4.SetDuty(10,10,10,10);
+	pwm4.SetDuty(0,0,0,0);
 
-	
-	
-	//MPU6050.Init();
-	//MPU6050.StartGyroCalibrate();//启动陀螺仪校准
-	
-	
 
-//	if(InfoStore.Read(0,0))
-//		mag.SetCalibrateRatioBias(InfoStore.Read(0,0),InfoStore.Read(0,2),InfoStore.Read(0,4),InfoStore.Read(0,6),InfoStore.Read(0,8),InfoStore.Read(0,10));
-//	
-//		control.SetPID_PIT(0.4,0,0.026);
-//		control.SetPID_ROL(0.4,0,0.026);
-	
 	while(1)
 	{			
-		if(tskmgr.TimeSlice(Updata_posture,0.008) ) 
+		if(tskmgr.TimeSlice(Updata_posture,0.1) ) 
 		{
 				//更新、获得欧拉角
-			imu.UpdateIMU();
-			//MPU6050.Update();
-		//	mag.Update();
-//			if(!COM433.mClockState) //当解锁
-//				control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),COM433.mRcvTargetThr,COM433.mRcvTargetPitch,COM433.mRcvTargetRoll,COM433.mRcvTargetYaw);		
-		}
+			//imu.UpdateIMU();
+			//mpu6050.Update();
+			if(mag.Update())
+			{
+			   //com<<"OK\n";
+			}
+					
 
-		
-//		if(tskmgr.TimeSlice(Receive_date,0.02) ) 
-//		{
-//			//接收
-//			COM433.DataListening();
-//			if(COM433.mMag_Calibrate == true) //磁力计校准
-//			{
-//				LOG("mag Calibrating - - - - -");
-//				if(imu.MagCalibrate(10)) //10s的磁力计校准
-//				{
-//					tskmgr.DelayMs(1000);//不延时的话IIC就出错了
-//					LOG("mag Calibrate succeed - - - - -");	
-//						InfoStore.Write(0,0,mag.mRatioX);
-//						InfoStore.Write(0,2,mag.mRatioY);
-//						InfoStore.Write(0,4,mag.mRatioZ);
-//						InfoStore.Write(0,6,mag.mBiasX);
-//						InfoStore.Write(0,8,mag.mBiasY);
-//						InfoStore.Write(0,10,mag.mBiasZ);
-//				}
-//				else
-//				 LOG("mag Calibrate error - - - - -");
-//				COM433.mMag_Calibrate = false;
-//			}
-//		}
-		
-//		if(COM433.mGyro_Calibrate) //角速度计校准
-//		{
-//			imu.GyroCalibrate();
-//			COM433.mGyro_Calibrate = false;
-//		}
-		
-		
-		if(tskmgr.TimeSlice(Send_date,0.1) )
-		{
-			//发送
-			//
-//			if(imu.GyroIsCalibrated())
-//			{
-//				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
-//				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
-//				//COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
-//				//COM433.SendCopterState(imu.mAngle.x,control.GetPID_ROL().Differential,control.GetPID_ROL().Proportion,(u32)Vol,0,(u8)COM433.mClockState);
-//				COM433.SendCopterState(imu.mAngle.x,imu.mAngle.y,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
-//				
-////				COM433.test(control.GetPID_PIT().Proportion,control.GetPID_PIT().Integral,control.GetPID_PIT().Differential,
-////										control.GetPID_PIT().Output,COM433.mRcvTargetThr/100,COM433.mRcvTargetRoll/100,
-////										control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D);
-//				
-//				//输出 比例 积分 微分  /  PID结果  油门量 横滚量 / P I D  所以都被放大了100的
-//				
-//				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
-//				//COM433.SendRcvControlQuantity();//发送接收到的舵量
-//								
-//				//com<<COM433.mRcvTargetYaw<<"\t"<<COM433.mRcvTargetRoll<<"\t"<<COM433.mRcvTargetPitch<<"\t"<<COM433.mRcvTargetThr<<"\n";
-//			}
-//			if(COM433.mGetPid)//如果请求了获取PID
-//			{
-//				COM433.mGetPid=false;
-//				COM433.SendPID(control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D,control.GetPID_ROL().P,control.GetPID_ROL().I,control.GetPID_ROL().D,control.GetPID_YAW().P,control.GetPID_YAW().I,control.GetPID_YAW().D);
-//			}
-			
 		}
+		
+
 		
 		if(tskmgr.TimeSlice(Updata_hint,1) ) //提示更新
 		{
 		// com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\n";
-			com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
-//			if(COM433.mClockState)
-//				ledYewGPIO.SetLevel(0);
-//			else
-//				ledYewGPIO.SetLevel(1);
-//			
-//			if(COM433.mMag_Calibrate)
-//				ledRedGPIO.SetLevel(0);
-//			else
-//				ledRedGPIO.SetLevel(1);
-//			
-//			if(!imu.GyroIsCalibrated())
-//				ledRedGPIO.SetLevel(0);
-//			else 
-//				ledRedGPIO.SetLevel(1);		
+		//	com<<mpu6050.GetAccRaw().x<<"\t"<<mpu6050.GetAccRaw().y<<"\t"<<mpu6050.GetAccRaw().z<<"\t"<<mpu6050.GetGyrRaw().x<<"\t"<<mpu6050.GetGyrRaw().y<<"\t"<<mpu6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
+       com<<"heading:"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().x<<"\n";
+			
 
-//			if(COM433.mPidUpdata) //更新PID
-//			{
-//				COM433.mPidUpdata=false;
-//				control.SetPID_PIT(COM433.PID[0],COM433.PID[1],COM433.PID[2]);
-//				control.SetPID_ROL(COM433.PID[3],COM433.PID[4],COM433.PID[5]);
-//				control.SetPID_YAW(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
-//				//control.SetPID_ROL_rate(COM433.PID[6],COM433.PID[7],COM433.PID[8]);
-//				Red.Blink(4,100,1);
-//			}
-//			Vol=pressure.Voltage_I(1,1,3,4.2)*100;//电压检测
+		//	Vol=pressure.Voltage_I(1,1,3,4.2)*100;//电压检测
 		}
 		
 	}
 }
+
+
+//USART usart1(1,115200,true);
+//I2C iic(2);
+//mpu6050 mpu6050_(iic);
+//HMC5883L mag(iic);
+
+//int main()
+//{
+
+////初始化mpu6050
+//	if(!iic.IsHealth())//发生了错误
+//		com<<"iic error\n";
+//	if(!mpu6050_.Init(&iic))//iic总线错误
+//	{
+//		Delay::Ms(10);
+//		com<<"init error1\n";
+//		if(!mpu6050_.Init(&iic))//iic总线错误
+//		{
+//			com<<"init error2\n";
+//		}
+//		Delay::Ms(5);
+//	}
+////测试磁力计是否存在
+//	if(mag.TestConnection(false))
+//	{
+//		com<<"success\n";
+//	}
+//	else
+//	{
+//		com<<"failed\n";
+//	}	
+//	
+////初始化磁力计
+//	if(mag.GetHealth())
+//		mag.Init();
+//	
+
+//	while(1)
+//	{
+//		//更新mpu6050，函数自带错误检查，如果发现总线正常，但是mpu6050未初始化，则会进行初始化
+//		if(!mpu6050_.Update())
+//		{
+//			com<<"error\n\n\n";
+//		}	
+//		else
+//		{
+//			com<<"mpu6050:"<<mpu6050_.GetAccRaw().z<<"\t";
+//		}
+//		
+//		//更新磁力计相关数据
+//		if(!mag.Update())
+//		{
+//			com<<"error_mag\n";
+//			if(!mpu6050_.Init(true))//设置mpu6050为bypass模式
+//				mpu6050_.Init(true);
+//		}
+//		else
+//		{
+//			com<<"heading:"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().x<<"\n";
+//		}
+//		
+//		//延时、串口显示、指示灯显示
+//		
+//		Delay::Ms(200);
+//		Delay::Ms(2);
+//	}
+//}
+
 

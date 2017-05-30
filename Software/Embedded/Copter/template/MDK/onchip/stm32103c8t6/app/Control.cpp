@@ -4,6 +4,7 @@ Control::Control(PWM &Moto):mMoto(Moto)
 {
 	OldTime=0;
 	
+	
 	//积分限幅
 	pitch_angle_PID.iLimit =5;
 	roll_angle_PID.iLimit =5;
@@ -11,8 +12,8 @@ Control::Control(PWM &Moto):mMoto(Moto)
 	pitch_rate_PID.iLimit =30;
 	roll_rate_PID.iLimit =30;
 	//总输出限幅
-	pitch_angle_PID.OLimit = 50;
-	roll_angle_PID.OLimit = 50;
+	pitch_angle_PID.OLimit = 60;
+	roll_angle_PID.OLimit = 60;
 	
 	FlyThr = 20;
 	
@@ -173,6 +174,21 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 
 bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 PcYaw)
 {
+	
+		//规范化接收的遥控器值  1000 - 2000  平衡位置度量在50内
+	if(RcThr<1000) RcThr=1000;
+	if(RcThr>2000) RcThr=2000;
+	if(RcPit<1000)	 RcPit=1000;
+	if(RcPit>2000)	 RcPit=2000;
+	if(RcPit>1450 && RcPit<1550) RcPit=1500;
+	if(RcRol<1000)	 RcRol=1000;
+	if(RcRol>2000)	 RcRol=2000;
+	if(RcRol>1450 && RcRol<1550) RcPit=1500;
+	if(PcYaw<1000)	 PcYaw=1000;
+	if(PcYaw>2000)	 PcYaw=2000;
+	if(PcYaw>1450 && PcYaw<1550) PcYaw=1500;
+	
+	
 	//角度环（外环）
 	float TargetRcThr = (RcThr - 1000)/10;
 	float TargetPitch = (RcPit-1500)*0.08; //期望角度控制在+-40°
@@ -185,6 +201,7 @@ bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 R
 		TimeInterval = tskmgr.Time() - OldTime;
 	OldTime = tskmgr.Time();
 	
+	
 	TOOL_PID_Postion_Cal(&pitch_angle_PID,TargetPitch,angle.y,TargetRcThr,TimeInterval);
 	TOOL_PID_Postion_Cal(&roll_angle_PID,TargetRoll,angle.x,TargetRcThr,TimeInterval);
 	
@@ -194,31 +211,92 @@ bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 R
 	
 //	TOOL_PID_Postion_Cal(&roll_rate_PID,TargetRoll,gyr.x,TargetRcThr,TimeInterval);
 	
+	
 	//电机控制
-	if(TargetRcThr >10)
-		mMoto.SetDuty(0,TargetRcThr-roll_rate_PID.Output,0,TargetRcThr+roll_rate_PID.Output);
+	if(MOTO1<0)
+		MOTO1=0;			
+	if(MOTO2<0)
+		MOTO2=0;	
+	
+	MOTO1 = Thr;
+	MOTO2 = Thr;
+	MOTO3 = Thr - roll_angle_PID.Output;	
+	MOTO4 = Thr + roll_angle_PID.Output;
+	
+		#ifdef DUBUG_PITCH
+	if(Thr<FlyThr)
+		mMoto.SetDuty(Thr,0,Thr,0);
 	else
-		mMoto.SetDuty(0,TargetRcThr,0,TargetRcThr);
+		mMoto.SetDuty(MOTO1,0,MOTO3,0);
+	#endif
+	
+	#ifdef DUBUG_ROLL
+	if(Thr<FlyThr)
+		mMoto.SetDuty(0,Thr,0,Thr);
+	else
+		mMoto.SetDuty(0,MOTO2,0,MOTO4);
+	#endif
+	
+	#ifdef NORMAL
+	if(Thr<FlyThr)
+		mMoto.SetDuty(Thr,Thr,Thr,Thr);
+	else
+		mMoto.SetDuty(MOTO1,MOTO2,MOTO3,MOTO4);
+	#endif
+	
+	
+//	
+//	if(TargetRcThr >10)
+//		mMoto.SetDuty(0,TargetRcThr-roll_rate_PID.Output,0,TargetRcThr+roll_rate_PID.Output);
+//	else
+//		mMoto.SetDuty(0,TargetRcThr,0,TargetRcThr);
 	
 	return true;
 }
 
+
 bool Control::TOOL_PID_Postion_Cal(PID_Typedef * PID,float target,float measure,float Thr,double dertT)
 {
-	float tempI=0; //积分项暂存
+//	float tempI=0; //积分项暂存
+//	
+//	PID->Error = target - measure; //计算误差
+//	PID->Differential = (PID->Error - PID->LastError)/dertT; //计算微分值
+//	PID->Output=(PID->P * PID->Error) + (PID->I * PID->Integral) + (PID->D * PID->Differential);  //PID:比例环节+积分环节+微分环节
+//	PID->LastError=PID->Error;//保存误差
+//	
+//	
+//	if( fabs(PID->Output) <Thr) //比油门还大时不积分
+//	{
+//		tempI=(PID->Integral) + (PID->Error) * dertT;     //积分环节
+//		if(tempI>-PID->iLimit && tempI<PID->iLimit &&PID->Output > - PID->iLimit && PID->Output < PID->iLimit)//在输出小于30才累计
+//			PID->Integral = tempI;
+//	}
 	
-	PID->Error = target - measure; //计算误差
-	PID->Differential = (PID->Error - PID->LastError)/dertT; //计算微分值
-	PID->Output=(PID->P * PID->Error) + (PID->I * PID->Integral) + (PID->D * PID->Differential);  //PID:比例环节+积分环节+微分环节
-	PID->LastError=PID->Error;//保存误差
 	
+	//P
+  	PID->Error = target - measure;
+	  PID->Proportion = PID->P * PID->Error;
+	//I
+	  if(Thr>FlyThr) //油门大于起飞油门踩进行积分
+	    PID->CumulativeError += PID->Error * dertT;
+	  PID->Integral = PID->I * PID->CumulativeError;
+	  
+		if(PID->Integral > PID->iLimit)
+			PID->Integral = PID->iLimit;
+		if(PID->Integral < -PID->iLimit)
+			PID->Integral = -PID->iLimit;	
+	//D
+    PID->Differential = (PID->Error -PID->LastError)/dertT * PID->D;
 	
-	if( fabs(PID->Output) <Thr) //比油门还大时不积分
-	{
-		tempI=(PID->Integral) + (PID->Error) * dertT;     //积分环节
-		if(tempI>-PID->iLimit && tempI<PID->iLimit &&PID->Output > - PID->iLimit && PID->Output < PID->iLimit)//在输出小于30才累计
-			PID->Integral = tempI;
-	}
+		PID->Output = PID->Proportion + PID->Integral + PID->Differential;
+		
+		//控制量上限
+		if(PID->Output > PID->OLimit)
+			PID->Output = PID->OLimit;
+		if(PID->Output < -PID->OLimit)
+		  PID->Output = -pid->OLimit;
+		
+		PID->LastError = PID->Error;
 	return true;
 	
 }

@@ -1,0 +1,20 @@
+F:\Visual Studio Projects\QuaternionView\QuaternionView\bin\Debug\QuaternionView.dll
+F:\Visual Studio Projects\QuaternionView\QuaternionView\bin\Debug\QuaternionView.pdb
+F:\Visual Studio Projects\QuaternionView\QuaternionView\bin\Debug\HelixToolkit.Wpf.dll
+F:\Visual Studio Projects\QuaternionView\QuaternionView\obj\Debug\View3D.baml
+F:\Visual Studio Projects\QuaternionView\QuaternionView\obj\Debug\View3D.g.cs
+F:\Visual Studio Projects\QuaternionView\QuaternionView\obj\Debug\QuaternionView_MarkupCompile.cache
+F:\Visual Studio Projects\QuaternionView\QuaternionView\obj\Debug\QuaternionView.g.resources
+F:\Visual Studio Projects\QuaternionView\QuaternionView\obj\Debug\QuaternionView.dll
+F:\Visual Studio Projects\QuaternionView\QuaternionView\obj\Debug\QuaternionView.pdb
+F:\Visual Studio Projects\QuaternionView\QuaternionView\obj\Debug\QuaternionView.csprojResolveAssemblyReference.cache
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\bin\Debug\QuaternionView.dll
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\bin\Debug\QuaternionView.pdb
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\bin\Debug\HelixToolkit.Wpf.dll
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\obj\Debug\QuaternionView.csprojResolveAssemblyReference.cache
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\obj\Debug\View3D.baml
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\obj\Debug\View3D.g.cs
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\obj\Debug\QuaternionView_MarkupCompile.cache
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\obj\Debug\QuaternionView.g.resources
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\obj\Debug\QuaternionView.dll
+E:\桌面\飞行控制\姿态模块Uranus产品资料20170511\C#_3D模型例子\QuaternionView\QuaternionView\obj\Debug\QuaternionView.pdb

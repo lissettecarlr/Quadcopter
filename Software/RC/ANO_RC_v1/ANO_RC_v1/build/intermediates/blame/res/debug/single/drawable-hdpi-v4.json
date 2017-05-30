@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/control_back.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/control_back.png"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/logo_main22.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/logo_main22.png"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_launcher.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/main_back2.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/main_back2.png"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/main_back.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/main_back.png"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/logo_main_text.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/logo_main_text.png"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/logo_main2.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/logo_main2.png"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/logo_cxybtz.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/logo_cxybtz.png"
+    },
+    {
+        "merged": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/build/intermediates/res/merged/debug/drawable-hdpi-v4/logo_anotc.png",
+        "source": "/Users/Wangjt/Desktop/EDA/Code/Android/ANO_RC_v1/ANO_RC_v1/src/main/res/drawable-hdpi/logo_anotc.png"
+    }
+]

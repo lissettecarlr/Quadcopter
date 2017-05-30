@@ -26,9 +26,9 @@
 
 
 //Timer T1(TIM1,1,2,3); //使用定时器计，溢出时间:1S+2毫秒+3微秒
-//USART com(1,115200,false);
-USART com(2,115200,false);
-Communication COM433(com); 
+USART com(1,115200,false);
+USART com2(2,115200,false);
+Communication COM433(com2); 
 
 
 PWM pwm4(TIM4,1,1,1,1,24000);
@@ -41,6 +41,7 @@ GPIO ledYewGPIO(GPIOA,12,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
 LED Red(ledRedGPIO);
 
 I2C i2c(2);
+
 Control control(pwm4);
 
 
@@ -76,11 +77,11 @@ int main()
 
 	imu.init();
 	
-	if(InfoStore.Read(0,0))
-		mag.SetCalibrateRatioBias(InfoStore.Read(0,0),InfoStore.Read(0,2),InfoStore.Read(0,4),InfoStore.Read(0,6),InfoStore.Read(0,8),InfoStore.Read(0,10));
+	//if(InfoStore.Read(0,0))
+	//	mag.SetCalibrateRatioBias(InfoStore.Read(0,0),InfoStore.Read(0,2),InfoStore.Read(0,4),InfoStore.Read(0,6),InfoStore.Read(0,8),InfoStore.Read(0,10));
 	
-		control.SetPID_PIT(0.4,0,0.026);
-		control.SetPID_ROL(0.4,0,0.026);
+		//control.SetPID_PIT(0.4,0,0.026);
+		//control.SetPID_ROL(0.4,0,0.026);
 	
 	while(1)
 	{			
@@ -97,24 +98,24 @@ int main()
 		{
 			//接收
 			COM433.DataListening();
-			if(COM433.mMag_Calibrate == true) //磁力计校准
-			{
-				LOG("mag Calibrating - - - - -");
-				if(imu.MagCalibrate(10)) //10s的磁力计校准
-				{
-					tskmgr.DelayMs(1000);//不延时的话IIC就出错了
-					LOG("mag Calibrate succeed - - - - -");	
-						InfoStore.Write(0,0,mag.mRatioX);
-						InfoStore.Write(0,2,mag.mRatioY);
-						InfoStore.Write(0,4,mag.mRatioZ);
-						InfoStore.Write(0,6,mag.mBiasX);
-						InfoStore.Write(0,8,mag.mBiasY);
-						InfoStore.Write(0,10,mag.mBiasZ);
-				}
-				else
-				 LOG("mag Calibrate error - - - - -");
-				COM433.mMag_Calibrate = false;
-			}
+//			if(COM433.mMag_Calibrate == true) //磁力计校准
+//			{
+//				LOG("mag Calibrating - - - - -");
+//				if(imu.MagCalibrate(10)) //10s的磁力计校准
+//				{
+//					tskmgr.DelayMs(1000);//不延时的话IIC就出错了
+//					LOG("mag Calibrate succeed - - - - -");	
+//						InfoStore.Write(0,0,mag.mRatioX);
+//						InfoStore.Write(0,2,mag.mRatioY);
+//						InfoStore.Write(0,4,mag.mRatioZ);
+//						InfoStore.Write(0,6,mag.mBiasX);
+//						InfoStore.Write(0,8,mag.mBiasY);
+//						InfoStore.Write(0,10,mag.mBiasZ);
+//				}
+//				else
+//				 LOG("mag Calibrate error - - - - -");
+//				COM433.mMag_Calibrate = false;
+//			}
 		}
 		
 		if(COM433.mGyro_Calibrate) //角速度计校准
@@ -130,11 +131,12 @@ int main()
 			//
 			if(imu.GyroIsCalibrated())
 			{
-				//com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
+				com<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
 				//com<<MPU6050.GetAccRaw().x<<"\t"<<MPU6050.GetAccRaw().y<<"\t"<<MPU6050.GetAccRaw().z<<"\t"<<MPU6050.GetGyrRaw().x<<"\t"<<MPU6050.GetGyrRaw().y<<"\t"<<MPU6050.GetGyrRaw().z<<"\t"<<mag.GetDataRaw().x<<"\t"<<mag.GetDataRaw().y<<"\t"<<mag.GetDataRaw().z<<"\n";
 				//COM433.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
 				//COM433.SendCopterState(imu.mAngle.x,control.GetPID_ROL().Differential,control.GetPID_ROL().Proportion,(u32)Vol,0,(u8)COM433.mClockState);
-				COM433.SendCopterState(imu.mAngle.x,imu.mAngle.y,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
+				
+				//COM433.SendCopterState(imu.mAngle.x,imu.mAngle.y,imu.mAngle.z,(u32)Vol,0,(u8)COM433.mClockState);
 				
 //				COM433.test(control.GetPID_PIT().Proportion,control.GetPID_PIT().Integral,control.GetPID_PIT().Differential,
 //										control.GetPID_PIT().Output,COM433.mRcvTargetThr/100,COM433.mRcvTargetRoll/100,
@@ -142,7 +144,7 @@ int main()
 				
 				//输出 比例 积分 微分  /  PID结果  油门量 横滚量 / P I D  所以都被放大了100的
 				
-				COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
+				//COM433.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetNoCalibrateDataRaw());
 				//COM433.SendRcvControlQuantity();//发送接收到的舵量
 								
 				//com<<COM433.mRcvTargetYaw<<"\t"<<COM433.mRcvTargetRoll<<"\t"<<COM433.mRcvTargetPitch<<"\t"<<COM433.mRcvTargetThr<<"\n";

@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\lib\math;..\..\..\..\lib\onchip\ADC;..\..\..\..\lib\onchip\capture;..\..\..\..\lib\onchip\delay;..\..\..\..\lib\onchip\EXTI;..\..\..\..\lib\onchip\flash;..\..\..\..\lib\onchip\GPIO;..\..\..\..\lib\onchip\I2C;..\..\..\..\lib\onchip\interrupt;..\..\..\..\lib\onchip\PWM;..\..\..\..\lib\onchip\taskManager;..\..\..\..\lib\onchip\timer;..\..\..\..\lib\onchip\USART;.\app;..\..\..\..\lib\offchip\LED;..\..\..\..\lib\offchip\HMI;..\..\..\..\lib\offchip\Joystick;..\..\..\..\lib\offchip\MPU6050;..\..\..\..\lib\offchip\Moto;..\..\..\..\lib\offchip\HMC5883L</IncludePath>
+              <IncludePath>..\..\..\..\lib\math;..\..\..\..\lib\onchip\ADC;..\..\..\..\lib\onchip\capture;..\..\..\..\lib\onchip\delay;..\..\..\..\lib\onchip\EXTI;..\..\..\..\lib\onchip\flash;..\..\..\..\lib\onchip\GPIO;..\..\..\..\lib\onchip\I2C;..\..\..\..\lib\onchip\interrupt;..\..\..\..\lib\onchip\PWM;..\..\..\..\lib\onchip\taskManager;..\..\..\..\lib\onchip\timer;..\..\..\..\lib\onchip\USART;.\app;..\..\..\..\lib\offchip\LED;..\..\..\..\lib\offchip\HMI;..\..\..\..\lib\offchip\Joystick;..\..\..\..\lib\offchip\MPU6050;..\..\..\..\lib\offchip\Moto;..\..\..\..\lib</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -491,7 +491,7 @@
             <File>
               <FileName>HMC5883L.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\..\..\lib\offchip\HMC5883L\HMC5883L.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\HMC5883L.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -527,11 +527,6 @@
               <FileName>Control.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\app\Control.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>IMU.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\app\IMU.cpp</FilePath>
             </File>
           </Files>
         </Group>

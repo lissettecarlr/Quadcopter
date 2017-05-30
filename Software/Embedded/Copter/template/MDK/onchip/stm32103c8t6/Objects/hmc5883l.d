@@ -30,3 +30,4 @@
 .\objects\hmc5883l.o: ..\..\..\..\lib\onchip\USART\USART.h
 .\objects\hmc5883l.o: ..\..\..\..\lib\onchip\GPIO\GPIO.h
 .\objects\hmc5883l.o: C:\Other\keil5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\hmc5883l.o: ..\..\..\..\lib\offchip\HMC5883L\Magnetometer.h

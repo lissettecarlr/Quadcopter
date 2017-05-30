@@ -27,12 +27,14 @@ u8 mpu6050::Init(bool wait)
 		if(!mI2C->WaitTransmitComplete(true,true,false))
 			return false;
 		
+
+		
 	//第一次不校准,给经验值
-	mIsGyrCalibrating = false;
-	mGyroOffset.x=-134;
-	mGyroOffset.y=0xb8;
-	mGyroOffset.z=-122;
-	mIsGyrCalibrated = true;
+//	mIsGyrCalibrating = false;
+//	mGyroOffset.x=-307;
+//	mGyroOffset.y=100;
+//	mGyroOffset.z=-533;
+//	mIsGyrCalibrated = true;
 		
 	return true;
 }
@@ -217,6 +219,7 @@ u8 mpu6050::Update(bool wait,Vector3<int> *acc, Vector3<int> *gyro)
 			gyroCalibrate_sum.z = 0;
 			gyroCalibrateCnt = 0;
 			mIsGyrCalibrated = true;
+			mIsGyrCalibrating = false;
 		}	
 	}	
 	mGyroRaw -= mGyroOffset;

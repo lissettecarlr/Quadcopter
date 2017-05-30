@@ -25,9 +25,11 @@ bool IMU::init(float RatioX,float RatioY,float RatioZ,float BiasX,float BiasY,fl
 {
 		float time = TaskManager::Time();
 		mIns.Init();
+	  //mIns.StartGyroCalibrate();
 		if(!mMag.TestConnection(false))
 			LOG("mag connection error\n");
-		mMag.Init(RatioX,RatioY,RatioZ,BiasX,BiasY,BiasZ);
+		//mMag.Init(RatioX,RatioY,RatioZ,BiasX,BiasY,BiasZ);
+		mMag.Init();
 		while(TaskManager::Time()-time<1.5)
 		{}
 		LOG("calibrating ... don't move!!!\n");	
@@ -77,7 +79,7 @@ bool IMU::GyroCalibrate()
 
 bool IMU::MagCalibrate(double SpendTime)
 {
-	mMag.Calibrate(SpendTime);
+	mMag.StartCalibrate();
 	mMagIsCalibrated = true;
 	return true;
 }
