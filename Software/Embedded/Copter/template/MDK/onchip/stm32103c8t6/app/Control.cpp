@@ -175,6 +175,7 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 PcYaw)
 {
 	
+	float MOTO1=0,MOTO2=0,MOTO3=0,MOTO4=0;
 		//规范化接收的遥控器值  1000 - 2000  平衡位置度量在50内
 	if(RcThr<1000) RcThr=1000;
 	if(RcThr>2000) RcThr=2000;
@@ -213,15 +214,13 @@ bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 R
 	
 	
 	//电机控制
-	if(MOTO1<0)
-		MOTO1=0;			
-	if(MOTO2<0)
-		MOTO2=0;	
+	MOTO1 = RcThr;
+	MOTO2 = RcThr;
+	MOTO3 = RcThr - roll_angle_PID.Output;	
+	MOTO4 = RcThr + roll_angle_PID.Output;
 	
-	MOTO1 = Thr;
-	MOTO2 = Thr;
-	MOTO3 = Thr - roll_angle_PID.Output;	
-	MOTO4 = Thr + roll_angle_PID.Output;
+	if(MOTO1 >100)
+		MOTO1=100;
 	
 		#ifdef DUBUG_PITCH
 	if(Thr<FlyThr)
@@ -294,7 +293,7 @@ bool Control::TOOL_PID_Postion_Cal(PID_Typedef * PID,float target,float measure,
 		if(PID->Output > PID->OLimit)
 			PID->Output = PID->OLimit;
 		if(PID->Output < -PID->OLimit)
-		  PID->Output = -pid->OLimit;
+		  PID->Output = -PID->OLimit;
 		
 		PID->LastError = PID->Error;
 	return true;

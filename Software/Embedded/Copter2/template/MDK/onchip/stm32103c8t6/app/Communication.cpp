@@ -138,11 +138,11 @@ bool Communication::DataListening()
 							}
 							return false;
 						}
-						else if(ch ==0x10) //PID更新
+						else if(ch ==0x10 ||ch ==0x11 ||ch ==0x12) //PID更新
 						{
 							static u8 PIDnumber;
 							PIDnumber = ch -0x10;
-							if(PIDnumber>2) //放置PID数值越界
+							if(PIDnumber>2) //防止PID数值越界
 							{
 								return false;
 							}
@@ -156,9 +156,11 @@ bool Communication::DataListening()
 									PID[PIDnumber][0]=((u16)data[4]*256+data[5])/1000.0;
 									PID[PIDnumber][1]=((u16)data[6]*256+data[7])/1000.0;
 									PID[PIDnumber][2]=((u16)data[8]*256+data[9])/1000.0;
+								
 									PID[PIDnumber][3]=((u16)data[10]*256+data[11])/1000.0;
 									PID[PIDnumber][4]=((u16)data[12]*256+data[13])/1000.0;
 									PID[PIDnumber][5]=((u16)data[14]*256+data[15])/1000.0;
+								
 									PID[PIDnumber][6]=((u16)data[16]*256+data[17])/1000.0;
 									PID[PIDnumber][7]=((u16)data[18]*256+data[19])/1000.0;
 									PID[PIDnumber][8]=((u16)data[20]*256+data[21])/1000.0;
@@ -346,52 +348,62 @@ bool Communication::reply(u8 difference,u8 sum)
 	usart.SendData(data_to_send,7);
 	return true;
 }
-bool Communication::SendPID(float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d)
+bool Communication::SendPID(u8 PIDnumber,float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d)
 {
-	u8 data_to_send[30];
-	u8 _cnt=0;
-	vs16 _temp;
+	u8 data_to_send[30]={0};
+	//u8 _cnt=0;
+	vs16 _temp=0;
 	
-	data_to_send[_cnt++]=0xAA;
-	data_to_send[_cnt++]=0xAA;
-	data_to_send[_cnt++]=0x10;
-	data_to_send[_cnt++]=0;
+	data_to_send[0]=0xAA;
+	data_to_send[1]=0xAA;
+	data_to_send[2]=PIDnumber;
+	data_to_send[3]=18;
 	
-	_temp = p1_p * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p1_i  * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p1_d  * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p2_p  * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p2_i  * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p2_d * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p3_p  * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p3_i  * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p3_d * 1000;
-	data_to_send[_cnt++]=BYTE1(_temp);
-	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = (int)(p1_p*1000);
+	data_to_send[4]=BYTE1(_temp);
+	data_to_send[5]=BYTE0(_temp);
 	
-	data_to_send[3] = _cnt-4;
+	_temp = (int)(p1_i*1000);
+	data_to_send[6]=BYTE1(_temp);
+	data_to_send[7]=BYTE0(_temp);
+	
+	_temp = (int)(p1_d*1000);
+	data_to_send[8]=BYTE1(_temp);
+	data_to_send[9]=BYTE0(_temp);
+	
+	_temp = (int)(p2_p*1000);
+	data_to_send[10]=BYTE1(_temp);
+	data_to_send[11]=BYTE0(_temp);
+	
+	_temp = (int)(p2_i*1000);
+	data_to_send[12]=BYTE1(_temp);
+	data_to_send[13]=BYTE0(_temp);
+	
+	_temp = (int)(p2_d*1000);
+	data_to_send[14]=BYTE1(_temp);
+	data_to_send[15]=BYTE0(_temp);
+	
+	_temp = (int)(p3_p*1000);
+	data_to_send[16]=BYTE1(_temp);
+	data_to_send[17]=BYTE0(_temp);
+	
+	_temp = (int)(p3_i*1000);	
+	data_to_send[18]=BYTE1(_temp);
+	data_to_send[19]=BYTE0(_temp);
+	
+	_temp = (int)(p3_d*1000);
+	data_to_send[20]=BYTE1(_temp);
+	data_to_send[21]=BYTE0(_temp);
+	
+	//data_to_send[3] = _cnt-4;
 	u8 sum = 0;
-	for(u8 i=0;i<_cnt;i++)
+	for(u8 i=0;i<=21;i++)
 		sum += data_to_send[i];
 	
-	data_to_send[_cnt++]=sum;
-	usart.SendData(data_to_send, _cnt);
+	data_to_send[22]=sum;
+	usart.SendData(data_to_send, 23);
+	
+	
 	return true;
 }
 

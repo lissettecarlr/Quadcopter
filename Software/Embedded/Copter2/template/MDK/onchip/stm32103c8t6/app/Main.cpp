@@ -31,10 +31,9 @@ USART com2(2,115200,false);
 
 Communication WIFI(com2); 
 
-
 PWM pwm4(TIM4,1,1,1,1,24000);
 ADC pressure(1); //PA1读取AD值
-flash InfoStore(0x08000000+60*MEMORY_PAGE_SIZE,true);     //flash
+//flash InfoStore(0x08000000+60*MEMORY_PAGE_SIZE,true);     //flash
 //0页 存磁力计校准值  1页存PID
 
 GPIO ledRedGPIO(GPIOB,5,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
@@ -43,21 +42,20 @@ LED Red(ledRedGPIO);
 
 I2C i2c(2);
 
-Control control(pwm4);
-
+//Control control(pwm4);
 
 int main()
 {
 	Red.On();
 	tskmgr.DelayMs(500);
-	mpu6050 MPU6050(i2c);
+	mpu6050 MPU6050(i2c,500);
 	tskmgr.DelayMs(500);
-	HMC5883L mag(i2c);
+	HMC5883L mag(i2c,500);
 	tskmgr.DelayS(1);
 	IMU imu(MPU6050,mag);
 	tskmgr.DelayS(1);
 	
-	
+	Control control(pwm4);
 	double Updata_posture=0; //计算欧拉角 10ms
 //	double Updata_Control=0; //控制 500Hz 2ms
 	double Receive_date=0;  //接收数据  20ms
@@ -65,7 +63,7 @@ int main()
 	double Updata_hint=0; //更新提示信息状态 500ms
 	
 	float Vol = 0;//电压
-	float magCV[6]={0};//用于保存磁力计数据
+//	float magCV[6]={0};//用于保存磁力计数据
 	
 	ledRedGPIO.SetLevel(0);//用于表示是否处于上锁状态
 	ledYewGPIO.SetLevel(0);//表示系统是否忙于做其他事
@@ -79,8 +77,17 @@ int main()
 	mag.SetOffsetBias(231,-482,-446.5);
 	mag.SetOffsetRatio(1,0.921,0.615);
 	
-		//control.SetPID_PIT(0.4,0,0.026);
-		//control.SetPID_ROL(0.4,0,0.026);
+//	if(InfoStore.Read(0,0))
+//	  control.ReadPID(InfoStore,0,0);
+	
+//		control.SetPID_PIT(0.4,0,0.026);
+//		control.SetPID_ROL(0.4,0,0.026);
+//		control.SetPID_YAW(0.01,0.01,0.01);
+//		
+//				control.SetPID_PIT_rate(0.01,0.01,0.01);
+//						control.SetPID_ROL_rate(0.01,0.01,0.01);
+//								control.SetPID_YAW_rate(0.01,0.01,0.01);
+		
 	
 	while(1)
 	{			
@@ -88,10 +95,10 @@ int main()
 		{
 				//更新、获得欧拉角
 			imu.UpdateIMU();
-			if(!WIFI.mClockState) //当解锁
-			{
-				control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),WIFI.mRcvTargetThr,WIFI.mRcvTargetPitch,WIFI.mRcvTargetRoll,WIFI.mRcvTargetYaw);		
-			}
+//			if(!WIFI.mClockState) //当解锁
+//			{
+				  control.SeriesPIDComtrol(imu.mAngle,MPU6050.GetGyrDegree(),WIFI.mRcvTargetThr,WIFI.mRcvTargetPitch,WIFI.mRcvTargetRoll,WIFI.mRcvTargetYaw);		
+//			}
 		}
 
 		
@@ -128,7 +135,7 @@ int main()
 				//x=mag.GetOffsetBias();
 				//y=mag.GetOffsetRatio();
 //				com2<<imu.mAngle.x<<"\t"<<imu.mAngle.y<<"\t"<<imu.mAngle.z<<"\n";
-				//com2<<x.x<<"  "<<x.y<<"  "<<x.z<<"  "<<y.x<<"  "<<y.y<<"  "<<y.z<<"  "<<"n";
+				//com2<<x.x<<"  "<<x.y<<"  "<<x.z<<"  "<<y.x<<"  "<<y.y<<"  "<<y.z<<"  "<<"n"; 
 //				static float x1=0,x2=0,y1=0,y2=0,z1=0,z2=0;
 //				if(mag.GetDataRaw().x >= x1)
 //					x1=mag.GetDataRaw().x;
@@ -159,12 +166,33 @@ int main()
 			if(WIFI.mGetPid)//如果请求了获取PID
 			{
 				WIFI.mGetPid=false;
-				WIFI.SendPID(control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D,
-				control.GetPID_ROL().P,control.GetPID_ROL().I,control.GetPID_ROL().D,
-				control.GetPID_YAW().P,control.GetPID_YAW().I,control.GetPID_YAW().D);
-				WIFI.SendPID(control.GetPID_PIT_rate().P,control.GetPID_PIT_rate().I,control.GetPID_PIT_rate().D,
-				control.GetPID_ROL_rate().P,control.GetPID_ROL_rate().I,control.GetPID_ROL_rate().D,
-				control.GetPID_YAW_rate().P,control.GetPID_YAW_rate().I,control.GetPID_YAW_rate().D);
+				
+//				WIFI.SendPID(0x10,
+//				control.GetPID_ROL().P,control.GetPID_ROL().I,control.GetPID_ROL().D,
+//				control.GetPID_YAW().P,control.GetPID_YAW().I,control.GetPID_YAW().D,
+//				control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D
+//				);
+				
+				
+					WIFI.SendPID(0x10,
+					control.roll_angle_PID.P,control.roll_angle_PID.I,control.roll_angle_PID.D	,
+					control.yaw_angle_PID.P,control.yaw_angle_PID.I,control.yaw_angle_PID.D	,
+					control.pitch_angle_PID.P,control.pitch_angle_PID.I,control.pitch_angle_PID.D				
+					);	
+				
+//				WIFI.SendPID(0x11,
+//				control.GetPID_ROL_rate().P,control.GetPID_ROL_rate().I,control.GetPID_ROL_rate().D,
+//				control.GetPID_YAW_rate().P,control.GetPID_YAW_rate().I,control.GetPID_YAW_rate().D,
+//				control.GetPID_PIT_rate().P,control.GetPID_PIT_rate().I,control.GetPID_PIT_rate().D
+//				);
+				
+				
+				  WIFI.SendPID(0x11,
+					control.roll_rate_PID.P,control.roll_rate_PID.I,control.roll_rate_PID.D	,
+					control.yaw_rate_PID.P,control.yaw_rate_PID.I,control.yaw_rate_PID.D	,
+					control.pitch_rate_PID.P,control.pitch_rate_PID.I,control.pitch_rate_PID.D				
+					);	
+				
 			}
 			
 		}
@@ -187,14 +215,43 @@ int main()
 	
 			if(WIFI.mPidUpdata) //更新PID
 			{
-				WIFI.mPidUpdata=false;
-				control.SetPID_PIT(WIFI.PID[0][0],WIFI.PID[0][1],WIFI.PID[0][2]);
-				control.SetPID_ROL(WIFI.PID[0][3],WIFI.PID[0][4],WIFI.PID[0][5]);
-				control.SetPID_YAW(WIFI.PID[0][6],WIFI.PID[0][7],WIFI.PID[0][8]);
+				WIFI.mPidUpdata=false;	
 				
-				control.SetPID_PIT_rate(WIFI.PID[1][0],WIFI.PID[1][1],WIFI.PID[1][2]);
-				control.SetPID_ROL_rate(WIFI.PID[1][3],WIFI.PID[1][4],WIFI.PID[1][5]);
-				control.SetPID_YAW_rate(WIFI.PID[1][6],WIFI.PID[1][7],WIFI.PID[1][8]);
+				control.roll_angle_PID.P=WIFI.PID[0][0];
+				control.roll_angle_PID.I=WIFI.PID[0][1];
+				control.roll_angle_PID.D=WIFI.PID[0][2];
+				
+				control.yaw_angle_PID.P = WIFI.PID[0][3];
+				control.yaw_angle_PID.I = WIFI.PID[0][4];
+				control.yaw_angle_PID.D = WIFI.PID[0][5];
+				
+				control.pitch_angle_PID.P = WIFI.PID[0][6];
+				control.pitch_angle_PID.I = WIFI.PID[0][7];
+				control.pitch_angle_PID.D = WIFI.PID[0][8];
+				
+//				control.SetPID_ROL(WIFI.PID[0][0],WIFI.PID[0][1],WIFI.PID[0][2]);
+//				control.SetPID_YAW(WIFI.PID[0][3],WIFI.PID[0][4],WIFI.PID[0][5]);
+//				control.SetPID_PIT(WIFI.PID[0][6],WIFI.PID[0][7],WIFI.PID[0][8]);
+								
+				control.roll_rate_PID.P=WIFI.PID[1][0];
+				control.roll_rate_PID.I=WIFI.PID[1][1];
+				control.roll_rate_PID.D=WIFI.PID[1][2];
+				
+				control.yaw_rate_PID.P = WIFI.PID[1][3];
+				control.yaw_rate_PID.I = WIFI.PID[1][4];
+				control.yaw_rate_PID.D = WIFI.PID[1][5];
+				
+				control.pitch_rate_PID.P = WIFI.PID[1][6];
+				control.pitch_rate_PID.I = WIFI.PID[1][7];
+				control.pitch_rate_PID.D = WIFI.PID[1][8];
+				
+				
+//				control.SetPID_ROL_rate(WIFI.PID[1][0],WIFI.PID[1][1],WIFI.PID[1][2]);
+//				control.SetPID_YAW_rate(WIFI.PID[1][3],WIFI.PID[1][4],WIFI.PID[1][5]);
+//				control.SetPID_PIT_rate(WIFI.PID[1][6],WIFI.PID[1][7],WIFI.PID[1][8]);
+				
+				
+//				control.SavePID(InfoStore,0,0);
 				
 				Red.Blink(4,100,1);
 			}

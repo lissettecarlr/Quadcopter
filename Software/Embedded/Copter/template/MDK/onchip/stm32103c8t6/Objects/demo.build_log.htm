@@ -50,6 +50,11 @@ compiling UserInterrupt.cpp...
 compiling Communication.cpp...
 compiling attitude.cpp...
 compiling Control.cpp...
+app\Control.cpp(217): error:  #20: identifier "Thr" is undefined
+        MOTO1 = Thr;
+app\Control.cpp(296): error:  #20: identifier "pid" is undefined
+                  PID->Output = -pid->OLimit;
+app\Control.cpp: 0 warnings, 2 errors
 compiling IMU.cpp...
 compiling misc.c...
 compiling stm32f10x_adc.c...
@@ -57,16 +62,7 @@ compiling stm32f10x_dma.c...
 compiling stm32f10x_exti.c...
 compiling stm32f10x_flash.c...
 compiling stm32f10x_gpio.c...
-compiling stm32f10x_i2c.c...
-compiling stm32f10x_rcc.c...
-compiling stm32f10x_tim.c...
-compiling stm32f10x_usart.c...
-compiling GPIO_STM32F10x.c...
-assembling startup_stm32f10x_md.s...
-compiling system_stm32f10x.c...
-linking...
-Program Size: Code=33066 RO-data=438 RW-data=200 ZI-data=4264  
-".\Objects\demo.axf" - 0 Error(s), 1 Warning(s).
+".\Objects\demo.axf" - 2 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -82,16 +78,16 @@ Package Vendor: Keil
                 STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
    * Component: DMA Version: 3.5.0
    * Component: EXTI Version: 3.5.0
-   * Component: Flash Version: 3.5.0
    * Component: Startup Version: 1.0.0
    * Component: Framework Version: 3.5.1
+   * Component: Flash Version: 3.5.0
    * Component: ADC Version: 3.5.0
-   * Component: I2C Version: 3.5.0
+   * Component: TIM Version: 3.5.0
    * Component: GPIO Version: 3.5.0
    * Component: RCC Version: 3.5.0
-   * Component: TIM Version: 3.5.0
-   * Component: GPIO Version: 1.2
+   * Component: I2C Version: 3.5.0
    * Component: USART Version: 3.5.0
+   * Component: GPIO Version: 1.2
 
 <h2>Collection of Component include folders:</h2>
   E:\project\微型四轴无人机\Software\Embedded\Copter\template\MDK\onchip\stm32103c8t6\RTE
@@ -112,53 +108,54 @@ Package Vendor: Keil
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_dma.h
 
    * Component: Keil::Device:StdPeriph Drivers:EXTI:3.5.0
-      Source file:   Device\StdPeriph_Driver\src\stm32f10x_exti.c
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_exti.h
+      Source file:   Device\StdPeriph_Driver\src\stm32f10x_exti.c
+
+   * Component: Keil::Device:Startup:1.0.0
+      Source file:   Device\Source\ARM\startup_stm32f10x_md.s
+      Source file:   Device\Source\ARM\STM32F1xx_OPT.s
+      Include file:  RTE_Driver\Config\RTE_Device.h
+      Source file:   Device\Source\system_stm32f10x.c
+
+   * Component: Keil::Device:StdPeriph Drivers:Framework:3.5.1
+      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_it.c
+      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
+      Include file:  Device\StdPeriph_Driver\inc\misc.h
+      Include file:  Device\StdPeriph_Driver\templates\stm32f10x_it.h
+      Source file:   Device\StdPeriph_Driver\src\misc.c
 
    * Component: Keil::Device:StdPeriph Drivers:Flash:3.5.0
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_flash.h
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_flash.c
 
-   * Component: Keil::Device:Startup:1.0.0
-      Source file:   Device\Source\ARM\STM32F1xx_OPT.s
-      Include file:  RTE_Driver\Config\RTE_Device.h
-      Source file:   Device\Source\ARM\startup_stm32f10x_md.s
-      Source file:   Device\Source\system_stm32f10x.c
-
-   * Component: Keil::Device:StdPeriph Drivers:Framework:3.5.1
-      Include file:  Device\StdPeriph_Driver\templates\stm32f10x_it.h
-      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_it.c
-      Source file:   Device\StdPeriph_Driver\src\misc.c
-      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
-      Include file:  Device\StdPeriph_Driver\inc\misc.h
-
    * Component: Keil::Device:StdPeriph Drivers:ADC:3.5.0
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_adc.h
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_adc.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_adc.h
 
-   * Component: Keil::Device:StdPeriph Drivers:I2C:3.5.0
-      Source file:   Device\StdPeriph_Driver\src\stm32f10x_i2c.c
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
+   * Component: Keil::Device:StdPeriph Drivers:TIM:3.5.0
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_tim.h
+      Source file:   Device\StdPeriph_Driver\src\stm32f10x_tim.c
 
    * Component: Keil::Device:StdPeriph Drivers:GPIO:3.5.0
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_gpio.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 
    * Component: Keil::Device:StdPeriph Drivers:RCC:3.5.0
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_rcc.c
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_rcc.h
 
-   * Component: Keil::Device:StdPeriph Drivers:TIM:3.5.0
-      Source file:   Device\StdPeriph_Driver\src\stm32f10x_tim.c
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_tim.h
+   * Component: Keil::Device:StdPeriph Drivers:I2C:3.5.0
+      Source file:   Device\StdPeriph_Driver\src\stm32f10x_i2c.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
+
+   * Component: Keil::Device:StdPeriph Drivers:USART:3.5.0
+      Source file:   Device\StdPeriph_Driver\src\stm32f10x_usart.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_usart.h
 
    * Component: Keil::Device:GPIO:1.2
       Source file:   RTE_Driver\GPIO_STM32F10x.c
       Include file:  RTE_Driver\GPIO_STM32F10x.h
-
-   * Component: Keil::Device:StdPeriph Drivers:USART:3.5.0
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_usart.h
-      Source file:   Device\StdPeriph_Driver\src\stm32f10x_usart.c
+Project build/rebuild aborted.
 </pre>
 </body>
 </html>

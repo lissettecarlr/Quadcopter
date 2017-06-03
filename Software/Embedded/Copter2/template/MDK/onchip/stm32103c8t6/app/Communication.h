@@ -54,7 +54,7 @@ class Communication{
 		//接收到的控制量
 	bool SendRcvControlQuantity();
 		//发送PID数据
-	bool SendPID(float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d);
+	bool SendPID(u8 PIDnumber,float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d);
 		//接收应答 需要应答的功能字和校验和
 	bool reply(u8 difference,u8 sum);
 		//发送电机信息

@@ -42,6 +42,14 @@ class Control{
 		double OldTime;
 		float FlyThr; //起飞油门量 经验值，用于区分使用PID的时间
 	
+
+
+		//增量式PID工具
+		//参数：需要更新的PID结构体，目标位置，当前位置，时间间隔
+		bool TOOL_PID_Postion_Cal(PID_Typedef * PID,float target,float measure,float Thr,double dertT);
+	public:
+		Control(PWM &Moto);
+	
 		PID_Typedef pitch_angle_PID;	//pitch角度环的PID
 		PID_Typedef pitch_rate_PID;		//pitch角速率环的PID
 
@@ -50,99 +58,53 @@ class Control{
 
 		PID_Typedef yaw_angle_PID;    //yaw角度环的PID 
 		PID_Typedef yaw_rate_PID;     //yaw角速率环的PID
-
-		//增量式PID工具
-		//参数：需要更新的PID结构体，目标位置，当前位置，时间间隔
-		bool TOOL_PID_Postion_Cal(PID_Typedef * PID,float target,float measure,float Thr,double dertT);
-	public:
-		Control(PWM &Moto);
+	
+	
+	
+	
 		bool ReadPID(flash info,u16 Page,u16 position);
 		bool SavePID(flash info,u16 Page,u16 position);
 	
 	//SET------------------------------------------------
-		bool SetPID_ROL(float P,float I,float D)
-		{
-			roll_angle_PID.P=P;
-			roll_angle_PID.I=I;
-			roll_angle_PID.D=D;
-			return true;
-		}
+		bool SetPID_ROL(float P,float I,float D);
+
 		
-		bool SetPID_PIT(float P,float I,float D)
-		{
-			pitch_angle_PID.P=P;
-			pitch_angle_PID.I=I;
-			pitch_angle_PID.D=D;
-			return true;
-		}
+		bool SetPID_PIT(float P,float I,float D);
+
 		
-		bool SetPID_YAW(float P,float I,float D)
-		{
-			yaw_angle_PID.P=P;
-			yaw_angle_PID.I=I;
-			yaw_angle_PID.D=D;
-			return true;
-		}
+		bool SetPID_YAW(float P,float I,float D);
+
 		//角速度环
-		bool SetPID_ROL_rate(float P,float I,float D)
-		{
-			roll_rate_PID.P=P;
-			roll_rate_PID.I=I;
-			roll_rate_PID.D=D;
-			return true;
-		}
+		bool SetPID_ROL_rate(float P,float I,float D);
+
 		
-		bool SetPID_PIT_rate(float P,float I,float D)
-		{
-			pitch_rate_PID.P=P;
-			pitch_rate_PID.I=I;
-			pitch_rate_PID.D=D;
-			return true;
-		}
+		bool SetPID_PIT_rate(float P,float I,float D);
+
 		
-		bool SetPID_YAW_rate(float P,float I,float D)
-		{
-			yaw_rate_PID.P=P;
-			yaw_rate_PID.I=I;
-			yaw_rate_PID.D=D;
-			return true;
-		}
+		bool SetPID_YAW_rate(float P,float I,float D);
+
 		
 	//GET-----------------------------------------------
-		PID_Typedef GetPID_ROL()
-		{
-				return roll_angle_PID;
-		}
+		PID_Typedef GetPID_ROL();
 		
-		PID_Typedef GetPID_YAW()
-		{
-			return yaw_angle_PID;
-		}
+		PID_Typedef GetPID_YAW();
+
 		
-		PID_Typedef GetPID_PIT()
-		{
-			return pitch_angle_PID;
-		}
+		PID_Typedef GetPID_PIT();
+
 		
-		PID_Typedef GetPID_ROL_rate()
-		{
-				return roll_rate_PID;
-		}
+		PID_Typedef GetPID_ROL_rate();
+
 		
-		PID_Typedef GetPID_YAW_rate()
-		{
-			return yaw_rate_PID;
-		}
+		PID_Typedef GetPID_YAW_rate();
+
 		
-		PID_Typedef GetPID_PIT_rate()
-		{
-			return pitch_rate_PID;
-		}
-		
+		PID_Typedef GetPID_PIT_rate();
+
 		//传入： 当前角度/陀螺仪的角速度/遥控器量
-		bool PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 PcYaw);
+		bool PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 RcYaw);
 		//串级PID
-		bool SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 PcYaw);
+		bool SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 RcYaw);
 		
 };
 
