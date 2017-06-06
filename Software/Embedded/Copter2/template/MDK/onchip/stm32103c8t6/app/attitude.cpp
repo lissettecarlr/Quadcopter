@@ -111,8 +111,8 @@ float recipNorm;
 		
 			// Normalise accelerometer measurement
 			//归一化，得到单位加速度
+			
 			recipNorm = 1.0 / sqrt(ax * ax + ay * ay + az * az);
-
 			ax *= recipNorm;
 			ay *= recipNorm;
 			az *= recipNorm;

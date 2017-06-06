@@ -50,6 +50,7 @@ class Control{
 	public:
 		Control(PWM &Moto);
 	
+		float MOTO1,MOTO2,MOTO3,MOTO4;
 		PID_Typedef pitch_angle_PID;	//pitch角度环的PID
 		PID_Typedef pitch_rate_PID;		//pitch角速率环的PID
 

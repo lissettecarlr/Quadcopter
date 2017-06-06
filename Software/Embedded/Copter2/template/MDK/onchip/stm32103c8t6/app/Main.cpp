@@ -33,7 +33,7 @@ Communication WIFI(com2);
 
 PWM pwm4(TIM4,1,1,1,1,24000);
 ADC pressure(1); //PA1读取AD值
-//flash InfoStore(0x08000000+60*MEMORY_PAGE_SIZE,true);     //flash
+flash InfoStore(0x08000000+60*MEMORY_PAGE_SIZE,true);     //flash
 //0页 存磁力计校准值  1页存PID
 
 GPIO ledRedGPIO(GPIOB,5,GPIO_Mode_Out_PP,GPIO_Speed_50MHz);//LED GPIO
@@ -77,8 +77,8 @@ int main()
 	mag.SetOffsetBias(231,-482,-446.5);
 	mag.SetOffsetRatio(1,0.921,0.615);
 	
-//	if(InfoStore.Read(0,0))
-//	  control.ReadPID(InfoStore,0,0);
+	//if(InfoStore.Read(0,0))
+	  control.ReadPID(InfoStore,0,0);
 	
 //		control.SetPID_PIT(0.4,0,0.026);
 //		control.SetPID_ROL(0.4,0,0.026);
@@ -95,10 +95,14 @@ int main()
 		{
 				//更新、获得欧拉角
 			imu.UpdateIMU();
-//			if(!WIFI.mClockState) //当解锁
-//			{
-				  control.SeriesPIDComtrol(imu.mAngle,MPU6050.GetGyrDegree(),WIFI.mRcvTargetThr,WIFI.mRcvTargetPitch,WIFI.mRcvTargetRoll,WIFI.mRcvTargetYaw);		
-//			}
+  		if(!WIFI.mClockState) //当解锁
+			{
+				 // control.SeriesPIDComtrol(imu.mAngle,MPU6050.GetGyrDegree(),WIFI.mRcvTargetThr,WIFI.mRcvTargetPitch,WIFI.mRcvTargetRoll,WIFI.mRcvTargetYaw);	
+           control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),WIFI.mRcvTargetThr,WIFI.mRcvTargetPitch,WIFI.mRcvTargetRoll,WIFI.mRcvTargetYaw);				
+			}
+			else{
+			  pwm4.SetDuty(0,0,0,0);
+			}
 		}
 
 		
@@ -160,7 +164,11 @@ int main()
 				WIFI.SendCopterState(imu.mAngle.y,imu.mAngle.x,imu.mAngle.z,(u32)Vol,0,(u8)WIFI.mClockState);								
 				
 				WIFI.SendSensorOriginalData(MPU6050.GetAccRaw(),MPU6050.GetGyrRaw(),mag.GetDataRaw());
-				WIFI.SendRcvControlQuantity();//发送接收到的舵量
+				//WIFI.SendRcvControlQuantity(control.MOTO1,control.MOTO2,control.MOTO3,control.MOTO4,control.pitch_angle_PID.Output,control.pitch_rate_PID.Output);//发送接收到的舵量
+				//WIFI.SendRcvControlQuantity(control.MOTO1,control.MOTO4,control.pitch_angle_PID.Proportion,control.pitch_angle_PID.Integral,control.pitch_angle_PID.Differential,control.pitch_angle_PID.Output);//发送接收到的舵量
+				 WIFI.SendRcvControlQuantity(control.MOTO1,control.pitch_angle_PID.Proportion,
+				 control.pitch_rate_PID.Proportion,control.pitch_rate_PID.Integral,control.pitch_rate_PID.Differential,
+				 control.pitch_rate_PID.Output);
 								
 			}
 			if(WIFI.mGetPid)//如果请求了获取PID
@@ -185,7 +193,7 @@ int main()
 //				control.GetPID_YAW_rate().P,control.GetPID_YAW_rate().I,control.GetPID_YAW_rate().D,
 //				control.GetPID_PIT_rate().P,control.GetPID_PIT_rate().I,control.GetPID_PIT_rate().D
 //				);
-				
+			
 				
 				  WIFI.SendPID(0x11,
 					control.roll_rate_PID.P,control.roll_rate_PID.I,control.roll_rate_PID.D	,
@@ -199,6 +207,7 @@ int main()
 		
 		if(tskmgr.TimeSlice(Updata_hint,0.5) ) //提示更新
 		{
+			com<<WIFI.mRcvTargetPitch<<"\t"<<control.pitch_angle_PID.Proportion<<"\t"<<control.pitch_angle_PID.Error<<"\t"<<control.pitch_angle_PID.P<<"\n";
 			if(WIFI.mClockState) //1锁定
 				ledYewGPIO.SetLevel(0);
 			else
@@ -251,7 +260,7 @@ int main()
 //				control.SetPID_PIT_rate(WIFI.PID[1][6],WIFI.PID[1][7],WIFI.PID[1][8]);
 				
 				
-//				control.SavePID(InfoStore,0,0);
+				control.SavePID(InfoStore,0,0);
 				
 				Red.Blink(4,100,1);
 			}

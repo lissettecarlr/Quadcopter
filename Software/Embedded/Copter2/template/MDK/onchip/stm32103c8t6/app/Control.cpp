@@ -36,7 +36,7 @@ bool Control::ReadPID(flash info,u16 Page,u16 position)
 		return false;
 	
 	SetPID_PIT(data[0]/1000.0,data[1]/1000.0,data[2]/1000.0);
-	SetPID_ROL(data[3]/1000.0,data[2]/1000.0,data[5]/1000.0);	
+	SetPID_ROL(data[3]/1000.0,data[5]/1000.0,data[5]/1000.0);	
 	SetPID_YAW(data[6]/1000.0,data[7]/1000.0,data[8]/1000.0);
 	
 	SetPID_PIT_rate(data[9]/1000.0,data[10]/1000.0,data[11]/1000.0);
@@ -90,17 +90,16 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		if(RcPit<1000)	 RcPit=1000;
 		if(RcPit>2000)	 RcPit=2000;
 		if(RcPit>1450 && RcPit<1550) RcPit=1500;
-		if(RcRol<1000)	 RcRol=1000;
-		if(RcRol>2000)	 RcRol=2000;
-		if(RcRol>1450 && RcRol<1550) RcPit=1500;
-		if(RcYaw<1000)	 RcYaw=1000;
-		if(RcYaw>2000)	 RcYaw=2000;
-		if(RcYaw>1450 && RcYaw<1550) RcYaw=1500;
+//		if(RcRol<1000)	 RcRol=1000;
+//		if(RcRol>2000)	 RcRol=2000;
+//		if(RcRol>1450 && RcRol<1550) RcRol=1500;
+//		if(RcYaw<1000)	 RcYaw=1000;
+//		if(RcYaw>2000)	 RcYaw=2000;
+//		if(RcYaw>1450 && RcYaw<1550) RcYaw=1500;
 
-		float MOTO1=0,MOTO2=0,MOTO3=0,MOTO4=0;
 		float Thr=(RcThr - 1000)/10; //将接收到的油门量转化为百分比
-		float TargetRoll = (RcRol -1500)*0.08; //遥控器控制在+-40°
-		float TargetPitch = (RcRol -1500)*0.08;
+		//float TargetRoll = (RcRol -1500)*0.08; //遥控器控制在+-40°
+		float TargetPitch = (RcPit -1500)*0.08;
 	
 	
 		//计算时间间隔
@@ -113,7 +112,7 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		
 //PITCH轴		
 		//比例
-		pitch_angle_PID.Error = TargetPitch- angle.y; //期望角度减去当前角度,这里将遥控器范围规定在+-20°
+		pitch_angle_PID.Error = TargetPitch- angle.x; //期望角度减去当前角度,这里将遥控器范围规定在+-20°
 		pitch_angle_PID.Proportion = pitch_angle_PID.P * pitch_angle_PID.Error; // 区间在 P*20
 		//积分
 		if(Thr>FlyThr) //大于起飞油门时才开始积分
@@ -125,81 +124,61 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		if(pitch_angle_PID.Integral < -pitch_angle_PID.iLimit)
 			pitch_angle_PID.Integral = -pitch_angle_PID.iLimit;		
 		//微分
-		pitch_angle_PID.Differential = -pitch_angle_PID.D * gyr.y;//  下偏陀螺仪为正，上偏为负
+		//pitch_angle_PID.Differential = -pitch_angle_PID.D * gyr.x;//  上偏陀螺仪为正
+		pitch_angle_PID.Differential = -(pitch_angle_PID.Error -pitch_angle_PID.LastError)/TimeInterval * pitch_angle_PID.D;
+		
 		pitch_angle_PID.Output = pitch_angle_PID.Proportion + pitch_angle_PID.Integral+pitch_angle_PID.Differential;
 		
-		//PID总和限幅
-//		if(pitch_angle_PID.Output >pitch_angle_PID.OLimit)
-//			pitch_angle_PID.Output=pitch_angle_PID.OLimit;
-//		if(pitch_angle_PID.Output<-pitch_angle_PID.OLimit)
-//			pitch_angle_PID.Output=-pitch_angle_PID.OLimit;
+	  pitch_angle_PID.LastError = pitch_angle_PID.Error;
+	  
 		
-		MOTO1 = Thr - pitch_angle_PID.Output;
-		MOTO3 = Thr + pitch_angle_PID.Output;
+		//角速度环
+		pitch_rate_PID.Error = pitch_angle_PID.Output - gyr.y;  //为正 减少14电机
+		pitch_rate_PID.Proportion = pitch_rate_PID.P * pitch_rate_PID.Error;
 		
-//ROLL轴
-//思考例子：当前-20度，也就是飞机向左偏了，目标是0度，误差就是20，由于向0度运动时陀螺仪是正数，于是微分项添加一个负号
-//要想回到0，MOTO2要减速,MOTO4要加速		
-		//比例
-		roll_angle_PID.Error = TargetRoll- angle.x; 
-		roll_angle_PID.Proportion = roll_angle_PID.P *roll_angle_PID.Error; 
-		//积分
-		if(Thr>FlyThr) 
-		roll_angle_PID.CumulativeError += roll_angle_PID.Error *TimeInterval;
-		roll_angle_PID.Integral = roll_angle_PID.I * roll_angle_PID.CumulativeError;
-		//积分限幅
-		if(roll_angle_PID.Integral > roll_angle_PID.iLimit)
-			roll_angle_PID.Integral = roll_angle_PID.iLimit;
-		if(roll_angle_PID.Integral < -roll_angle_PID.iLimit)
-			roll_angle_PID.Integral = -roll_angle_PID.iLimit;		
-		//微分
-		roll_angle_PID.Differential = -roll_angle_PID.D * gyr.x;//微分  左偏为负 右偏为正
+		if(Thr>FlyThr) //大于起飞油门时才开始积分
+		pitch_rate_PID.CumulativeError +=pitch_rate_PID.Error *TimeInterval;
+		pitch_rate_PID.Integral = pitch_rate_PID.CumulativeError *pitch_rate_PID.I;
 		
-		roll_angle_PID.Output = roll_angle_PID.Proportion + roll_angle_PID.Integral+roll_angle_PID.Differential;
+//		//积分限幅  的油门量
+//		if(pitch_rate_PID.Integral > pitch_rate_PID.iLimit)
+//			pitch_rate_PID.Integral = pitch_rate_PID.iLimit;
+//		if(pitch_rate_PID.Integral < -pitch_rate_PID.iLimit)
+//			pitch_rate_PID.Integral = -pitch_rate_PID.iLimit;	
 		
-		//PID总和限幅
-//		if(roll_angle_PID.Output >roll_angle_PID.OLimit)
-//			roll_angle_PID.Output=roll_angle_PID.OLimit;
-//		if(roll_angle_PID.Output<-roll_angle_PID.OLimit)
-//			roll_angle_PID.Output=-roll_angle_PID.OLimit;
+		pitch_rate_PID.Differential = -(pitch_rate_PID.Error -pitch_rate_PID.LastError)/TimeInterval * pitch_rate_PID.D;
 		
-		MOTO2 = Thr - roll_angle_PID.Output;	
-		MOTO4 = Thr + roll_angle_PID.Output;
+		pitch_rate_PID.Output = pitch_rate_PID.Proportion + pitch_rate_PID.Integral+pitch_rate_PID.Differential;
+		
+		pitch_rate_PID.LastError = pitch_rate_PID.Error;
+		
+	  MOTO1 = Thr - pitch_angle_PID.Output;
+	  MOTO2 = Thr + pitch_angle_PID.Output;
+	  MOTO3 = Thr + pitch_angle_PID.Output;	
+	  MOTO4 = Thr - pitch_angle_PID.Output;
+		
+
 		
 //输出
 		if(MOTO1<0)
 			MOTO1=0;			
 		if(MOTO2<0)
 			MOTO2=0;	
-		
-		#ifdef DUBUG_PITCH
-		if(Thr<FlyThr)
-			mMoto.SetDuty(Thr,0,Thr,0);
-		else
-			mMoto.SetDuty(MOTO1,0,MOTO3,0);
-		#endif
-		
-		#ifdef DUBUG_ROLL
-		if(Thr<FlyThr)
-			mMoto.SetDuty(0,Thr,0,Thr);
-		else
-			mMoto.SetDuty(0,MOTO2,0,MOTO4);
-		#endif
-		
-		#ifdef NORMAL
+		if(MOTO4<0)
+			MOTO4=0;			
+		if(MOTO3<0)
+			MOTO3=0;	
+
 		if(Thr<FlyThr)
 			mMoto.SetDuty(Thr,Thr,Thr,Thr);
 		else
 			mMoto.SetDuty(MOTO1,MOTO2,MOTO3,MOTO4);
-		#endif
-		
 		return true;
 }
 
 bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u16 RcRol,u16 RcYaw)
 {
 	
-	float MOTO1=0,MOTO2=0,MOTO3=0,MOTO4=0;
 		//规范化接收的遥控器值  1000 - 2000  平衡位置度量在50内
 	if(RcThr<1000) RcThr=1000;
 	if(RcThr>2000) RcThr=2000;
@@ -274,7 +253,7 @@ bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 R
 		MOTO3=0;
 	if(MOTO4 <0)
 		MOTO4=0;
-//		#ifdef DUBUG_PITCH
+//#ifdef DUBUG_PITCH
 //	if(RcThr<FlyThr)
 //		mMoto.SetDuty(RcThr,0,RcThr,0);
 //	else
@@ -295,8 +274,7 @@ bool Control::SeriesPIDComtrol(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 R
 		mMoto.SetDuty(MOTO1,MOTO2,MOTO3,MOTO4);
 	#endif
 	
-	
-//	
+
 //	if(TargetRcThr >10)
 //		mMoto.SetDuty(0,TargetRcThr-roll_rate_PID.Output,0,TargetRcThr+roll_rate_PID.Output);
 //	else

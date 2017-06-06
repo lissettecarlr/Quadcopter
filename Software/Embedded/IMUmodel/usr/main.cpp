@@ -10,7 +10,7 @@
 
 
 USART com1(1,9600,false);   //USART1
-USART com2(2,9600,false);
+USART com2(2,115200,false);
 USART com3(3,9600,false);
    
 UarnusIMU imu(com2);
@@ -31,6 +31,7 @@ u8 data[32]={0x5A,0xA5,
 0xD0,0x5D,0xFF,0xE9,0xFE,0xDB,0x05};
 
 uint16_t che=0;
+u8 data1[10]={1,2,3,4,5,6,7,8,9,0};
 
 int main(){
 
@@ -50,16 +51,29 @@ int main(){
 	while(1)
 	{
 		
-	  if(tskmgr.ClockTool(doing,0.02))
+//	  if(tskmgr.ClockTool(doing,0.02))
+//		{
+			//imu.Update();
+//		}
+		if(tskmgr.ClockTool(doing2,3))
 		{
-			imu.Update();
-		}
-		if(tskmgr.ClockTool(doing2,0.1))
-		{
-		  com1<<imu.GetAcc().x<<"\t"<<imu.GetAcc().y<<"\t"<<imu.GetAcc().z<<"\t";
-		  com1<<imu.GetGyr().x<<"\t"<<imu.GetGyr().y<<"\t"<<imu.GetGyr().z<<"\t";
-			com1<<imu.GetMag().x<<"\t"<<imu.GetMag().y<<"\t"<<imu.GetMag().z<<"\t";
-			com1<<imu.GetAngle().x<<"\t"<<imu.GetAngle().y<<"\t"<<imu.GetAngle().z<<"\n";
+		  //com1<<imu.GetAcc().x<<"\t"<<imu.GetAcc().y<<"\t"<<imu.GetAcc().z<<"\n";
+		  // com1<<imu.GetGyr().x<<"\t"<<imu.GetGyr().y<<"\t"<<imu.GetGyr().z<<"\n";
+		//	com1<<imu.GetMag().x<<"\t"<<imu.GetMag().y<<"\t"<<imu.GetMag().z<<"\n";
+			//com1<<imu.GetAngle().x<<"\t"<<imu.GetAngle().y<<"\t"<<imu.GetAngle().z<<"\n";
+					
+			com1<<"1234567890";//1
+			com1<<"1234567890";//2
+			com1<<"1234567890";//3
+			com1<<"1234567890";//4
+			com1<<"1234567890";//5
+			com1<<"1234567890";//6
+			com1<<"1234567890";//7
+			com1<<"1234567890";//8
+			com1<<"1234567890";//9
+			com1<<"1234567890";//0
+			
+			
 		}
 		
 	}

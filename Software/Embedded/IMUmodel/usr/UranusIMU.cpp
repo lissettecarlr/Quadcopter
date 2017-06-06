@@ -71,26 +71,60 @@ bool UarnusIMU::Update()
 				  data[1] = 0xa5;
 				  mCom.GetReceivedData(data+2,2); //取出长度
 				  mCom.GetReceivedData(ch,2); //CRC校验
-				  check1=ch[0]+ch[1]<<8;
+				  check1=ch[1]*256+ch[0];
 				  mCom.GetReceivedData(data+4,28); //取出4组
 				  crc16_update(&check2,data,32);
 				 if(check2 == check1) //校验正确
 				 {
-				    acc.x = data[5]+data[6]<<8;
-						acc.y = data[7]+data[8]<<8;
-						acc.z = data[9]+data[10]<<8;
+					  short temp = 0;
 					  
-				    gyr.x = data[12]+data[13]<<8;
-						gyr.y = data[14]+data[15]<<8;
-						gyr.z = data[16]+data[17]<<8;
-
-				    mag.x = data[19]+data[20]<<8;
-						mag.y = data[21]+data[22]<<8;
-						mag.z = data[23]+data[24]<<8;		
-
-					  angle.x = (data[26]+data[27]<<8)/100;
-						angle.y = (data[28]+data[29]<<8)/100;
-						angle.z = (data[30]+data[31]<<8)/10;		
+					  temp = (((short)(temp ^ data[6]) )<<8)^data[5] ;
+				    acc.x = temp;
+					  temp = 0;
+					 
+						temp = (((short)(temp ^ data[8]) )<<8)^data[7] ;
+				    acc.y = temp;
+					  temp = 0;
+					 
+					 	temp = (((short)(temp ^ data[10]) )<<8)^data[9] ;
+				    acc.z = temp;
+					  temp = 0;
+					 
+					  
+					 	temp = (((short)(temp ^ data[13]) )<<8)^data[12] ;
+				    gyr.x = temp;
+					  temp = 0;
+					 
+						temp = (((short)(temp ^ data[15]) )<<8)^data[14] ;
+				    gyr.y = temp;
+					  temp = 0;
+					 
+					 	temp = (((short)(temp ^ data[17]) )<<8)^data[16] ;
+				    gyr.z = temp;
+					  temp = 0;
+					 
+  
+	
+	         	temp = (((short)(temp ^ data[20]) )<<8)^data[19] ;
+				    mag.x = temp;
+					  temp = 0;
+					 
+						temp = (((short)(temp ^ data[22]) )<<8)^data[21] ;
+				    mag.y = temp;
+					  temp = 0;
+					 
+					 	temp = (((short)(temp ^ data[24]) )<<8)^data[23] ;
+				    mag.z = temp;
+					  temp = 0;
+						
+						temp = (((short)(temp ^ data[27]) )<<8)^data[26] ;
+						angle.x = (float)temp/100;
+					  temp = 0;
+						temp = (((short)(temp ^ data[29]) )<<8)^data[28] ;
+						angle.y = (float)temp/100;;
+						temp = 0;
+						temp = (((short)(temp ^ data[31]) )<<8)^data[30] ;
+						angle.z = (float)temp/10;;	
 					 
 					 mCom.ClearReceiveBuffer();
 					 return true;

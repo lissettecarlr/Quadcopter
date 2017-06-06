@@ -36,9 +36,10 @@ namespace 飞控地面站
             view3D.Model3DPath = @"Model\PilotFish_UAV.obj";
             elementHost1.Child = view3D;
             cb_pid.SelectedIndex = 0;
-            Tb_Initial();
+            Tb_Initial();//设置滑动条最大最小值
             btn_Initial_False();
-
+            tb_pitch.Value = 1500;
+            tb_roll.Value = 1500;
         }
 
         public Quaternion ZRotation(double angleInRadians)
@@ -159,14 +160,13 @@ namespace 飞控地面站
                                                     pow = (short)(pow ^ df[12]); //低8位
                                                     pow = (short)(pow << 8);    //高8位
                                                     pow = (short)(pow ^ df[13]); //在b2赋给s的低8位   
-                                                    lab_butter.Text = (((float)(pow))/100).ToString(); 
-                                                    //   temp = df[6];
-                                                    // lab_pitch.Text = (((temp*256) + df[7]) / 100).ToString();
-                                                    //temp = df[8];
-                                                    //lab_yaw.Text = (((temp*256) + df[9]) / 100).ToString();
-                                                    //  lab_butter.Text=(7887).ToString();电量
-                                                    // view3D.SetQuaternion(double.Parse(lab_pitch.Text) / 100,  double.Parse(lab_yaw.Text)/100, double.Parse(lab_roll.Text) / 100, 0.1);
-                                                    view3D.SetQuaternion((double)temp* 0.0174533, (double)temp2* 0.0174533, (double)temp3* 0.0174533, 0.1);
+                                                    lab_butter.Text = (((float)(pow))/100).ToString();
+                                                    double x, y, z, w;
+                                                    w = Math.Cos(temp / 200 * 0.0174533) * Math.Cos(temp2 / 200 * 0.0174533) * Math.Cos(temp3 / 200 * 0.0174533) + Math.Sin(temp / 200 * 0.0174533) * Math.Sin(temp2 / 200 * 0.0174533) * Math.Sin(temp3 / 200 * 0.0174533);
+                                                    x = Math.Sin(temp / 200 * 0.0174533) * Math.Cos(temp2 / 200 * 0.0174533) * Math.Cos(temp3 / 200 * 0.0174533) - Math.Cos(temp / 200 * 0.0174533) * Math.Sin(temp2 / 200 * 0.0174533) * Math.Sin(temp3 / 200 * 0.0174533);
+                                                    y = Math.Cos(temp / 200 * 0.0174533) * Math.Sin(temp2 / 200 * 0.0174533) * Math.Cos(temp3 / 200 * 0.0174533) + Math.Sin(temp / 200 * 0.0174533) * Math.Cos(temp2 / 200 * 0.0174533) * Math.Sin(temp3 / 200 * 0.0174533);
+                                                    z = Math.Cos(temp / 200 * 0.0174533) * Math.Cos(temp2 / 200 * 0.0174533) * Math.Sin(temp3 / 200 * 0.0174533) - Math.Sin(temp / 200 * 0.0174533) * Math.Sin(temp2 / 200 * 0.0174533) * Math.Cos(temp3 / 200 * 0.0174533);
+                                                    view3D.SetQuaternion(x,y,z,w);
 
                                                     if (df[15] == 0x01)
                                                     {
@@ -256,6 +256,46 @@ namespace 飞控地面站
                                                 txt_yaw.Text = ((int)(((df[6] << 8) + df[7]) )).ToString();
                                                 txt_roll.Text = ((int)(((df[8] << 8) + df[9]) )).ToString();
                                                 txt_pitch.Text = ((int)(((df[10] << 8) + df[11]) )).ToString();
+
+                                                short tempa = 0;
+                                                tempa = (short)(tempa ^ df[12]);
+                                                tempa = (short)(tempa << 8);
+                                                tempa = (short)(tempa ^ df[13]);                                               
+                                                txt_pid_7_rol.Text = tempa.ToString();
+
+                                                short tempb = 0;
+                                                tempb = (short)(tempb ^ df[14]);
+                                                tempb = (short)(tempb << 8);
+                                                tempb = (short)(tempb ^ df[15]);
+                                                txt_pid_8_rol.Text = tempb.ToString();
+
+                                                short tempc = 0;
+                                                tempc = (short)(tempc ^ df[16]);
+                                                tempc = (short)(tempc << 8);
+                                                tempc = (short)(tempc ^ df[17]);
+                                                txt_pid_9_rol.Text = tempc.ToString();
+
+                                                short tempd = 0;
+                                                tempd = (short)(tempd ^ df[18]);
+                                                tempd = (short)(tempd << 8);
+                                                tempd = (short)(tempd ^ df[19]);
+                                                txt_pid_7_yaw.Text = tempd.ToString();
+
+                                                short tempe = 0;
+                                                tempe = (short)(tempe ^ df[20]);
+                                                tempe = (short)(tempe << 8);
+                                                tempe = (short)(tempe ^ df[21]);
+                                                txt_pid_8_yaw.Text = tempe.ToString();
+
+                                                short tempf = 0;
+                                                tempf = (short)(tempf ^ df[22]);
+                                                tempf = (short)(tempf << 8);
+                                                tempf = (short)(tempf ^ df[23]);
+                                                txt_pid_9_yaw.Text = tempf.ToString();
+
+
+
+
                                                 break;
                                             case 0x06:
 
@@ -379,7 +419,7 @@ namespace 飞控地面站
         {
             Control.CheckForIllegalCrossThreadCalls = false;
             timer1.Enabled = true;
-           
+            
             Console.WriteLine("===================load==============");
             this.DoubleBuffered = true;//设置本窗体
             SetStyle(ControlStyles.UserPaint, true);
@@ -392,6 +432,7 @@ namespace 飞控地面站
 
         private void Tb_Initial()
         {
+            //
             tb_thr.Minimum = 1000;
             tb_thr.Maximum = 2000;
 
@@ -681,24 +722,28 @@ namespace 飞控地面站
             msg = "PID_2";
             try
             {
-                Int16 pid_4_rol = (Int16)(double.Parse(txt_pid_4_rol.Text) );
-                Int16 pid_4_yaw = (Int16)(double.Parse(txt_pid_4_yaw.Text) );
-                Int16 pid_4_pitch = (Int16)(double.Parse(txt_pid_4_pitch.Text) );
+                Int16 pid_4_rol = (Int16)(int.Parse(txt_pid_4_rol.Text) );
+                Int16 pid_4_yaw = (Int16)(int.Parse(txt_pid_4_yaw.Text) );
+                Int16 pid_4_pitch = (Int16)(int.Parse(txt_pid_4_pitch.Text) );
 
-                Int16 pid_5_rol = (Int16)(double.Parse(txt_pid_5_rol.Text) );
-                Int16 pid_5_yaw = (Int16)(double.Parse(txt_pid_5_yaw.Text) );
-                Int16 pid_5_pitch = (Int16)(double.Parse(txt_pid_5_pitch.Text) );
+                Int16 pid_5_rol = (Int16)(int.Parse(txt_pid_5_rol.Text) );
+                Int16 pid_5_yaw = (Int16)(int.Parse(txt_pid_5_yaw.Text) );
+                Int16 pid_5_pitch = (Int16)(int.Parse(txt_pid_5_pitch.Text) );
 
-                Int16 pid_6_rol = (Int16)(double.Parse(txt_pid_6_rol.Text) );
-                Int16 pid_6_yaw = (Int16)(double.Parse(txt_pid_6_yaw.Text) );
-                Int16 pid_6_pitch = (Int16)(double.Parse(txt_pid_6_pitch.Text) );
+                Int16 pid_6_rol = (Int16)(int.Parse(txt_pid_6_rol.Text) );
+                Int16 pid_6_yaw = (Int16)(int.Parse(txt_pid_6_yaw.Text) );
+                Int16 pid_6_pitch = (Int16)(int.Parse(txt_pid_6_pitch.Text) );
 
                 byte pid_4_rol_L = (byte)(pid_4_rol & 0xff);//低八位
                 byte pid_4_rol_H = (byte)(pid_4_rol >> 8);//高八位
                 byte pid_4_yaw_L = (byte)(pid_4_yaw & 0xff);
                 byte pid_4_yaw_H = (byte)(pid_4_yaw >> 8);
-                byte pid_4_pitch_L = (byte)(pid_4_pitch & 0xff);
-                byte pid_4_pitch_H = (byte)(pid_4_pitch >> 8);
+
+                // byte pid_4_pitch_L = (byte)(pid_4_pitch & 0xff);
+                //byte pid_4_pitch_H = (byte)(pid_4_pitch >> 8);
+                byte pid_4_pitch_L = (byte)((int.Parse(txt_pid_4_pitch.Text))& 0xff);
+                byte pid_4_pitch_H = (byte)((int.Parse(txt_pid_4_pitch.Text)) >> 8);
+
 
                 byte pid_5_rol_L = (byte)(pid_5_rol & 0xff);
                 byte pid_5_rol_H = (byte)(pid_5_rol >> 8);
@@ -895,31 +940,7 @@ namespace 飞控地面站
                         SendMsg(ref d, UCR);
                         state = false;
                         d = new byte[30];
-                //if (IsUsedIPEndPoint(ip, port) == false)
-                //{
-                //    if (IsUsedIPEndPoint(port) == false)
-                //    {
-                //        btn_Initial_True();
-                //        Protocol p = new Protocol();
-                //        d = p.Pro_Lock();
-                //        state = true;
-                //        SendMsg(ref d, UCR);
-                //        state = false;
-                //        d = new byte[30];
-                //    }
-                //    else
-                //    {
-                //        lab_msg.Text = "端口号已占用";
-                //        lab_msg.ForeColor = Color.Red;
-                //    }
-                //}
-                //else
-                //{
-                //    lab_msg.Text = "IP地址不可用";
-                //    lab_msg.ForeColor = Color.Red;
-                //}
-               
-                
+     
             }
             catch
             {
