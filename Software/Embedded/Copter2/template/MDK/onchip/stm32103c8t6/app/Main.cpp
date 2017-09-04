@@ -101,6 +101,10 @@ int main()
            control.PIDControl(imu.mAngle,MPU6050.GetGyrDegree(),WIFI.mRcvTargetThr,WIFI.mRcvTargetPitch,WIFI.mRcvTargetRoll,WIFI.mRcvTargetYaw);				
 			}
 			else{
+				control.pitch_rate_PID.CumulativeError = 0;
+				control.roll_rate_PID.CumulativeError = 0;
+				control.roll_angle_PID.CumulativeError = 0;
+				control.roll_angle_PID.CumulativeError = 0;
 			  pwm4.SetDuty(0,0,0,0);
 			}
 		}
@@ -175,12 +179,6 @@ int main()
 			{
 				WIFI.mGetPid=false;
 				
-//				WIFI.SendPID(0x10,
-//				control.GetPID_ROL().P,control.GetPID_ROL().I,control.GetPID_ROL().D,
-//				control.GetPID_YAW().P,control.GetPID_YAW().I,control.GetPID_YAW().D,
-//				control.GetPID_PIT().P,control.GetPID_PIT().I,control.GetPID_PIT().D
-//				);
-				
 				
 					WIFI.SendPID(0x10,
 					control.roll_angle_PID.P,control.roll_angle_PID.I,control.roll_angle_PID.D	,
@@ -188,13 +186,7 @@ int main()
 					control.pitch_angle_PID.P,control.pitch_angle_PID.I,control.pitch_angle_PID.D				
 					);	
 				
-//				WIFI.SendPID(0x11,
-//				control.GetPID_ROL_rate().P,control.GetPID_ROL_rate().I,control.GetPID_ROL_rate().D,
-//				control.GetPID_YAW_rate().P,control.GetPID_YAW_rate().I,control.GetPID_YAW_rate().D,
-//				control.GetPID_PIT_rate().P,control.GetPID_PIT_rate().I,control.GetPID_PIT_rate().D
-//				);
-			
-				
+	
 				  WIFI.SendPID(0x11,
 					control.roll_rate_PID.P,control.roll_rate_PID.I,control.roll_rate_PID.D	,
 					control.yaw_rate_PID.P,control.yaw_rate_PID.I,control.yaw_rate_PID.D	,
@@ -250,9 +242,9 @@ int main()
 				control.yaw_rate_PID.I = WIFI.PID[1][4];
 				control.yaw_rate_PID.D = WIFI.PID[1][5];
 				
-				control.pitch_rate_PID.P = WIFI.PID[1][6];
-				control.pitch_rate_PID.I = WIFI.PID[1][7];
-				control.pitch_rate_PID.D = WIFI.PID[1][8];
+				control.pitch_rate_PID.P = WIFI.PID[1][6] ;
+				control.pitch_rate_PID.I = WIFI.PID[1][7] ;
+				control.pitch_rate_PID.D = WIFI.PID[1][8] ;
 				
 				
 //				control.SetPID_ROL_rate(WIFI.PID[1][0],WIFI.PID[1][1],WIFI.PID[1][2]);

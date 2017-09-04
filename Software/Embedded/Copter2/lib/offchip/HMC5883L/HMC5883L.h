@@ -149,58 +149,19 @@ class HMC5883L:public Sensor,public Magnetometer
 		#else
 		HMC5883L(I2C &i2c);
 		#endif
-		/////////////////////
-		///Initialization
-		/////////////////////
+
 		virtual bool Init(bool wait=false);
 	
-		///////////////////////
-		///Status of HMC5883L
-		///@retval 1:normal 0:error
-		///////////////////////
 		unsigned char GetHealth();
 
 	#ifdef HMC5883L_USE_TASKMANAGER
-		/////////////////////////////
-		///Set the max interval of update(Hz)
-		///@param maxUpdateFrequency
-		//////////////////////////
 		void SetMaxUpdateFrequency(u16 maxUpdateFrequency);
-		
-		/////////////////////////////
-		///Get the max interval of update(Hz)
-		///@retval maxUpdateFrequency
-		//////////////////////////
 		u16 GetMaxUpdateFrequency();
 	#endif
 
-		////////////////////////
-		///Verify the connection of sensor
-		///@param isClearIicCmdQueue if clear the iic command queue. 
-		///  true:clear  false:It will wait the completion of queue comand befor execute connection test
-		///@retval 0:error ocurred 1:exist
-		///@attention it will wait in this function until the connection status is detected
-		///////////////////////
 		bool TestConnection(bool isClearIicCmdQueue);
-		
-		/////////////////////
-		///Get status that if the data is ready
-		///@retval true:ready
-		/////////////////////
 		bool GetReadyStatus();
-		
-		///////////////////////
-		///Get status that if the data register is locked 
-		///////////////////////
 		bool IsLocked();
-		
-		//////////////////////
-		///Update data from sensor to memory
-		///@param wait If wait until the commang execute complete
-		///@param mag The adress of data save to
-		///@return if wait set to true,MOD_READY:update succed MOD_ERROR:update fail  MOD_BUSY:Update interval is too short
-		///        if wait set to false,MOD_ERROR:发送更新数据失败 MOD_READY:命令将会发送（具体的发送时间取决于队列中的排队的命令的数量）MOD_BUSY:Update interval is too short
-		/////////////////////
 		virtual  u8 Update(bool wait=false,Vector3<int> *mag=0);
 		
 		

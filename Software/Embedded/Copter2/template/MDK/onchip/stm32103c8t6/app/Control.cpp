@@ -141,21 +141,21 @@ bool Control::PIDControl(Vector3f angle,Vector3<float> gyr,u16 RcThr,u16 RcPit,u
 		pitch_rate_PID.Integral = pitch_rate_PID.CumulativeError *pitch_rate_PID.I;
 		
 //		//积分限幅  的油门量
-//		if(pitch_rate_PID.Integral > pitch_rate_PID.iLimit)
-//			pitch_rate_PID.Integral = pitch_rate_PID.iLimit;
-//		if(pitch_rate_PID.Integral < -pitch_rate_PID.iLimit)
-//			pitch_rate_PID.Integral = -pitch_rate_PID.iLimit;	
+		if(pitch_rate_PID.Integral > pitch_rate_PID.iLimit)
+			pitch_rate_PID.Integral = pitch_rate_PID.iLimit;
+		if(pitch_rate_PID.Integral < -pitch_rate_PID.iLimit)
+			pitch_rate_PID.Integral = -pitch_rate_PID.iLimit;	
 		
 		pitch_rate_PID.Differential = -(pitch_rate_PID.Error -pitch_rate_PID.LastError)/TimeInterval * pitch_rate_PID.D;
 		
-		pitch_rate_PID.Output = pitch_rate_PID.Proportion + pitch_rate_PID.Integral+pitch_rate_PID.Differential;
+		pitch_rate_PID.Output = pitch_rate_PID.Proportion - pitch_rate_PID.Integral+pitch_rate_PID.Differential;
 		
 		pitch_rate_PID.LastError = pitch_rate_PID.Error;
 		
-	  MOTO1 = Thr - pitch_angle_PID.Output;
-	  MOTO2 = Thr + pitch_angle_PID.Output;
-	  MOTO3 = Thr + pitch_angle_PID.Output;	
-	  MOTO4 = Thr - pitch_angle_PID.Output;
+	  MOTO1 = Thr - pitch_rate_PID.Output;
+	  MOTO2 = Thr + pitch_rate_PID.Output;
+	  MOTO3 = Thr + pitch_rate_PID.Output;	
+	  MOTO4 = Thr - pitch_rate_PID.Output;
 		
 
 		

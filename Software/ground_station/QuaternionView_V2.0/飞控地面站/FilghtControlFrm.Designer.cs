@@ -70,6 +70,9 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.cb_pid = new System.Windows.Forms.ComboBox();
             this.txt_pid_9_pitch = new System.Windows.Forms.TextBox();
             this.txt_pid_9_yaw = new System.Windows.Forms.TextBox();
@@ -118,11 +121,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.btn_ReviceMsg = new System.Windows.Forms.Button();
             this.btn_start = new System.Windows.Forms.Button();
-            this.txtip = new System.Windows.Forms.TextBox();
-            this.txtport = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tb_pitch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tb_roll)).BeginInit();
@@ -275,7 +274,7 @@
             this.txt_pitch.TabIndex = 17;
             this.txt_pitch.Text = "0";
             this.txt_pitch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txt_pitch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_pitch_KeyPress);
+
             // 
             // txt_roll
             // 
@@ -285,7 +284,7 @@
             this.txt_roll.TabIndex = 16;
             this.txt_roll.Text = "0";
             this.txt_roll.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txt_roll.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_roll_KeyPress);
+
             // 
             // txt_yaw
             // 
@@ -295,7 +294,7 @@
             this.txt_yaw.TabIndex = 15;
             this.txt_yaw.Text = "0";
             this.txt_yaw.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txt_yaw.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_yaw_KeyPress);
+      
             // 
             // txt_thr
             // 
@@ -306,7 +305,6 @@
             this.txt_thr.Text = "0";
             this.txt_thr.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txt_thr.TextChanged += new System.EventHandler(this.txt_thr_TextChanged);
-            this.txt_thr.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_thr_KeyPress);
             // 
             // tb_pitch
             // 
@@ -315,7 +313,6 @@
             this.tb_pitch.Name = "tb_pitch";
             this.tb_pitch.Size = new System.Drawing.Size(136, 45);
             this.tb_pitch.TabIndex = 13;
-            this.tb_pitch.Scroll += new System.EventHandler(this.tb_pitch_Scroll);
             // 
             // tb_roll
             // 
@@ -324,7 +321,6 @@
             this.tb_roll.Name = "tb_roll";
             this.tb_roll.Size = new System.Drawing.Size(136, 45);
             this.tb_roll.TabIndex = 12;
-            this.tb_roll.Scroll += new System.EventHandler(this.tb_roll_Scroll);
             // 
             // tb_yaw
             // 
@@ -333,7 +329,6 @@
             this.tb_yaw.Name = "tb_yaw";
             this.tb_yaw.Size = new System.Drawing.Size(136, 45);
             this.tb_yaw.TabIndex = 11;
-            this.tb_yaw.Scroll += new System.EventHandler(this.tb_yaw_Scroll);
             // 
             // tb_thr
             // 
@@ -342,7 +337,6 @@
             this.tb_thr.Name = "tb_thr";
             this.tb_thr.Size = new System.Drawing.Size(136, 45);
             this.tb_thr.TabIndex = 10;
-            this.tb_thr.Scroll += new System.EventHandler(this.tb_thr_Scroll);
             // 
             // label14
             // 
@@ -607,6 +601,33 @@
             this.groupBox5.TabIndex = 13;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "PID";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(289, 87);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(16, 16);
+            this.label9.TabIndex = 62;
+            this.label9.Text = "P";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(289, 55);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(16, 16);
+            this.label8.TabIndex = 61;
+            this.label8.Text = "Y";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(289, 27);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(16, 16);
+            this.label7.TabIndex = 60;
+            this.label7.Text = "R";
             // 
             // cb_pid
             // 
@@ -1084,58 +1105,11 @@
             this.btn_start.UseVisualStyleBackColor = true;
             this.btn_start.Click += new System.EventHandler(this.btn_start_Click);
             // 
-            // txtip
-            // 
-            this.txtip.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtip.Location = new System.Drawing.Point(458, 597);
-            this.txtip.Name = "txtip";
-            this.txtip.Size = new System.Drawing.Size(145, 29);
-            this.txtip.TabIndex = 20;
-            this.txtip.Text = "192.168.4.1";
-            // 
-            // txtport
-            // 
-            this.txtport.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txtport.Location = new System.Drawing.Point(602, 597);
-            this.txtport.Name = "txtport";
-            this.txtport.Size = new System.Drawing.Size(62, 29);
-            this.txtport.TabIndex = 21;
-            this.txtport.Text = "9000";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(289, 27);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(16, 16);
-            this.label7.TabIndex = 60;
-            this.label7.Text = "R";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(289, 55);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(16, 16);
-            this.label8.TabIndex = 61;
-            this.label8.Text = "Y";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(289, 87);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(16, 16);
-            this.label9.TabIndex = 62;
-            this.label9.Text = "P";
-            // 
             // FilghtControlFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1032, 644);
-            this.Controls.Add(this.txtport);
-            this.Controls.Add(this.txtip);
             this.Controls.Add(this.btn_start);
             this.Controls.Add(this.btn_ReviceMsg);
             this.Controls.Add(this.label6);
@@ -1266,11 +1240,10 @@
         private System.Windows.Forms.Button btn_lock;
         private System.Windows.Forms.Button btn_ReviceMsg;
         private System.Windows.Forms.Button btn_start;
-        private System.Windows.Forms.TextBox txtip;
-        private System.Windows.Forms.TextBox txtport;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
+        private System.IO.Ports.SerialPort serialPort1;
     }
 }
 

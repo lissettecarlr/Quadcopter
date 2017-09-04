@@ -164,6 +164,8 @@ bool Communication::DataListening()
 									PID[PIDnumber][6]=((u16)data[16]*256+data[17])/1000.0;
 									PID[PIDnumber][7]=((u16)data[18]*256+data[19])/1000.0;
 									PID[PIDnumber][8]=((u16)data[20]*256+data[21])/1000.0;
+								
+								  
 									reply(ch,check);
 									mPidUpdata = true;
 									return true;

@@ -49,25 +49,6 @@ namespace 飞控地面站
             return q;
         }
 
-        public void re()
-        {
-            UdpClient receivingUdpClient = new UdpClient(9001);
-            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-            while (true)         //循环扫描
-            {
-                try
-                {
-                    //获取接受到的信息,传的时候是以Byte[]来传的,所以接受时也要用Byte
-                    Byte[] receiveBytes = receivingUdpClient.Receive(ref RemoteIpEndPoint);
-                    string stripaddress = RemoteIpEndPoint.Address.ToString();      //发送方IP地址
-                    string strPort = RemoteIpEndPoint.Port.ToString();         //发送方端口
-                    Console.WriteLine(BitConverter.ToString(receiveBytes));
-                    Console.WriteLine("发送方IP地址："+ stripaddress+ "发送方端口:"+ strPort);
-                }
-                catch { }
-}
-        }
-
         UdpClient UCR = new UdpClient(port);
         /// <summary>
         /// 接收数据
@@ -92,8 +73,8 @@ namespace 飞控地面站
                         //IPEndPoint Sender = null;
                         //Receive处于等待，但不影响发送
                         byte[] data = new byte[1024];
-                        data = UCR.Receive(ref Sender);
-                        if(state==true)
+                        data = UCR.Receive(ref Sender); 
+                        if (state==true)
                         {
                             SendMsg(ref d, UCR);
                         }
@@ -106,6 +87,7 @@ namespace 飞控地面站
                         int cursor = 0;//游标指针
                         int copylength = 0;
                         int length = 0;
+
                         for (int i = 0; i < data.Length; i += length)
                         {
                             cursor = cursor + 1;
@@ -243,13 +225,8 @@ namespace 飞控地面站
                                                 temp12 = (short)(temp12 << 8);    //高8位
                                                 temp12 = (short)(temp12 ^ df[21]); //在b2赋给s的低8位                                                 
                                                 lab_mag_z.Text = temp12.ToString();
-
-
-
-                                                //lab_mag_x.Text = (((df[16] << 8) + df[17]) ).ToString();
-                                                //lab_mag_y.Text = (((df[18] << 8) + df[19]) ).ToString();
-                                                //lab_mag_z.Text = (((df[20] << 8) + df[21]) ).ToString();
-                                                this.FilghtControlFrm_Load(null, null);//修改
+                                    
+                                                this.FilghtControlFrm_Load(null, null);//刷新
                                                 break;
                                             case 0x03:
                                                 txt_thr.Text = ((int)(((df[4] << 8) + df[5]) )).ToString();
@@ -360,12 +337,14 @@ namespace 飞控地面站
                                 {
                                     lab_msg.Text = "数据不完整！";
                                     lab_msg.ForeColor = Color.Red;
+                                    break;
                                 }
                             }
                             else
                             {
                                 lab_msg.Text = "数据报错误！";
                                 lab_msg.ForeColor = Color.Red;
+                                break;
                             }
 
 
@@ -474,61 +453,7 @@ namespace 飞控地面站
         #region 上位机=========》飞控
 
         #region 遥控器
-        private void tb_thr_Scroll(object sender, EventArgs e)
-        {
-           // txt_thr.Text = tb_thr.Value.ToString();
-        }
 
-        private void tb_yaw_Scroll(object sender, EventArgs e)
-        {
-           // txt_yaw.Text = tb_yaw.Value.ToString();
-        }
-
-        private void tb_roll_Scroll(object sender, EventArgs e)
-        {
-           // txt_roll.Text = tb_roll.Value.ToString();
-        }
-
-        private void tb_pitch_Scroll(object sender, EventArgs e)
-        {
-           // txt_pitch.Text = tb_pitch.Value.ToString();
-        }
-
-        private void txt_thr_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            //if (e.KeyChar == (char)13)
-            //{
-            //    double s = double.Parse(txt_thr.Text);
-            //    tb_thr.Value = (int)s;
-            //}
-        }
-
-        private void txt_yaw_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            //if (e.KeyChar == (char)13)
-            //{
-            //    double s = double.Parse(txt_yaw.Text);
-            //    tb_yaw.Value = (int)s;
-            //}
-        }
-
-        private void txt_roll_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            //if (e.KeyChar == (char)13)
-            //{
-            //    double s = double.Parse(txt_roll.Text);
-            //    tb_roll.Value = (int)s;
-            //}
-        }
-
-        private void txt_pitch_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            //if (e.KeyChar == (char)13)
-            //{
-            //    double s = double.Parse(txt_pitch.Text);
-            //    tb_pitch.Value = (int)s;
-            //}
-        }
         /// <summary>
         /// 发送遥控器数据
         /// </summary>
@@ -739,10 +664,9 @@ namespace 飞控地面站
                 byte pid_4_yaw_L = (byte)(pid_4_yaw & 0xff);
                 byte pid_4_yaw_H = (byte)(pid_4_yaw >> 8);
 
-                // byte pid_4_pitch_L = (byte)(pid_4_pitch & 0xff);
-                //byte pid_4_pitch_H = (byte)(pid_4_pitch >> 8);
-                byte pid_4_pitch_L = (byte)((int.Parse(txt_pid_4_pitch.Text))& 0xff);
-                byte pid_4_pitch_H = (byte)((int.Parse(txt_pid_4_pitch.Text)) >> 8);
+                byte pid_4_pitch_L = (byte)(pid_4_pitch & 0xff);
+                byte pid_4_pitch_H = (byte)(pid_4_pitch >> 8);
+        
 
 
                 byte pid_5_rol_L = (byte)(pid_5_rol & 0xff);
@@ -844,29 +768,6 @@ namespace 飞控地面站
         #endregion
 
 
-        #region 定义事件，实时刷新界面
-        //委托
-        public delegate void dDownloadList(Label lab, string msg);
-        //事件
-        public event dDownloadList onDownLoadList;
-
-        public void frmServer_onDownLoadList(Label lab,string msg)
-        {
-
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new FilghtControlFrm.dDownloadList(frmServer_onDownLoadList), new object[] { msg });
-            }
-            else
-            {
-                lab.Text = msg;
-                Application.DoEvents();
-            }
-        }
-
-
-        #endregion
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             lab_msg.Text = "-------";
@@ -931,8 +832,8 @@ namespace 飞控地面站
 
             try
             {
-                ip = txtip.Text.Trim();
-                port = int.Parse(txtport.Text.Trim());
+                //ip = txtip.Text.Trim();
+                //port = int.Parse(txtport.Text.Trim());
                   btn_Initial_True();
                         Protocol p = new Protocol();
                         d = p.Pro_Lock();
